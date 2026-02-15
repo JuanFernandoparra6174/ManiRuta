@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Login | ManiRuta</title>
+  <link rel="stylesheet" href="/css/base.css" />
+  <link rel="stylesheet" href="/css/auth.css" />
+</head>
+<body>
+  <div class="auth-wrap">
+    <div class="auth-bg"></div>
+
+    <div class="auth">
+      <section class="hero card">
+        <!-- SOLO LINK: reemplaza por tu URL (Supabase Storage público o lo que sea) -->
+        <div class="img" id="heroImg"></div>
+
+        <div class="brand"><span class="dot"></span> ManiRuta</div>
+        <h1>Transporte público<br/>con información real.</h1>
+        <p>Rutas y alertas en una sola plataforma. Denuncia incidentes de forma rápida y segura.</p>
+        <div class="stats">
+          <span class="badge">🚌 Tiempo real</span>
+          <span class="badge">📍 Paraderos</span>
+          <span class="badge">🚨 Alertas</span>
+          <span class="badge">🛡️ Denuncias</span>
+        </div>
+      </section>
+
+      <section class="panel card">
+        <div class="topbar">
+          <div>
+            <div class="help">Bienvenido</div>
+            <div style="font-weight:900; font-size:20px;">Iniciar sesión</div>
+          </div>
+          <a class="btn btn-ghost" href="/pages/signup.html">Crear cuenta</a>
+        </div>
+
+        <form class="form" id="loginForm" autocomplete="on">
+          <div>
+            <label class="help">Correo</label>
+            <input class="input" type="email" id="email" required placeholder="tucorreo@ejemplo.com"/>
+          </div>
+
+          <div>
+            <label class="help">Contraseña</label>
+            <input class="input" type="password" id="password" required placeholder="••••••••"/>
+          </div>
+
+          <div id="err" class="error" style="display:none;"></div>
+
+          <button class="btn btn-primary" type="submit">🔐 Entrar</button>
+
+          <div class="help">
+            ¿No tienes cuenta? <a href="/pages/signup.html" style="color:var(--primary); font-weight:900;">Regístrate</a>
+          </div>
+        </form>
+      </section>
+    </div>
+  </div>
+
+  <script type="module">
+    import { signIn } from "/js/auth.js";
+    import { setError } from "/js/ui.js";
+    import { redirectToRoleHome } from "/js/guard.js";
+
+    // 🔁 CAMBIA ESTE LINK POR TU IMAGEN (Supabase Storage público, etc.)
+    const IMG_AUTH_BG = "https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?auto=format&fit=crop&w=1400&q=70";
+    document.getElementById("heroImg").style.backgroundImage = `url('${IMG_AUTH_BG}')`;
+
+    document.getElementById("loginForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      setError("err", "");
+
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+
+      try{
+        await signIn({ email, password });
+        await redirectToRoleHome();
+      } catch(err){
+        setError("err", err?.message || "Error iniciando sesión");
+      }
+    });
+  </script>
+</body>
+</html>
