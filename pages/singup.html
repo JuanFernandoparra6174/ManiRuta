@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Registro | ManiRuta</title>
+  <link rel="stylesheet" href="/css/base.css" />
+  <link rel="stylesheet" href="/css/auth.css" />
+</head>
+<body>
+  <div class="auth-wrap">
+    <div class="auth-bg"></div>
+
+    <div class="auth">
+      <section class="hero card">
+        <div class="img" id="heroImg"></div>
+
+        <div class="brand"><span class="dot"></span> ManiRuta</div>
+        <h1>Crea tu cuenta<br/>en segundos.</h1>
+        <p>Tu contraseña se protege con Supabase Auth. Aquí solo se guarda tu perfil.</p>
+        <div class="stats">
+          <span class="badge">🔒 Seguro</span>
+          <span class="badge">⚡ Rápido</span>
+          <span class="badge">✨ Limpio</span>
+        </div>
+      </section>
+
+      <section class="panel card">
+        <div class="topbar">
+          <div>
+            <div class="help">Registro</div>
+            <div style="font-weight:900; font-size:20px;">Crear cuenta (Pasajero)</div>
+          </div>
+          <a class="btn btn-ghost" href="/pages/login.html">Volver</a>
+        </div>
+
+        <form class="form" id="signupForm" autocomplete="on">
+          <div class="row">
+            <div>
+              <label class="help">Usuario</label>
+              <input class="input" id="username" required placeholder="fernando123"/>
+            </div>
+            <div>
+              <label class="help">Teléfono</label>
+              <input class="input" id="phone" placeholder="3000000000"/>
+            </div>
+          </div>
+
+          <div>
+            <label class="help">Correo</label>
+            <input class="input" type="email" id="email" required placeholder="tucorreo@ejemplo.com"/>
+          </div>
+
+          <div class="row">
+            <div>
+              <label class="help">Contraseña</label>
+              <input class="input" type="password" id="password" required minlength="8" placeholder="mínimo 8 caracteres"/>
+            </div>
+            <div>
+              <label class="help">Confirmar</label>
+              <input class="input" type="password" id="confirm" required minlength="8" placeholder="repite la contraseña"/>
+            </div>
+          </div>
+
+          <div id="err" class="error" style="display:none;"></div>
+          <div id="ok" class="help" style="display:none; font-weight:900;"></div>
+
+          <button class="btn btn-primary" type="submit">✅ Crear cuenta</button>
+
+          <div class="help">Cuentas de empresa/admin se crean por administración.</div>
+        </form>
+      </section>
+    </div>
+  </div>
+
+  <script type="module">
+    import { signUpPassenger } from "/js/auth.js";
+    import { setError, setText } from "/js/ui.js";
+
+    const IMG_AUTH_BG = "https://images.unsplash.com/photo-1520975693411-6a0a3f0a1d1d?auto=format&fit=crop&w=1400&q=70";
+    document.getElementById("heroImg").style.backgroundImage = `url('${IMG_AUTH_BG}')`;
+
+    document.getElementById("signupForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      setError("err", "");
+      setText("ok", "");
+      document.getElementById("ok").style.display = "none";
+
+      const username = document.getElementById("username").value.trim();
+      const phone = document.getElementById("phone").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+      const confirm = document.getElementById("confirm").value;
+
+      if (password !== confirm){
+        setError("err", "Las contraseñas no coinciden.");
+        return;
+      }
+
+      try{
+        await signUpPassenger({ username, email, phone, password });
+        setText("ok", "Cuenta creada. Si Supabase pide verificación por correo, confírmala y luego inicia sesión.");
+        document.getElementById("ok").style.display = "block";
+        e.target.reset();
+      } catch(err){
+        setError("err", err?.message || "Error creando cuenta");
+      }
+    });
+  </script>
+</body>
+</html>
