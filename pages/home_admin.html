@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Home Admin | ManiRuta</title>
+  <link rel="stylesheet" href="/css/base.css"/>
+  <link rel="stylesheet" href="/css/home.css"/>
+</head>
+<body>
+  <header class="nav">
+    <div class="container nav-inner">
+      <div class="brand"><span class="dot"></span> ManiRuta</div>
+      <div class="right">
+        <span class="badge" id="who">...</span>
+        <button class="btn btn-ghost" id="logout">Salir</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container grid">
+    <section class="card tile">
+      <h2>🛡️ Home Super Admin</h2>
+      <p>Prueba: aquí irá gestión de empresas, usuarios, políticas y módulos.</p>
+      <div class="preview" id="imgAdmin"></div>
+    </section>
+
+    <section class="card tile">
+      <h2>📊 Estado</h2>
+      <p><b>Rol:</b> SUPER_ADMIN</p>
+      <p class="help" id="profileInfo"></p>
+    </section>
+  </main>
+
+  <script type="module">
+    import { requireAuthAndRole } from "/js/guard.js";
+    import { signOut } from "/js/auth.js";
+    import { setText } from "/js/ui.js";
+
+    const IMG_HOME_ADMIN = "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=1400&q=70";
+    document.getElementById("imgAdmin").style.backgroundImage = `url('${IMG_HOME_ADMIN}')`;
+
+    const profile = await requireAuthAndRole(3);
+    if (profile){
+      setText("who", `@${profile.username} · ADMIN`);
+      setText("profileInfo", `Status: ${profile.status} · Email: ${profile.email || "—"}`);
+    }
+
+    document.getElementById("logout").addEventListener("click", async () => {
+      await signOut();
+      window.location.href = "/pages/login.html";
+    });
+  </script>
+</body>
+</html>
