@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Home Pasajero | ManiRuta</title>
+  <link rel="stylesheet" href="/css/base.css"/>
+  <link rel="stylesheet" href="/css/home.css"/>
+</head>
+<body>
+  <header class="nav">
+    <div class="container nav-inner">
+      <div class="brand"><span class="dot"></span> ManiRuta</div>
+      <div class="right">
+        <span class="badge" id="who">...</span>
+        <button class="btn btn-ghost" id="logout">Salir</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container grid">
+    <section class="card tile">
+      <h2>👤 Home Pasajero</h2>
+      <p>Prueba: aquí irá consultar rutas, planificador, denuncias y alertas.</p>
+      <div class="preview" id="imgPax"></div>
+    </section>
+
+    <section class="card tile">
+      <h2>📌 Estado</h2>
+      <p><b>Rol:</b> PASAJERO</p>
+      <p class="help" id="profileInfo"></p>
+    </section>
+  </main>
+
+  <script type="module">
+    import { requireAuthAndRole } from "/js/guard.js";
+    import { signOut } from "/js/auth.js";
+    import { setText } from "/js/ui.js";
+
+    const IMG_HOME_PAX = "https://images.unsplash.com/photo-1526779259212-939e64788e3c?auto=format&fit=crop&w=1400&q=70";
+    document.getElementById("imgPax").style.backgroundImage = `url('${IMG_HOME_PAX}')`;
+
+    const profile = await requireAuthAndRole(1);
+    if (profile){
+      setText("who", `@${profile.username} · PASAJERO`);
+      setText("profileInfo", `Status: ${profile.status} · Email: ${profile.email || "—"} · Phone: ${profile.phone || "—"}`);
+    }
+
+    document.getElementById("logout").addEventListener("click", async () => {
+      await signOut();
+      window.location.href = "/pages/login.html";
+    });
+  </script>
+</body>
+</html>
