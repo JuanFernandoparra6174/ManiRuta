@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Conductores | ManiRuta</title>
+  <link rel="stylesheet" href="../css/base.css"/>
+  <link rel="stylesheet" href="../css/home.css"/>
+</head>
+<body>
+
+<header class="nav">
+  <div class="container nav-inner">
+    <div class="brand"><span class="dot"></span> Conductores</div>
+    <div class="right">
+      <a class="btn btn-ghost" href="home_company.html">Volver</a>
+      <button class="btn btn-ghost" id="logout">Salir</button>
+    </div>
+  </div>
+</header>
+
+<main class="container page stack">
+  <section class="card tile">
+    <div class="page-title">
+      <div>
+        <p class="sub">Tu empresa</p>
+        <h2 class="h1">👨‍✈️ Lista de conductores</h2>
+      </div>
+      <span class="chip" id="who">...</span>
+    </div>
+
+    <div style="overflow:auto;">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Documento</th>
+            <th>Teléfono</th>
+            <th>Licencia</th>
+            <th>Estado</th>
+          </tr>
+        </thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+  </section>
+</main>
+
+<script type="module">
+  import { requireAuthAndRole } from "../js/guard.js";
+  import { signOut } from "../js/auth.js";
+  import { setText } from "../js/ui.js";
+  import { fetchMyCompanyDrivers } from "../js/drivers.js";
+
+  const profile = await requireAuthAndRole(2);
+  if (profile) setText("who", `@${profile.username}`);
+
+  document.getElementById("logout").addEventListener("click", async () => {
+    await signOut();
+    window.location.href = "login.html";
+  });
+
+  function statusChip(status){
+    if (status === "ACTIVE") return `<span class="chip ok">ACTIVE</span>`;
+    return `<span class="chip bad">${status}</span>`;
+  }
+
+  const data = await fetchMyCompanyDrivers();
+  const tbody = document.getElementById("rows");
+  tbody.innerHTML = data.map(d => `
+    <tr>
+      <td>${d.full_name}</td>
+      <td>${d.doc_type} ${d.doc_number}</td>
+      <td>${d.phone || "—"}</td>
+      <td>${d.license_no}</td>
+      <td>${statusChip(d.status)}</td>
+    </tr>
+  `).join("") || `<tr><td colspan="5">No hay conductores registrados.</td></tr>`;
+</script>
+
+</body>
+</html>
