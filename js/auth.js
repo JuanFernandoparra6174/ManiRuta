@@ -3,7 +3,7 @@ import { supabase } from "./supabaseClient.js";
 const PASSENGER_ROLE_ID = 1; // 1 PASAJERO, 2 EMPRESA_BUSES, 3 SUPER_ADMIN
 
 export async function signUpPassenger({ username, email, phone, password }) {
-  // 1) Auth (Supabase hashea la contraseña)
+  // 1) Crear usuario en Supabase Auth (hash lo maneja Auth)
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
@@ -12,9 +12,9 @@ export async function signUpPassenger({ username, email, phone, password }) {
   if (error) throw error;
 
   const authUser = data.user;
-  if (!authUser) throw new Error("No se pudo crear el usuario (Auth).");
+  if (!authUser) throw new Error("No se pudo crear el usuario en Auth.");
 
-  // 2) Perfil en tu tabla users
+  // 2) Insertar perfil en tu tabla public.users
   const { error: insertErr } = await supabase.from("users").insert({
     id: authUser.id,
     username,
@@ -29,7 +29,11 @@ export async function signUpPassenger({ username, email, phone, password }) {
   });
 
   if (insertErr) throw insertErr;
-  return authUser;
+
+  // Si session viene null, normalmente hay confirmación por correo activa
+  const needsEmailConfirm = !data.session;
+
+  return { authUser, needsEmailConfirm };
 }
 
 export async function signIn({ email, password }) {
