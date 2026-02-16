@@ -128,7 +128,10 @@
     document.getElementById("goFleet").addEventListener("click", go("📌 Monitoreo (pendiente)"));
     document.getElementById("goRoutes").addEventListener("click", go("📌 Gestión de rutas (pendiente)"));
     document.getElementById("goAlerts").addEventListener("click", go("📌 Alertas operativas (pendiente)"));
-    document.getElementById("goIncidents").addEventListener("click", go("📌 Incidentes (pendiente)"));
+    document.getElementById("goIncidents").addEventListener("click", (e) => {
+  e.preventDefault();
+  window.location.href = "incidents_admin.html";
+});
 
     document.getElementById("menuBtn").addEventListener("click", () => alert("☰ Menú (pendiente)"));
     document.getElementById("settingsBtn").addEventListener("click", () => alert("⚙️ Ajustes (pendiente)"));
@@ -136,6 +139,7 @@
 
 </body>
 </html>
+
 
 
 
