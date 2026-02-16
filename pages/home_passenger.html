@@ -2,56 +2,183 @@
 <html lang="es">
 <head>
   <meta charset="utf-8"/>
-  <base href="/ManiRuta/">
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Home Pasajero | ManiRuta</title>
-  <link rel="stylesheet" href="css/base.css"/>
-  <link rel="stylesheet" href="css/home.css"/>
+  <title>Inicio Pasajero | ManiRuta</title>
+  <link rel="stylesheet" href="../css/base.css"/>
+  <link rel="stylesheet" href="../css/home.css"/>
 </head>
 <body>
+
+  <!-- NAV -->
   <header class="nav">
     <div class="container nav-inner">
-      <div class="brand"><span class="dot"></span> ManiRuta</div>
-      <div class="right">
-        <span class="badge" id="who">...</span>
+      <div class="nav-left">
+        <button class="icon-btn" id="menuBtn" title="Menú" aria-label="Menú">
+          <!-- hamburger -->
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+            <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </button>
+
+        <div class="brand">
+          <span class="dot"></span> ManiRuta
+        </div>
+      </div>
+
+      <div class="nav-right">
+        <span class="pill" id="who">...</span>
+
+        <button class="icon-btn" id="settingsBtn" title="Ajustes" aria-label="Ajustes">
+          <!-- gear -->
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+            <path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z" stroke="currentColor" stroke-width="2"/>
+            <path d="M19.4 15a7.9 7.9 0 0 0 .1-2l2-1.2-2-3.4-2.3.7a7.4 7.4 0 0 0-1.7-1l-.3-2.4H10.8l-.3 2.4a7.4 7.4 0 0 0-1.7 1l-2.3-.7-2 3.4 2 1.2a7.9 7.9 0 0 0 .1 2l-2 1.2 2 3.4 2.3-.7c.5.4 1.1.7 1.7 1l.3 2.4h4.4l.3-2.4c.6-.3 1.2-.6 1.7-1l2.3.7 2-3.4-2-1.2Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+          </svg>
+        </button>
+
         <button class="btn btn-ghost" id="logout">Salir</button>
       </div>
     </div>
   </header>
 
-  <main class="container grid">
-    <section class="card tile">
-      <h2>👤 Home Pasajero</h2>
-      <p>Prueba: aquí irá consultar rutas, planificador, denuncias y alertas.</p>
-      <div class="preview" id="imgPax"></div>
+  <main class="container home-wrap">
+
+    <!-- Welcome -->
+    <section class="card welcome">
+      <div class="welcome-top">
+        <div>
+          <h1 id="welcomeTitle">👋 Hola, pasajero</h1>
+          <p>Consulta rutas en tiempo real, planea tu viaje y reporta incidentes rápido.</p>
+        </div>
+        <span class="pill">🚌 Tiempo real</span>
+      </div>
+
+      <div class="footer-actions">
+        <span class="badge">📍 Paraderos</span>
+        <span class="badge">🧭 Planificador</span>
+        <span class="badge">🚨 Alertas</span>
+        <span class="badge">🛡️ Denuncias</span>
+      </div>
     </section>
 
-    <section class="card tile">
-      <h2>📌 Estado</h2>
-      <p><b>Rol:</b> PASAJERO</p>
-      <p class="help" id="profileInfo"></p>
+    <!-- Modules list (mockup style) -->
+    <section class="feature-list">
+
+      <a class="feature" href="#" id="goRoutes">
+        <div class="feature-thumb">
+          <div class="img" id="imgRoutes"></div>
+          <div class="tag">🗺️ Rutas</div>
+        </div>
+        <div>
+          <h2>Rutas</h2>
+          <p>Consulta buses y paraderos en tiempo real.</p>
+          <div class="small-row">
+            <span class="help">Ver rutas disponibles</span>
+            <span class="chev">›</span>
+          </div>
+        </div>
+      </a>
+
+      <a class="feature" href="#" id="goPlanner">
+        <div class="feature-thumb">
+          <div class="img" id="imgPlanner"></div>
+          <div class="tag">🧭 Planificador</div>
+        </div>
+        <div>
+          <h2>Planificador</h2>
+          <p>Encuentra la mejor ruta según tu ubicación.</p>
+          <div class="small-row">
+            <span class="help">Optimiza tu viaje</span>
+            <span class="chev">›</span>
+          </div>
+        </div>
+      </a>
+
+      <a class="feature" href="#" id="goIncidents">
+        <div class="feature-thumb">
+          <div class="img" id="imgIncidents"></div>
+          <div class="tag">🚨 Denuncias</div>
+        </div>
+        <div>
+          <h2>Denuncias</h2>
+          <p>Reporta incidentes de forma rápida y anónima.</p>
+          <div class="small-row">
+            <span class="help">Crear denuncia</span>
+            <span class="chev">›</span>
+          </div>
+        </div>
+      </a>
+
+      <a class="feature" href="#" id="goAlerts">
+        <div class="feature-thumb">
+          <div class="img" id="imgAlerts"></div>
+          <div class="tag">🔔 Alertas</div>
+        </div>
+        <div>
+          <h2>Alertas</h2>
+          <p>Recibe notificaciones sobre desvíos y eventos.</p>
+          <div class="small-row">
+            <span class="help">Ver alertas</span>
+            <span class="chev">›</span>
+          </div>
+        </div>
+      </a>
+
     </section>
   </main>
 
   <script type="module">
-    import { requireAuthAndRole } from "js/guard.js";
-    import { signOut } from "js/auth.js";
-    import { setText } from "js/ui.js";
+    import { requireAuthAndRole } from "../js/guard.js";
+    import { signOut } from "../js/auth.js";
 
-    const IMG_HOME_PAX = "https://images.unsplash.com/photo-1526779259212-939e64788e3c?auto=format&fit=crop&w=1400&q=70";
-    document.getElementById("imgPax").style.backgroundImage = `url('${IMG_HOME_PAX}')`;
+    // Imágenes de prueba (cámbialas luego por tus links de Supabase Storage)
+    const IMG_ROUTES    = "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=900&q=70"; // bus
+    const IMG_PLANNER   = "https://images.unsplash.com/photo-1526779259212-939e64788e3c?auto=format&fit=crop&w=900&q=70"; // mapa
+    const IMG_INCIDENTS = "https://images.unsplash.com/photo-1584447128309-b66b7a4d1b07?auto=format&fit=crop&w=900&q=70"; // seguridad / alerta
+    const IMG_ALERTS    = "https://images.unsplash.com/photo-1520975916090-3105956dac38?auto=format&fit=crop&w=900&q=70"; // ciudad / notificación
 
-    const profile = await requireAuthAndRole(1);
+    document.getElementById("imgRoutes").style.backgroundImage    = `url('${IMG_ROUTES}')`;
+    document.getElementById("imgPlanner").style.backgroundImage   = `url('${IMG_PLANNER}')`;
+    document.getElementById("imgIncidents").style.backgroundImage = `url('${IMG_INCIDENTS}')`;
+    document.getElementById("imgAlerts").style.backgroundImage    = `url('${IMG_ALERTS}')`;
+
+    // Protección + perfil
+    const profile = await requireAuthAndRole(1); // 1 = PASAJERO
     if (profile){
-      setText("who", `@${profile.username} · PASAJERO`);
-      setText("profileInfo", `Status: ${profile.status} · Email: ${profile.email || "—"} · Phone: ${profile.phone || "—"}`);
+      document.getElementById("who").textContent = `@${profile.username}`;
+      document.getElementById("welcomeTitle").textContent = `👋 Hola, ${profile.username}`;
     }
 
+    // Logout
     document.getElementById("logout").addEventListener("click", async () => {
       await signOut();
-      window.location.href = "pages/login.html";
+      window.location.href = "login.html"; // estás dentro de /pages/
     });
+
+    // Botones (por ahora placeholder)
+    document.getElementById("goRoutes").addEventListener("click", (e) => {
+      e.preventDefault();
+      alert("📌 Aquí irá el módulo de Rutas (pendiente).");
+    });
+    document.getElementById("goPlanner").addEventListener("click", (e) => {
+      e.preventDefault();
+      alert("📌 Aquí irá el Planificador (pendiente).");
+    });
+    document.getElementById("goIncidents").addEventListener("click", (e) => {
+      e.preventDefault();
+      alert("📌 Aquí irá Denuncias (pendiente).");
+    });
+    document.getElementById("goAlerts").addEventListener("click", (e) => {
+      e.preventDefault();
+      alert("📌 Aquí irán Alertas (pendiente).");
+    });
+
+    // Menú/Ajustes placeholder
+    document.getElementById("menuBtn").addEventListener("click", () => alert("☰ Menú (pendiente)"));
+    document.getElementById("settingsBtn").addEventListener("click", () => alert("⚙️ Ajustes (pendiente)"));
   </script>
 </body>
 </html>
+
+
 
