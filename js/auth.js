@@ -4,7 +4,6 @@ import { supabase } from "./supabaseClient.js";
 // SIGN UP PASAJERO
 // =============================
 export async function signUpPassenger({ username, email, phone, password }) {
-
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
@@ -46,4 +45,5 @@ export async function signOut() {
   const { error } = await supabase.auth.signOut();
   if (error) throw error;
 }
+
 
