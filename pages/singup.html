@@ -2,11 +2,10 @@
 <html lang="es">
 <head>
   <meta charset="utf-8" />
-  <base href="../">
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Registro | ManiRuta</title>
-  <link rel="stylesheet" href="css/base.css" />
-  <link rel="stylesheet" href="css/auth.css" />
+  <link rel="stylesheet" href="../css/base.css" />
+  <link rel="stylesheet" href="../css/auth.css" />
 </head>
 <body>
   <div class="auth-wrap">
@@ -32,7 +31,7 @@
             <div class="help">Registro</div>
             <div style="font-weight:900; font-size:20px;">Crear cuenta (Pasajero)</div>
           </div>
-          <a class="btn btn-ghost" href="pages/login.html">Volver</a>
+          <a class="btn btn-ghost" href="login.html">Volver</a>
         </div>
 
         <form class="form" id="signupForm" autocomplete="on">
@@ -75,8 +74,8 @@
   </div>
 
   <script type="module">
-    import { signUpPassenger } from "js/auth.js";
-    import { setError, setText } from "js/ui.js";
+    import { signUpPassenger } from "../js/auth.js";
+    import { setError, setText } from "../js/ui.js";
 
     const IMG_AUTH_BG = "https://images.unsplash.com/photo-1520975693411-6a0a3f0a1d1d?auto=format&fit=crop&w=1400&q=70";
     document.getElementById("heroImg").style.backgroundImage = `url('${IMG_AUTH_BG}')`;
@@ -110,6 +109,7 @@
   </script>
 </body>
 </html>
+
 
 
 
