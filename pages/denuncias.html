@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Denuncias | ManiRuta</title>
+  <link rel="stylesheet" href="../css/base.css"/>
+  <link rel="stylesheet" href="../css/home.css"/>
+</head>
+<body>
+
+<header class="nav">
+  <div class="container nav-inner">
+    <div class="brand"><span class="dot"></span> Denuncias</div>
+    <div class="right">
+      <a class="btn btn-ghost" href="home_passenger.html">Volver</a>
+      <button class="btn btn-ghost" id="logout">Salir</button>
+    </div>
+  </div>
+</header>
+
+<main class="container page stack">
+
+  <section class="card tile">
+    <div class="page-title">
+      <div>
+        <p class="sub">Crear una denuncia</p>
+        <h2 class="h1">🚨 Reportar incidente</h2>
+      </div>
+      <span class="chip" id="who">...</span>
+    </div>
+
+    <form class="form" id="incidentForm">
+      <div>
+        <label class="help">Categoría</label>
+        <select class="input" id="category" required></select>
+      </div>
+
+      <div>
+        <label class="help">Descripción</label>
+        <textarea class="input" id="description" rows="4" required placeholder="Describe lo que pasó..."></textarea>
+        <div class="help">Tu denuncia se guarda con estado <b>NEW</b>.</div>
+      </div>
+
+      <div id="err" class="error" style="display:none;"></div>
+      <div id="ok" class="toast" style="display:none;"></div>
+
+      <button class="btn btn-primary" type="submit">✅ Enviar denuncia</button>
+    </form>
+  </section>
+
+  <section class="card tile">
+    <div class="page-title">
+      <div>
+        <p class="sub">Historial</p>
+        <h2 class="h1">📄 Mis denuncias</h2>
+      </div>
+      <button class="btn btn-ghost" id="refresh">Actualizar</button>
+    </div>
+
+    <div style="overflow:auto;">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Categoría</th>
+            <th>Estado</th>
+            <th>Fecha</th>
+            <th>Descripción</th>
+          </tr>
+        </thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+  </section>
+
+</main>
+
+<script type="module">
+  import { requireAuthAndRole } from "../js/guard.js";
+  import { signOut } from "../js/auth.js";
+  import { setError, setText } from "../js/ui.js";
+  import { fetchCategories, createIncident, fetchMyIncidents } from "../js/incidents.js";
+
+  const profile = await requireAuthAndRole(1);
+  if (profile) setText("who", `@${profile.username}`);
+
+  document.getElementById("logout").addEventListener("click", async () => {
+    await signOut();
+    window.location.href = "login.html";
+  });
+
+  async function loadCategories(){
+    const cats = await fetchCategories();
+    const sel = document.getElementById("category");
+    sel.innerHTML = cats.map(c => `<option value="${c.id}">${c.name}</option>`).join("");
+  }
+
+  function statusChip(status){
+    if (status === "NEW") return `<span class="chip warn">NEW</span>`;
+    if (status === "RESOLVED") return `<span class="chip ok">RESOLVED</span>`;
+    if (status === "REJECTED") return `<span class="chip bad">REJECTED</span>`;
+    return `<span class="chip">${status}</span>`;
+  }
+
+  async function loadMyIncidents(){
+    const data = await fetchMyIncidents();
+    const tbody = document.getElementById("rows");
+    tbody.innerHTML = data.map(r => `
+      <tr>
+        <td>${r.incident_categories?.name || "—"}</td>
+        <td>${statusChip(r.status)}</td>
+        <td>${new Date(r.created_at).toLocaleString()}</td>
+        <td>${(r.description || "").slice(0,120)}</td>
+      </tr>
+    `).join("") || `<tr><td colspan="4">Sin denuncias aún.</td></tr>`;
+  }
+
+  await loadCategories();
+  await loadMyIncidents();
+
+  document.getElementById("refresh").addEventListener("click", loadMyIncidents);
+
+  document.getElementById("incidentForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    setError("err", "");
+    document.getElementById("ok").style.display = "none";
+
+    const category_id = Number(document.getElementById("category").value);
+    const description = document.getElementById("description").value.trim();
+
+    try{
+      await createIncident({ category_id, description });
+      document.getElementById("ok").textContent = "✅ Denuncia enviada. Quedó registrada como NEW.";
+      document.getElementById("ok").style.display = "block";
+      e.target.reset();
+      await loadMyIncidents();
+    }catch(err){
+      setError("err", err?.message || "Error enviando denuncia");
+    }
+  });
+</script>
+
+</body>
+</html>
