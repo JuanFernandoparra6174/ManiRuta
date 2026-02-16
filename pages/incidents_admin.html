@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Incidentes | Admin | ManiRuta</title>
+  <link rel="stylesheet" href="../css/base.css"/>
+  <link rel="stylesheet" href="../css/home.css"/>
+</head>
+<body>
+
+<header class="nav">
+  <div class="container nav-inner">
+    <div class="brand"><span class="dot"></span> Incidentes</div>
+    <div class="right">
+      <a class="btn btn-ghost" href="home_admin.html">Volver</a>
+      <button class="btn btn-ghost" id="logout">Salir</button>
+    </div>
+  </div>
+</header>
+
+<main class="container page stack">
+  <section class="card tile">
+    <div class="page-title">
+      <div>
+        <p class="sub">Control total</p>
+        <h2 class="h1">🛡️ Todas las denuncias</h2>
+      </div>
+      <span class="chip" id="who">...</span>
+    </div>
+
+    <div style="overflow:auto;">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Categoría</th>
+            <th>Estado</th>
+            <th>Usuario</th>
+            <th>Descripción</th>
+          </tr>
+        </thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+  </section>
+</main>
+
+<script type="module">
+  import { supabase } from "../js/supabaseClient.js";
+  import { requireAuthAndRole } from "../js/guard.js";
+  import { signOut } from "../js/auth.js";
+  import { setText } from "../js/ui.js";
+
+  const profile = await requireAuthAndRole(3);
+  if (profile) setText("who", `@${profile.username}`);
+
+  document.getElementById("logout").addEventListener("click", async () => {
+    await signOut();
+    window.location.href = "login.html";
+  });
+
+  function statusChip(status){
+    if (status === "NEW") return `<span class="chip warn">NEW</span>`;
+    if (status === "RESOLVED") return `<span class="chip ok">RESOLVED</span>`;
+    if (status === "REJECTED") return `<span class="chip bad">REJECTED</span>`;
+    return `<span class="chip">${status}</span>`;
+  }
+
+  const { data, error } = await supabase
+    .from("incidents")
+    .select(`
+      id, status, description, created_at,
+      incident_categories(name),
+      users:created_by_user_id(username)
+    `)
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    document.getElementById("rows").innerHTML =
+      `<tr><td colspan="5">Error: ${error.message}</td></tr>`;
+  } else {
+    document.getElementById("rows").innerHTML = (data || []).map(r => `
+      <tr>
+        <td>${new Date(r.created_at).toLocaleString()}</td>
+        <td>${r.incident_categories?.name || "—"}</td>
+        <td>${statusChip(r.status)}</td>
+        <td>${r.users?.username || "ANÓNIMO"}</td>
+        <td>${(r.description || "").slice(0,140)}</td>
+      </tr>
+    `).join("") || `<tr><td colspan="5">Sin denuncias aún.</td></tr>`;
+  }
+</script>
+
+</body>
+</html>
