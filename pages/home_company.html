@@ -159,7 +159,9 @@
     // Acciones placeholder
     const go = (msg) => () => alert(msg);
     document.getElementById("goFleet").addEventListener("click", go("📌 Mi Flota (pendiente)"));
-    document.getElementById("goDrivers").addEventListener("click", go("📌 Conductores (pendiente)"));
+    document.getElementById("goDrivers").addEventListener("click", () => {
+  window.location.href = "drivers.html";
+});
     document.getElementById("goStats").addEventListener("click", go("📌 Estadísticas (pendiente)"));
     document.getElementById("goCfg").addEventListener("click", go("📌 Configuración (pendiente)"));
 
@@ -169,6 +171,7 @@
 
 </body>
 </html>
+
 
 
 
