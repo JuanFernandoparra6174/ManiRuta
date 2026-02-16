@@ -75,7 +75,7 @@
 
   <script type="module">
     import { signUpPassenger } from "../js/auth.js";
-    import { setError, setText } from "../js/ui.js";
+    import { setError, setOk } from "../js/ui.js";
 
     const IMG_AUTH_BG = "https://images.unsplash.com/photo-1520975693411-6a0a3f0a1d1d?auto=format&fit=crop&w=1400&q=70";
     document.getElementById("heroImg").style.backgroundImage = `url('${IMG_AUTH_BG}')`;
@@ -83,8 +83,7 @@
     document.getElementById("signupForm").addEventListener("submit", async (e) => {
       e.preventDefault();
       setError("err", "");
-      setText("ok", "");
-      document.getElementById("ok").style.display = "none";
+      setOk("ok", "");
 
       const username = document.getElementById("username").value.trim();
       const phone = document.getElementById("phone").value.trim();
@@ -98,9 +97,14 @@
       }
 
       try{
-        await signUpPassenger({ username, email, phone, password });
-        setText("ok", "Cuenta creada. Si Supabase pide verificación por correo, confírmala y luego inicia sesión.");
-        document.getElementById("ok").style.display = "block";
+        const { needsEmailConfirm } = await signUpPassenger({ username, email, phone, password });
+
+        if (needsEmailConfirm){
+          setOk("ok", "Cuenta creada. Te enviamos un correo para confirmar. Confírmalo y luego inicia sesión.");
+        } else {
+          setOk("ok", "Cuenta creada correctamente. Ya puedes iniciar sesión.");
+        }
+
         e.target.reset();
       } catch(err){
         setError("err", err?.message || "Error creando cuenta");
@@ -109,6 +113,7 @@
   </script>
 </body>
 </html>
+
 
 
 
