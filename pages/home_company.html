@@ -2,58 +2,171 @@
 <html lang="es">
 <head>
   <meta charset="utf-8"/>
-  <base href="/ManiRuta/">
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Home Empresa | ManiRuta</title>
-  <link rel="stylesheet" href="css/base.css"/>
-  <link rel="stylesheet" href="css/home.css"/>
+  <title>Inicio Empresa | ManiRuta</title>
+  <link rel="stylesheet" href="../css/base.css"/>
+  <link rel="stylesheet" href="../css/home.css"/>
 </head>
 <body>
+
   <header class="nav">
     <div class="container nav-inner">
-      <div class="brand"><span class="dot"></span> ManiRuta</div>
-      <div class="right">
-        <span class="badge" id="who">...</span>
+      <div class="nav-left">
+        <button class="icon-btn" id="menuBtn" title="Menú" aria-label="Menú">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+            <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="brand">
+        <span class="dot"></span> Inicio
+      </div>
+
+      <div class="nav-right">
+        <span class="pill" id="who">...</span>
+
+        <button class="icon-btn" id="settingsBtn" title="Ajustes" aria-label="Ajustes">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+            <path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z" stroke="currentColor" stroke-width="2"/>
+            <path d="M19.4 15a7.9 7.9 0 0 0 .1-2l2-1.2-2-3.4-2.3.7a7.4 7.4 0 0 0-1.7-1l-.3-2.4H10.8l-.3 2.4a7.4 7.4 0 0 0-1.7 1l-2.3-.7-2 3.4 2 1.2a7.9 7.9 0 0 0 .1 2l-2 1.2 2 3.4 2.3-.7c.5.4 1.1.7 1.7 1l.3 2.4h4.4l.3-2.4c.6-.3 1.2-.6 1.7-1l2.3.7 2-3.4-2-1.2Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+          </svg>
+        </button>
+
         <button class="btn btn-ghost" id="logout">Salir</button>
       </div>
     </div>
   </header>
 
-  <main class="container grid">
-    <section class="card tile">
-      <h2>🏢 Home Empresa</h2>
-      <p>Prueba: aquí irá gestión de flota, conductores, rutas y alertas.</p>
-      <div class="preview" id="imgCompany"></div>
+  <main class="container home-wrap">
+
+    <!-- Welcome -->
+    <section class="card welcome">
+      <div class="welcome-top">
+        <div>
+          <h1 id="welcomeTitle">🏢 Panel Empresa</h1>
+          <p>Gestiona tu flota, conductores, rutas y revisa estadísticas.</p>
+        </div>
+        <span class="pill">EMPRESA_BUSES</span>
+      </div>
+
+      <div class="footer-actions">
+        <span class="badge">🚌 Flota</span>
+        <span class="badge">👨‍✈️ Conductores</span>
+        <span class="badge">📊 Estadísticas</span>
+        <span class="badge">⚙️ Configuración</span>
+      </div>
     </section>
 
-    <section class="card tile">
-      <h2>🔧 Estado</h2>
-      <p><b>Rol:</b> EMPRESA_BUSES</p>
-      <p class="help" id="profileInfo"></p>
-      <p class="help"><b>company_id:</b> <span id="cid">—</span></p>
+    <!-- GRID 2x2 -->
+    <section class="company-grid">
+
+      <article class="company-card">
+        <div class="company-top">
+          <div class="company-avatar"><div class="img" id="imgFleet"></div></div>
+        </div>
+        <p class="company-title">Mi Flota</p>
+        <p class="company-sub">Buses activos y estado general</p>
+        <div class="company-actions">
+          <button class="btn-mini" id="goFleet">ver</button>
+        </div>
+      </article>
+
+      <article class="company-card">
+        <div class="company-top">
+          <div class="company-avatar"><div class="img" id="imgDrivers"></div></div>
+        </div>
+        <p class="company-title">Conductores</p>
+        <p class="company-sub">Lista y gestión de conductores</p>
+        <div class="company-actions">
+          <button class="btn-mini secondary" id="goDrivers">manejar</button>
+        </div>
+      </article>
+
+      <article class="company-card">
+        <div class="company-top">
+          <div class="company-avatar"><div class="img" id="imgStats"></div></div>
+        </div>
+        <p class="company-title">Estadísticas</p>
+        <p class="company-sub">Ver métricas y rendimiento</p>
+        <div class="company-actions">
+          <button class="btn-mini" id="goStats">Checar</button>
+        </div>
+      </article>
+
+      <article class="company-card">
+        <div class="company-top">
+          <div class="company-avatar"><div class="img" id="imgCfg"></div></div>
+        </div>
+        <p class="company-title">Configuración</p>
+        <p class="company-sub">Ajustes de la empresa</p>
+        <div class="company-actions">
+          <button class="btn-mini secondary" id="goCfg">editar</button>
+        </div>
+      </article>
+
     </section>
+
+    <div class="section-title">vista de flotas</div>
+
+    <section class="fleet-hero">
+      <div class="hero-img" id="imgHero"></div>
+      <div class="hero-body">
+        <div class="hero-kpi" id="fleetKpi">
+          <b>—</b>
+        </div>
+        <div class="help" id="companyInfo"></div>
+      </div>
+    </section>
+
   </main>
 
   <script type="module">
-    import { requireAuthAndRole } from "js/guard.js";
-    import { signOut } from "js/auth.js";
-    import { setText } from "js/ui.js";
+    import { requireAuthAndRole } from "../js/guard.js";
+    import { signOut } from "../js/auth.js";
 
-    const IMG_HOME_COMPANY = "https://images.unsplash.com/photo-1520106212299-d99c443e4568?auto=format&fit=crop&w=1400&q=70";
-    document.getElementById("imgCompany").style.backgroundImage = `url('${IMG_HOME_COMPANY}')`;
+    // Imágenes de prueba (cámbialas luego por tus links)
+    const IMG_FLEET   = "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=900&q=70"; // bus
+    const IMG_DRIVERS = "https://images.unsplash.com/photo-1529070538774-1843cb3265df?auto=format&fit=crop&w=900&q=70"; // persona
+    const IMG_STATS   = "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=900&q=70"; // stats
+    const IMG_CFG     = "https://images.unsplash.com/photo-1581092795360-fd1ca04f0952?auto=format&fit=crop&w=900&q=70"; // config
+    const IMG_HERO    = "https://images.unsplash.com/photo-1483729558449-99ef09a8c325?auto=format&fit=crop&w=1400&q=70"; // flota noche
 
-    const profile = await requireAuthAndRole(2);
+    document.getElementById("imgFleet").style.backgroundImage   = `url('${IMG_FLEET}')`;
+    document.getElementById("imgDrivers").style.backgroundImage = `url('${IMG_DRIVERS}')`;
+    document.getElementById("imgStats").style.backgroundImage   = `url('${IMG_STATS}')`;
+    document.getElementById("imgCfg").style.backgroundImage     = `url('${IMG_CFG}')`;
+    document.getElementById("imgHero").style.backgroundImage    = `url('${IMG_HERO}')`;
+
+    const profile = await requireAuthAndRole(2); // 2 = EMPRESA
     if (profile){
-      setText("who", `@${profile.username} · EMPRESA`);
-      setText("profileInfo", `Status: ${profile.status} · Email: ${profile.email || "—"}`);
-      setText("cid", profile.company_id || "SIN EMPRESA ASIGNADA");
+      document.getElementById("who").textContent = `@${profile.username}`;
+      document.getElementById("welcomeTitle").textContent = `🏢 Bienvenido, ${profile.username}`;
+
+      const cid = profile.company_id || "SIN EMPRESA";
+      document.getElementById("companyInfo").textContent = `company_id: ${cid}`;
+
+      // KPI fake por ahora (luego lo conectamos a buses)
+      document.getElementById("fleetKpi").innerHTML =
+        `<b>10</b> buses activos, <b>2</b> buses en mantenimiento`;
     }
 
     document.getElementById("logout").addEventListener("click", async () => {
       await signOut();
-      window.location.href = "pages/login.html";
+      window.location.href = "login.html";
     });
+
+    // Acciones placeholder
+    const go = (msg) => () => alert(msg);
+    document.getElementById("goFleet").addEventListener("click", go("📌 Mi Flota (pendiente)"));
+    document.getElementById("goDrivers").addEventListener("click", go("📌 Conductores (pendiente)"));
+    document.getElementById("goStats").addEventListener("click", go("📌 Estadísticas (pendiente)"));
+    document.getElementById("goCfg").addEventListener("click", go("📌 Configuración (pendiente)"));
+
+    document.getElementById("menuBtn").addEventListener("click", () => alert("☰ Menú (pendiente)"));
+    document.getElementById("settingsBtn").addEventListener("click", () => alert("⚙️ Ajustes (pendiente)"));
   </script>
+
 </body>
 </html>
 
