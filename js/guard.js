@@ -2,9 +2,9 @@ import { supabase } from "./supabaseClient.js";
 import { getMyProfile } from "./profile.js";
 
 function roleToHome(roleId) {
-  if (roleId === 1) return "pages/home_passenger.html";
-  if (roleId === 2) return "pages/home_company.html";
-  if (roleId === 3) return "pages/home_admin.html";
+  if (roleId === 1) return "home_passenger.html";
+  if (roleId === 2) return "home_company.html";
+  if (roleId === 3) return "home_admin.html";
   return "pages/login.html";
 }
 
@@ -38,5 +38,6 @@ export async function redirectToRoleHome() {
   }
   window.location.href = roleToHome(profile.role_id);
 }
+
 
 
