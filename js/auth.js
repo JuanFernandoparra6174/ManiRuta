@@ -3,12 +3,18 @@ import { supabase } from "./supabaseClient.js";
 const PASSENGER_ROLE_ID = 1; // 1 PASAJERO, 2 EMPRESA_BUSES, 3 SUPER_ADMIN
 
 export async function signUpPassenger({ username, email, phone, password }) {
-  // 1) Crear usuario en Supabase Auth (hash lo maneja Auth)
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
     options: { data: { username, phone } }
   });
+  if (error) throw error;
+
+  // Si session es null, hay verificación por correo activada
+  const needsEmailConfirm = !data.session;
+
+  return { authUser: data.user, needsEmailConfirm };
+}
   if (error) throw error;
 
   const authUser = data.user;
@@ -46,3 +52,4 @@ export async function signOut() {
   const { error } = await supabase.auth.signOut();
   if (error) throw error;
 }
+
