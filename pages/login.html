@@ -1,12 +1,11 @@
 <!doctype html>
 <html lang="es">
 <head>
-  <base href="/ManiRuta/">
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Login | ManiRuta</title>
-  <link rel="stylesheet" href="css/base.css" />
-  <link rel="stylesheet" href="css/auth.css" />
+  <link rel="stylesheet" href="../css/base.css" />
+  <link rel="stylesheet" href="../css/auth.css" />
 </head>
 <body>
   <div class="auth-wrap">
@@ -33,7 +32,7 @@
             <div class="help">Bienvenido</div>
             <div style="font-weight:900; font-size:20px;">Iniciar sesión</div>
           </div>
-          <a class="btn btn-ghost" href="pages/singup.html">Crear cuenta</a>
+          <a class="btn btn-ghost" href="signup.html">Crear cuenta</a>
         </div>
 
         <form class="form" id="loginForm" autocomplete="on">
@@ -52,7 +51,7 @@
           <button class="btn btn-primary" type="submit">🔐 Entrar</button>
 
           <div class="help">
-            ¿No tienes cuenta? <a href="pages/signup.html" style="color:var(--primary); font-weight:900;">Regístrate</a>
+            ¿No tienes cuenta? <a href="signup.html" style="color:var(--primary); font-weight:900;">Regístrate</a>
           </div>
         </form>
       </section>
@@ -60,9 +59,9 @@
   </div>
 
   <script type="module">
-    import { signIn } from "js/auth.js";
-    import { setError } from "js/ui.js";
-    import { redirectToRoleHome } from "js/guard.js";
+    import { signIn } from "../js/auth.js";
+    import { setError } from "../js/ui.js";
+    import { redirectToRoleHome } from "../js/guard.js";
 
     const IMG_AUTH_BG = "https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?auto=format&fit=crop&w=1400&q=70";
     document.getElementById("heroImg").style.backgroundImage = `url('${IMG_AUTH_BG}')`;
@@ -84,6 +83,7 @@
   </script>
 </body>
 </html>
+
 
 
 
