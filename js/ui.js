@@ -9,3 +9,11 @@ export function setError(id, msg) {
   el.textContent = msg ?? "";
   el.style.display = msg ? "block" : "none";
 }
+
+// 👇 AGREGA ESTO
+export function setOk(id, msg) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.textContent = msg ?? "";
+  el.style.display = msg ? "block" : "none";
+}
