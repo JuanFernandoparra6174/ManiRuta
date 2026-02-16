@@ -2,10 +2,11 @@
 <html lang="es">
 <head>
   <meta charset="utf-8"/>
+  <base href="/ManiRuta/">
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Home Admin | ManiRuta</title>
-  <link rel="stylesheet" href="/css/base.css"/>
-  <link rel="stylesheet" href="/css/home.css"/>
+  <link rel="stylesheet" href="css/base.css"/>
+  <link rel="stylesheet" href="css/home.css"/>
 </head>
 <body>
   <header class="nav">
@@ -33,9 +34,9 @@
   </main>
 
   <script type="module">
-    import { requireAuthAndRole } from "/js/guard.js";
-    import { signOut } from "/js/auth.js";
-    import { setText } from "/js/ui.js";
+    import { requireAuthAndRole } from "js/guard.js";
+    import { signOut } from "js/auth.js";
+    import { setText } from "js/ui.js";
 
     const IMG_HOME_ADMIN = "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=1400&q=70";
     document.getElementById("imgAdmin").style.backgroundImage = `url('${IMG_HOME_ADMIN}')`;
@@ -48,8 +49,10 @@
 
     document.getElementById("logout").addEventListener("click", async () => {
       await signOut();
-      window.location.href = "/pages/login.html";
+      window.location.href = "pages/login.html";
     });
   </script>
 </body>
 </html>
+
+
