@@ -124,6 +124,7 @@
   <script type="module">
     import { requireAuthAndRole } from "../js/guard.js";
     import { signOut } from "../js/auth.js";
+    import { countCompanyBusesByStatus } from "../js/buses.js";
 
     // Imágenes de prueba (cámbialas luego por tus links)
     const IMG_FLEET   = "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=900&q=70"; // bus
@@ -146,9 +147,15 @@
       const cid = profile.company_id || "SIN EMPRESA";
       document.getElementById("companyInfo").textContent = `company_id: ${cid}`;
 
-      // KPI fake por ahora (luego lo conectamos a buses)
-      document.getElementById("fleetKpi").innerHTML =
-        `<b>10</b> buses activos, <b>2</b> buses en mantenimiento`;
+     // KPI real desde Supabase (tabla: buses)
+if (profile.company_id){
+  const kpi = await countCompanyBusesByStatus(profile.company_id);
+  document.getElementById("fleetKpi").innerHTML =
+    `<b>${kpi.active}</b> activos · <b>${kpi.maintenance}</b> mantenimiento · <b>${kpi.inactive}</b> inactivos · <b>${kpi.total}</b> total`;
+} else {
+  document.getElementById("fleetKpi").innerHTML =
+    `⚠️ Tu usuario empresa no tiene company_id asignado.`;
+}
     }
 
     document.getElementById("logout").addEventListener("click", async () => {
@@ -158,7 +165,9 @@
 
     // Acciones placeholder
     const go = (msg) => () => alert(msg);
-    document.getElementById("goFleet").addEventListener("click", go("📌 Mi Flota (pendiente)"));
+    document.getElementById("goFleet").addEventListener("click", () => {
+  window.location.href = "buses.html";
+});
     document.getElementById("goDrivers").addEventListener("click", () => {
   window.location.href = "drivers.html";
 });
@@ -171,6 +180,7 @@
 
 </body>
 </html>
+
 
 
 
