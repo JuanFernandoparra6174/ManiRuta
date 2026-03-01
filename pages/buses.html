@@ -1,0 +1,400 @@
+<!-- pages/buses.html -->
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Mi Flota | ManiRuta</title>
+  <link rel="stylesheet" href="../css/base.css"/>
+  <link rel="stylesheet" href="../css/home.css"/>
+  <link rel="stylesheet" href="../css/buses.css"/>
+</head>
+<body>
+
+<header class="nav">
+  <div class="container nav-inner">
+    <div class="brand"><span class="dot"></span> Mi Flota</div>
+
+    <div class="nav-right">
+      <span class="pill" id="who">...</span>
+      <a class="btn btn-ghost" href="home_company.html">Volver</a>
+      <button class="btn btn-ghost" id="logout">Salir</button>
+    </div>
+  </div>
+</header>
+
+<main class="container fleet-page">
+
+  <section class="fleet-hero card">
+    <div class="decor"></div>
+    <div class="bg" id="heroBg"></div>
+
+    <div class="content">
+      <div class="hero-top">
+        <div>
+          <h1 class="hero-title">🚌 Mi Flota (CRUD)</h1>
+          <p class="hero-sub">Crea buses, edita datos, elimina y cambia estados: 🟢 ACTIVE · 🛠️ MAINTENANCE · ⛔ INACTIVE.</p>
+        </div>
+
+        <div class="hero-tags">
+          <span class="chip" id="companyChip">🏷️ company_id: ...</span>
+          <span class="chip">🏢 EMPRESA_BUSES</span>
+        </div>
+      </div>
+
+      <div class="kpi-strip" id="kpis">
+        <div class="kpi"><div class="n">—</div><div class="l">TOTAL</div></div>
+        <div class="kpi"><div class="n">—</div><div class="l">ACTIVOS</div></div>
+        <div class="kpi"><div class="n">—</div><div class="l">MANTEN.</div></div>
+        <div class="kpi"><div class="n">—</div><div class="l">INACTIVOS</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="fleet-grid">
+
+    <!-- Form -->
+    <section class="card panel">
+      <div class="panel-title">
+        <h3 id="formTitle">➕ Registrar bus</h3>
+        <span class="mini-muted" id="formHint">Crea rápido tu flota 🚀</span>
+      </div>
+
+      <form id="busForm" class="grid1">
+        <input type="hidden" id="busId"/>
+
+        <div class="grid2">
+          <div>
+            <label class="mini-muted">Placa *</label>
+            <input class="input" id="plate" placeholder="ABC123" required maxlength="12"/>
+          </div>
+
+          <div>
+            <label class="mini-muted">Código interno</label>
+            <input class="input" id="internalCode" placeholder="BUS-01 (opcional)" maxlength="30"/>
+          </div>
+        </div>
+
+        <div>
+          <label class="mini-muted">Estado *</label>
+          <select class="input" id="status" required>
+            <option value="ACTIVE">🟢 ACTIVE</option>
+            <option value="MAINTENANCE">🛠️ MAINTENANCE</option>
+            <option value="INACTIVE">⛔ INACTIVE</option>
+          </select>
+        </div>
+
+        <div class="actions-row">
+          <button class="btn btn-primary" type="submit" id="saveBtn">💾 Guardar</button>
+          <button class="btn-soft" type="button" id="cancelEditBtn" style="display:none;">↩️ Cancelar edición</button>
+          <button class="btn-soft btn-danger" type="button" id="clearBtn">🧹 Limpiar</button>
+        </div>
+
+        <div class="toast-ok" id="ok"></div>
+        <div class="toast-err" id="err"></div>
+
+        <div class="help">🔒 Nota: si Supabase tiene RLS activado y te sale “permission denied”, te faltan políticas para CRUD en <b>buses</b>.</div>
+      </form>
+    </section>
+
+    <!-- List -->
+    <section class="card panel">
+      <div class="panel-title">
+        <h3>📋 Lista de buses</h3>
+        <button class="btn-soft" id="refreshBtn">🔄 Refrescar</button>
+      </div>
+
+      <div class="grid2" style="margin-bottom:10px;">
+        <input class="input" id="search" placeholder="Buscar por placa o código 🔎"/>
+        <select class="input" id="filterStatus">
+          <option value="">🎯 Todos los estados</option>
+          <option value="ACTIVE">🟢 ACTIVE</option>
+          <option value="MAINTENANCE">🛠️ MAINTENANCE</option>
+          <option value="INACTIVE">⛔ INACTIVE</option>
+        </select>
+      </div>
+
+      <div style="overflow:auto;">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Placa</th>
+              <th>Código</th>
+              <th>Estado</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </div>
+
+      <div id="empty" class="empty" style="display:none; margin-top:10px;">
+        <p class="t">😴 No hay buses aún</p>
+        <p class="p">Crea tu primer bus arriba y aquí aparece automático.</p>
+      </div>
+    </section>
+
+  </section>
+
+</main>
+
+<script type="module">
+  import { requireAuthAndRole } from "../js/guard.js";
+  import { signOut } from "../js/auth.js";
+  import { setText, setError, setOk } from "../js/ui.js";
+  import {
+    fetchCompanyBuses,
+    createBus,
+    updateBus,
+    deleteBus,
+    countCompanyBusesByStatus
+  } from "../js/buses.js";
+
+  // Imagen (URL web)
+  const HERO_IMG = "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=1400&q=70";
+  document.getElementById("heroBg").style.backgroundImage = `url('${HERO_IMG}')`;
+
+  const profile = await requireAuthAndRole(2); // EMPRESA
+  if (!profile) throw new Error("No auth (guard redirige).");
+
+  setText("who", `@${profile.username}`);
+
+  const companyId = profile.company_id;
+  document.getElementById("companyChip").textContent =
+    companyId ? `🏷️ company_id: ${companyId}` : "⚠️ Sin company_id asignado";
+
+  // DOM
+  const form = document.getElementById("busForm");
+  const busIdEl = document.getElementById("busId");
+  const plateEl = document.getElementById("plate");
+  const internalEl = document.getElementById("internalCode");
+  const statusEl = document.getElementById("status");
+
+  const formTitle = document.getElementById("formTitle");
+  const formHint = document.getElementById("formHint");
+  const cancelEditBtn = document.getElementById("cancelEditBtn");
+  const clearBtn = document.getElementById("clearBtn");
+
+  const rowsEl = document.getElementById("rows");
+  const emptyEl = document.getElementById("empty");
+  const searchEl = document.getElementById("search");
+  const filterStatusEl = document.getElementById("filterStatus");
+  const refreshBtn = document.getElementById("refreshBtn");
+  const kpisEl = document.getElementById("kpis");
+
+  document.getElementById("logout").addEventListener("click", async () => {
+    await signOut();
+    window.location.href = "login.html";
+  });
+
+  // Si no hay company_id, bloqueamos
+  if (!companyId){
+    plateEl.disabled = true;
+    internalEl.disabled = true;
+    statusEl.disabled = true;
+    form.querySelector("button[type='submit']").disabled = true;
+    setError("err", "Tu usuario EMPRESA no tiene company_id. Así no se puede guardar buses porque buses.company_id es NOT NULL.");
+  }
+
+  let all = [];
+
+  function esc(s){
+    return String(s ?? "")
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;")
+      .replaceAll("'","&#039;");
+  }
+
+  function statusChip(status){
+    if (status === "ACTIVE") return `<span class="chip ok">🟢 ACTIVE</span>`;
+    if (status === "MAINTENANCE") return `<span class="chip warn">🛠️ MAINTENANCE</span>`;
+    return `<span class="chip bad">⛔ INACTIVE</span>`;
+  }
+
+  function setEditMode(bus){
+    busIdEl.value = bus.id;
+    plateEl.value = bus.plate || "";
+    internalEl.value = bus.internal_code || "";
+    statusEl.value = bus.status || "ACTIVE";
+
+    formTitle.textContent = "✏️ Editar bus";
+    formHint.textContent = "Edita y guarda cambios sin dolor 😎";
+    cancelEditBtn.style.display = "inline-flex";
+    setOk("ok", "Modo edición activado ✅");
+    setError("err", "");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function clearForm(){
+    busIdEl.value = "";
+    plateEl.value = "";
+    internalEl.value = "";
+    statusEl.value = "ACTIVE";
+
+    formTitle.textContent = "➕ Registrar bus";
+    formHint.textContent = "Crea rápido tu flota 🚀";
+    cancelEditBtn.style.display = "none";
+  }
+
+  async function renderKpis(){
+    if (!companyId) return;
+    const k = await countCompanyBusesByStatus(companyId);
+    kpisEl.innerHTML = `
+      <div class="kpi"><div class="n">${k.total}</div><div class="l">TOTAL</div></div>
+      <div class="kpi"><div class="n">${k.active}</div><div class="l">ACTIVOS</div></div>
+      <div class="kpi"><div class="n">${k.maintenance}</div><div class="l">MANTEN.</div></div>
+      <div class="kpi"><div class="n">${k.inactive}</div><div class="l">INACTIVOS</div></div>
+    `;
+  }
+
+  function renderTable(){
+    const q = (searchEl.value || "").trim().toLowerCase();
+    const st = filterStatusEl.value;
+
+    const filtered = all.filter(b => {
+      const hay = `${b.plate || ""} ${b.internal_code || ""}`.toLowerCase();
+      const okQ = !q || hay.includes(q);
+      const okS = !st || b.status === st;
+      return okQ && okS;
+    });
+
+    emptyEl.style.display = filtered.length ? "none" : "block";
+
+    rowsEl.innerHTML = filtered.map(b => `
+      <tr>
+        <td><b>${esc(b.plate)}</b></td>
+        <td>${esc(b.internal_code || "—")}</td>
+        <td>${statusChip(b.status)}</td>
+        <td>
+          <div class="row-actions">
+            <button class="pill-btn active icon" data-act="status" data-id="${b.id}" data-status="ACTIVE" title="Poner ACTIVE">🟢</button>
+            <button class="pill-btn maint icon" data-act="status" data-id="${b.id}" data-status="MAINTENANCE" title="Poner MAINTENANCE">🛠️</button>
+            <button class="pill-btn inact icon" data-act="status" data-id="${b.id}" data-status="INACTIVE" title="Poner INACTIVE">⛔</button>
+
+            <button class="pill-btn icon" data-act="edit" data-id="${b.id}" title="Editar">✏️</button>
+            <button class="pill-btn inact icon" data-act="delete" data-id="${b.id}" title="Eliminar">🗑️</button>
+          </div>
+        </td>
+      </tr>
+    `).join("") || "";
+  }
+
+  async function refresh(){
+    try{
+      setError("err", "");
+      setOk("ok", "");
+      if (!companyId) return;
+
+      all = await fetchCompanyBuses(companyId);
+      renderTable();
+      await renderKpis();
+    }catch(e){
+      console.error(e);
+      setError("err", e?.message || String(e));
+    }
+  }
+
+  // Events
+  searchEl.addEventListener("input", renderTable);
+  filterStatusEl.addEventListener("change", renderTable);
+  refreshBtn.addEventListener("click", refresh);
+
+  cancelEditBtn.addEventListener("click", () => {
+    clearForm();
+    setOk("ok", "Edición cancelada 👍");
+    setError("err", "");
+  });
+
+  clearBtn.addEventListener("click", () => {
+    clearForm();
+    setOk("ok", "Formulario limpio 🧼");
+    setError("err", "");
+  });
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    try{
+      setError("err", "");
+      setOk("ok", "");
+
+      if (!companyId) return;
+
+      const plate = plateEl.value.trim().toUpperCase();
+      const internal_code = internalEl.value.trim();
+      const status = statusEl.value;
+
+      if (!plate) return setError("err", "La placa es obligatoria.");
+
+      const id = busIdEl.value;
+
+      if (!id){
+        await createBus({ company_id: companyId, plate, internal_code, status });
+        setOk("ok", "Bus creado ✅");
+      }else{
+        await updateBus(id, companyId, { plate, internal_code: internal_code || null, status });
+        setOk("ok", "Bus actualizado ✅");
+      }
+
+      clearForm();
+      await refresh();
+    }catch(e){
+      console.error(e);
+      // Mensaje más humano para errores típicos (placa duplicada)
+      const msg = e?.message || String(e);
+      if (msg.toLowerCase().includes("duplicate") || msg.toLowerCase().includes("unique")){
+        setError("err", "Esa placa ya existe (duplicada). Usa otra.");
+      }else{
+        setError("err", msg);
+      }
+    }
+  });
+
+  rowsEl.addEventListener("click", async (e) => {
+    const btn = e.target.closest("button");
+    if (!btn) return;
+
+    const act = btn.dataset.act;
+    const id = btn.dataset.id;
+    if (!act || !id) return;
+
+    try{
+      setError("err", "");
+      setOk("ok", "");
+
+      if (act === "edit"){
+        const bus = all.find(x => x.id === id);
+        if (bus) setEditMode(bus);
+        return;
+      }
+
+      if (act === "delete"){
+        if (!confirm("¿Eliminar este bus? 🗑️")) return;
+        await deleteBus(id, companyId);
+        setOk("ok", "Bus eliminado ✅");
+        if (busIdEl.value === id) clearForm();
+        await refresh();
+        return;
+      }
+
+      if (act === "status"){
+        const newStatus = btn.dataset.status;
+        await updateBus(id, companyId, { status: newStatus });
+        setOk("ok", `Estado actualizado a ${newStatus} ✅`);
+        await refresh();
+        return;
+      }
+    }catch(e2){
+      console.error(e2);
+      setError("err", e2?.message || String(e2));
+    }
+  });
+
+  // Init
+  await refresh();
+</script>
+
+</body>
+</html>
