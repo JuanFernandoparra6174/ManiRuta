@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8"/>
+    <title>Admin - Rutas | ManiRuta</title>
+    <link rel="stylesheet" href="../css/base.css"/>
+    <link rel="stylesheet" href="../css/home.css"/>
+</head>
+<body>
+    <header class="nav">
+        <div class="container nav-inner">
+            <div class="brand"><span class="dot"></span> Definición de Rutas</div>
+            <a href="home_admin.html" class="btn btn-ghost">Volver</a>
+        </div>
+    </header>
+
+    <main class="container page stack">
+        <section class="card tile">
+            <h2 class="h1">🗺️ Crear Nueva Ruta Oficial</h2>
+            <form id="routeForm" class="stack" style="margin-top:15px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <input type="text" id="rCode" class="input" placeholder="Código (Ej: R-10)" required>
+                <input type="text" id="rName" class="input" placeholder="Nombre (Ej: Chipre - Centro)" required>
+                <select id="rCompany" class="input" required>
+                    <option value="">Asignar a Empresa...</option>
+                </select>
+                <input type="text" id="rDesc" class="input" placeholder="Descripción del recorrido">
+                <button type="submit" class="btn btn-primary" style="grid-column: span 2;">➕ Guardar Ruta</button>
+            </form>
+        </section>
+
+        <section class="card tile">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Código</th>
+                        <th>Ruta / Empresa</th>
+                        <th>Estado</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+                <tbody id="routesTable"></tbody>
+            </table>
+        </section>
+    </main>
+
+    <script type="module">
+        import { fetchAllRoutes, createRoute, deleteRoute } from "../js/routes.js";
+        import { fetchCompanies } from "../js/companies.js";
+        import { requireAuthAndRole } from "../js/guard.js";
+
+        await requireAuthAndRole(3);
+
+        const table = document.getElementById("routesTable");
+        const form = document.getElementById("routeForm");
+        const companySelect = document.getElementById("rCompany");
+
+        async function load() {
+            // Cargar select de empresas
+            const companies = await fetchCompanies();
+            companySelect.innerHTML = '<option value="">Asignar a Empresa...</option>' + 
+                companies.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+
+            // Cargar tabla de rutas
+            const routes = await fetchAllRoutes();
+            table.innerHTML = routes.map(r => `
+                <tr>
+                    <td><span class="pill">${r.code}</span></td>
+                    <td><b>${r.name}</b><br><small>${r.companies?.name || 'Sin empresa'}</small></td>
+                    <td><span class="chip ok">${r.status}</span></td>
+                    <td><button class="btn-mini bad" onclick="removeRoute('${r.id}')">Eliminar</button></td>
+                </tr>
+            `).join('');
+        }
+
+        form.onsubmit = async (e) => {
+            e.preventDefault();
+            await createRoute({
+                code: document.getElementById("rCode").value,
+                name: document.getElementById("rName").value,
+                company_id: document.getElementById("rCompany").value,
+                description: document.getElementById("rDesc").value
+            });
+            form.reset();
+            load();
+        };
+
+        window.removeRoute = async (id) => {
+            if(confirm("¿Eliminar esta ruta?")) { await deleteRoute(id); load(); }
+        };
+
+        load();
+    </script>
+</body>
+</html>

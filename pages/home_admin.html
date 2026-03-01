@@ -12,107 +12,69 @@
   <header class="nav">
     <div class="container nav-inner">
       <div class="nav-left">
-        <button class="icon-btn" id="menuBtn" title="Menú" aria-label="Menú">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-            <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-          </svg>
-        </button>
+        <div class="brand"><span class="dot"></span> ManiRuta Admin</div>
       </div>
-
-      <div style="display:flex; align-items:center; gap:10px;">
-        <div class="brand">
-          <span class="dot"></span> Inicio
-        </div>
-      </div>
-
       <div class="nav-right">
         <span class="pill" id="who">...</span>
-        <button class="icon-btn" id="settingsBtn" title="Ajustes" aria-label="Ajustes">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-            <path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z" stroke="currentColor" stroke-width="2"/>
-            <path d="M19.4 15a7.9 7.9 0 0 0 .1-2l2-1.2-2-3.4-2.3.7a7.4 7.4 0 0 0-1.7-1l-.3-2.4H10.8l-.3 2.4a7.4 7.4 0 0 0-1.7 1l-2.3-.7-2 3.4 2 1.2a7.9 7.9 0 0 0 .1 2l-2 1.2 2 3.4 2.3-.7c.5.4 1.1.7 1.7 1l.3 2.4h4.4l.3-2.4c.6-.3 1.2-.6 1.7-1l2.3.7 2-3.4-2-1.2Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
-          </svg>
-        </button>
         <button class="btn btn-ghost" id="logout">Salir</button>
       </div>
     </div>
   </header>
 
   <main class="container home-wrap">
-
-    <!-- Welcome -->
     <section class="card welcome">
       <div class="welcome-top">
         <div>
-          <h1 id="welcomeTitle">🛡️ Panel Admin</h1>
-          <p>Gestiona empresas, usuarios, rutas y revisa incidentes. Control total del sistema.</p>
+          <h1 id="welcomeTitle">🛡️ Panel de Control</h1>
+          <p>Gestiona paraderos, empresas y publica alertas para toda la ciudad.</p>
         </div>
         <span class="pill">SUPER_ADMIN</span>
       </div>
-
-      <div class="footer-actions">
-        <span class="badge">📊 Estadísticas</span>
-        <span class="badge">🏢 Empresas</span>
-        <span class="badge">👥 Usuarios</span>
-        <span class="badge">🛡️ Políticas</span>
-      </div>
     </section>
 
-    <!-- Grid tipo mockup -->
-    <section class="admin-grid" style="position:relative; z-index:2;">
+    <section class="admin-grid" style="position:relative; z-index:2; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 18px;">
 
-      <a class="admin-card" href="#" id="goFleet">
-        <div class="admin-img" id="imgFleet"></div>
+      <a class="admin-card" href="admin_stops.html">
+        <div class="admin-img" style="background-image: url('https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=400&q=60')"></div>
         <div class="admin-body">
-          <div class="admin-title">🚌 Monitoreo</div>
-          <div class="admin-sub">Visualiza en tiempo real la ubicación y el estado de cada bus.</div>
+          <div class="admin-title">📍 Gestionar Paraderos</div>
+          <div class="admin-sub">Crear, editar y eliminar puntos de parada en el mapa.</div>
         </div>
       </a>
 
-      <a class="admin-card" href="#" id="goRoutes">
-        <div class="admin-img" id="imgRoutes"></div>
+      <a class="admin-card" href="admin_alerts.html">
+        <div class="admin-img" style="background-image: url('https://images.unsplash.com/photo-1590079015191-f569a6924d5c?auto=format&fit=crop&w=400&q=60')"></div>
         <div class="admin-body">
-          <div class="admin-title">🗺️ Gestión de rutas</div>
-          <div class="admin-sub">Actualiza rutas, paraderos y horarios de forma centralizada.</div>
+          <div class="admin-title">🔔 Alertas Operativas</div>
+          <div class="admin-sub">Publica desvíos o cierres viales en tiempo real.</div>
         </div>
       </a>
 
-      <a class="admin-card" href="#" id="goAlerts">
-        <div class="admin-img" id="imgAlerts"></div>
+      <a class="admin-card" href="admin_companies.html">
+        <div class="admin-img" style="background-image: url('https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&w=400&q=60')"></div>
         <div class="admin-body">
-          <div class="admin-title">🔔 Alertas operativas</div>
-          <div class="admin-sub">Publica avisos sobre desvíos, accidentes u obras en rutas.</div>
+          <div class="admin-title">🏢 Empresas de Bus</div>
+          <div class="admin-sub">Registra y administra las empresas de transporte.</div>
         </div>
       </a>
 
-      <a class="admin-card" href="#" id="goIncidents">
-        <div class="admin-img" id="imgIncidents"></div>
+      <a class="admin-card" href="incidents_admin.html">
+        <div class="admin-img" style="background-image: url('https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=400&q=60')"></div>
         <div class="admin-body">
-          <div class="admin-title">🚨 Incidentes</div>
-          <div class="admin-sub">Recibe y administra denuncias de usuarios en un solo lugar.</div>
+          <div class="admin-title">🚨 Revisar Incidentes</div>
+          <div class="admin-sub">Ver denuncias de robo, acoso o mal comportamiento.</div>
         </div>
       </a>
 
     </section>
-
   </main>
 
   <script type="module">
     import { requireAuthAndRole } from "../js/guard.js";
     import { signOut } from "../js/auth.js";
 
-    // Imágenes de prueba (cámbialas luego por links de Supabase Storage)
-    const IMG_FLEET     = "https://ultatek.com/wp-content/uploads/2023/02/Sistema-de-monitoreo-OEE.jpg"; // monitoreo / pantallas
-    const IMG_ROUTES    = "https://www.ubicalo.com.mx/wp-content/uploads/2020/01/original-7a011e255540d7abd905d9aae64a6247.jpg"; // mapa / rutas
-    const IMG_ALERTS    = "https://www.shutterstock.com/image-photo/close-yellow-school-bus-stop-600nw-2489698147.jpg"; // señal / alerta
-    const IMG_INCIDENTS = "https://wp.tyt.com.mx/wp-content/uploads/2018/05/Transporte-publico-1-1024x597.jpg"; // warning / seguridad
-
-    document.getElementById("imgFleet").style.backgroundImage     = `url('${IMG_FLEET}')`;
-    document.getElementById("imgRoutes").style.backgroundImage    = `url('${IMG_ROUTES}')`;
-    document.getElementById("imgAlerts").style.backgroundImage    = `url('${IMG_ALERTS}')`;
-    document.getElementById("imgIncidents").style.backgroundImage = `url('${IMG_INCIDENTS}')`;
-
-    const profile = await requireAuthAndRole(3); // 3 = SUPER_ADMIN
+    // Seguridad: Solo Admins (Role 3)
+    const profile = await requireAuthAndRole(3); 
     if (profile){
       document.getElementById("who").textContent = `@${profile.username}`;
       document.getElementById("welcomeTitle").textContent = `🛡️ Bienvenido, ${profile.username}`;
@@ -122,26 +84,9 @@
       await signOut();
       window.location.href = "login.html";
     });
-
-    // Placeholders por ahora
-    const go = (msg) => (e) => { e.preventDefault(); alert(msg); };
-    document.getElementById("goFleet").addEventListener("click", go("📌 Monitoreo (pendiente)"));
-    document.getElementById("goRoutes").addEventListener("click", go("📌 Gestión de rutas (pendiente)"));
-    document.getElementById("goAlerts").addEventListener("click", go("📌 Alertas operativas (pendiente)"));
-    document.getElementById("goIncidents").addEventListener("click", (e) => {
-  e.preventDefault();
-  window.location.href = "incidents_admin.html";
-});
-
-    document.getElementById("menuBtn").addEventListener("click", () => alert("☰ Menú (pendiente)"));
-    document.getElementById("settingsBtn").addEventListener("click", () => alert("⚙️ Ajustes (pendiente)"));
   </script>
-
 </body>
 </html>
-
-
-
 
 
 

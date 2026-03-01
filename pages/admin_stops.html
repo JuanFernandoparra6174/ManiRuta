@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8"/>
+    <title>Admin - Paraderos | ManiRuta</title>
+    <link rel="stylesheet" href="../css/base.css"/>
+    <link rel="stylesheet" href="../css/home.css"/>
+</head>
+<body>
+    <header class="nav">
+        <div class="container nav-inner">
+            <div class="brand"><span class="dot"></span> Gestión de Paraderos</div>
+            <a href="home_admin.html" class="btn btn-ghost">Volver</a>
+        </div>
+    </header>
+
+    <main class="container page stack">
+        <section class="card tile">
+            <h2 class="h1">📍 Crear Nuevo Paradero</h2>
+            <form id="stopForm" class="stack" style="margin-top:15px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <input type="text" id="stopName" class="input" placeholder="Nombre del Paradero" required>
+                <input type="text" id="stopAddress" class="input" placeholder="Dirección">
+                <input type="number" step="any" id="stopLat" class="input" placeholder="Latitud" required>
+                <input type="number" step="any" id="stopLng" class="input" placeholder="Longitud" required>
+                <button type="submit" class="btn btn-primary" style="grid-column: span 2;">➕ Guardar Paradero</button>
+            </form>
+        </section>
+
+        <section class="card tile">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Coordenadas</th>
+                        <th>Estado</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+                <tbody id="stopsTable">
+                    </tbody>
+            </table>
+        </section>
+    </main>
+
+    <script type="module">
+        import { fetchStops, createStop, deleteStop } from "../js/stops.js";
+        import { requireAuthAndRole } from "../js/guard.js";
+
+        // 1. Proteger la ruta
+        await requireAuthAndRole(3);
+
+        const table = document.getElementById("stopsTable");
+        const form = document.getElementById("stopForm");
+
+        // 2. Función para listar
+        async function loadStops() {
+            const stops = await fetchStops();
+            table.innerHTML = stops.map(s => `
+                <tr>
+                    <td><b>${s.name}</b><br><small>${s.address || ''}</small></td>
+                    <td>${s.lat}, ${s.lng}</td>
+                    <td><span class="chip ok">${s.status}</span></td>
+                    <td><button class="btn-mini bad" onclick="removeStop('${s.id}')">Eliminar</button></td>
+                </tr>
+            `).join('');
+        }
+
+        // 3. Crear nuevo
+        form.onsubmit = async (e) => {
+            e.preventDefault();
+            await createStop({
+                name: document.getElementById("stopName").value,
+                lat: document.getElementById("stopLat").value,
+                lng: document.getElementById("stopLng").value,
+                address: document.getElementById("stopAddress").value
+            });
+            form.reset();
+            loadStops();
+        };
+
+        window.removeStop = async (id) => {
+            if(confirm("¿Seguro?")) { await deleteStop(id); loadStops(); }
+        };
+
+        loadStops();
+    </script>
+</body>
+</html>

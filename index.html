@@ -1,12 +1,14 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="utf-8" />
-  <base href="/ManiRuta/">
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>ManiRuta</title>
-  <meta http-equiv="refresh" content="0; url=pages/login.html" />
+    <meta charset="UTF-8">
+    <title>ManiRuta | Cargando...</title>
 </head>
-<body></body>
+<body>
+    <script type="module">
+        import { redirectToRoleHome } from "./js/guard.js";
+        // Al abrir la web, el guardia decide a qué home ir
+        redirectToRoleHome();
+    </script>
+</body>
 </html>
-
