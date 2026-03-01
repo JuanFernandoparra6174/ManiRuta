@@ -1,11 +1,96 @@
-<section class="card tile">
-    <h2 class="h1">🏢 Registrar Empresa de Bus</h2>
-    <form id="companyForm" class="stack" style="margin-top:15px;">
-        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-            <input type="text" id="compName" class="input" placeholder="Nombre Empresa" required>
-            <input type="text" id="compNit" class="input" placeholder="NIT">
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <title>Admin - Empresas | ManiRuta</title>
+    <link rel="stylesheet" href="../css/base.css"/>
+    <link rel="stylesheet" href="../css/home.css"/>
+</head>
+<body>
+    <header class="nav">
+        <div class="container nav-inner">
+            <div class="brand"><span class="dot"></span> Registro de Empresas</div>
+            <a href="home_admin.html" class="btn btn-ghost">Volver</a>
         </div>
-        <input type="email" id="compEmail" class="input" placeholder="Correo Electrónico">
-        <button type="submit" class="btn btn-primary">Registrar Empresa</button>
-    </form>
-</section>
+    </header>
+
+    <main class="container page stack">
+        <section class="card tile">
+            <h2 class="h1">🏢 Registrar Empresa de Bus</h2>
+            <form id="companyForm" class="stack" style="margin-top:15px;">
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                    <input type="text" id="compName" class="input" placeholder="Nombre Empresa" required>
+                    <input type="text" id="compNit" class="input" placeholder="NIT">
+                </div>
+                <input type="email" id="compEmail" class="input" placeholder="Correo Electrónico" required>
+                <button type="submit" class="btn btn-primary">Registrar Empresa</button>
+            </form>
+        </section>
+
+        <section class="card tile">
+            <h2 class="h1">Lista de Empresas</h2>
+            <table class="table" style="margin-top:10px;">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>NIT</th>
+                        <th>Email</th>
+                    </tr>
+                </thead>
+                <tbody id="companiesTable">
+                    </tbody>
+            </table>
+        </section>
+    </main>
+
+    <script type="module">
+        import { fetchCompanies, createCompany } from "../js/companies.js";
+        import { requireAuthAndRole } from "../js/guard.js";
+
+        // Protegemos la ruta para que solo entre el Admin
+        await requireAuthAndRole(3);
+
+        const form = document.getElementById("companyForm");
+        const tableBody = document.getElementById("companiesTable");
+
+        // Función para cargar la lista de empresas
+        async function loadCompanies() {
+            try {
+                const companies = await fetchCompanies();
+                tableBody.innerHTML = companies.map(c => `
+                    <tr>
+                        <td>${c.name}</td>
+                        <td>${c.nit || '—'}</td>
+                        <td>${c.email || '—'}</td>
+                    </tr>
+                `).join('');
+            } catch (err) {
+                console.error("Error al cargar empresas:", err);
+            }
+        }
+
+        // Evento para guardar
+        form.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            
+            const name = document.getElementById("compName").value;
+            const nit = document.getElementById("compNit").value;
+            const email = document.getElementById("compEmail").value;
+
+            try {
+                await createCompany({ name, nit, email });
+                alert("✅ Empresa registrada con éxito");
+                form.reset();
+                loadCompanies(); // Recargamos la tabla
+            } catch (err) {
+                alert("❌ Error al guardar: " + err.message);
+                console.error(err);
+            }
+        });
+
+        // Cargar al iniciar
+        loadCompanies();
+    </script>
+</body>
+</html>

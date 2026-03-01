@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <title>Admin - Alertas | ManiRuta</title>
+    <link rel="stylesheet" href="../css/base.css"/>
+    <link rel="stylesheet" href="../css/home.css"/>
+</head>
+<body>
+    <header class="nav">
+        <div class="container nav-inner">
+            <div class="brand"><span class="dot"></span> Alertas Operativas</div>
+            <a href="home_admin.html" class="btn btn-ghost">Volver</a>
+        </div>
+    </header>
+
+    <main class="container page stack">
+        <section class="card tile">
+            <h2 class="h1">📢 Publicar Aviso a la Ciudad</h2>
+            <form id="alertForm" class="stack" style="margin-top:15px;">
+                <input type="text" id="aTitle" class="input" placeholder="Título (ej: Cierre Av. Kevin Angel)" required>
+                <textarea id="aMsg" class="input" placeholder="Detalles del incidente o desvío..." rows="3" required></textarea>
+                
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                    <select id="aType" class="input">
+                        <option value="TRAFFIC">Tráfico / Desvío</option>
+                        <option value="WEATHER">Clima</option>
+                        <option value="MAINTENANCE">Obras</option>
+                    </select>
+                    <select id="aSeverity" class="input">
+                        <option value="INFO">Informativa</option>
+                        <option value="WARNING">Advertencia</option>
+                        <option value="CRITICAL">Urgente</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Enviar Alerta</button>
+            </form>
+        </section>
+
+        <section class="card tile">
+            <h2 class="h1">Alertas Activas</h2>
+            <table class="table" style="margin-top:10px;">
+                <thead>
+                    <tr>
+                        <th>Evento</th>
+                        <th>Nivel</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody id="alertsTable">
+                    </tbody>
+            </table>
+        </section>
+    </main>
+
+    <script type="module">
+        import { fetchAllAlerts, createOperationalAlert } from "../js/alerts_admin.js";
+        import { requireAuthAndRole } from "../js/guard.js";
+
+        await requireAuthAndRole(3); // Solo Admin
+
+        const form = document.getElementById("alertForm");
+        const table = document.getElementById("alertsTable");
+
+        async function load() {
+            const alerts = await fetchAllAlerts();
+            table.innerHTML = alerts.map(a => `
+                <tr>
+                    <td><b>${a.title}</b><br><small>${a.message}</small></td>
+                    <td><span class="chip ${a.severity === 'CRITICAL' ? 'bad' : 'warn'}">${a.severity}</span></td>
+                    <td><span class="chip ok">${a.status}</span></td>
+                </tr>
+            `).join('');
+        }
+
+        form.onsubmit = async (e) => {
+            e.preventDefault();
+            try {
+                await createOperationalAlert({
+                    title: document.getElementById("aTitle").value,
+                    message: document.getElementById("aMsg").value,
+                    type: document.getElementById("aType").value,
+                    severity: document.getElementById("aSeverity").value
+                });
+                form.reset();
+                load();
+            } catch (err) { alert("Error: " + err.message); }
+        };
+
+        load();
+    </script>
+</body>
+</html>
