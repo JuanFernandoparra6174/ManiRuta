@@ -6,76 +6,443 @@
   <title>Conductores | ManiRuta</title>
   <link rel="stylesheet" href="../css/base.css"/>
   <link rel="stylesheet" href="../css/home.css"/>
+  <link rel="stylesheet" href="../css/drivers.css"/>
 </head>
 <body>
 
 <header class="nav">
   <div class="container nav-inner">
     <div class="brand"><span class="dot"></span> Conductores</div>
-    <div class="right">
+
+    <div class="nav-right">
+      <span class="pill" id="who">...</span>
       <a class="btn btn-ghost" href="home_company.html">Volver</a>
       <button class="btn btn-ghost" id="logout">Salir</button>
     </div>
   </div>
 </header>
 
-<main class="container page stack">
-  <section class="card tile">
-    <div class="page-title">
-      <div>
-        <p class="sub">Tu empresa</p>
-        <h2 class="h1">👨‍✈️ Lista de conductores</h2>
-      </div>
-      <span class="chip" id="who">...</span>
-    </div>
+<main class="container drivers-page">
 
-    <div style="overflow:auto;">
-      <table class="table">
-        <thead>
-          <tr>
-            <th>Nombre</th>
-            <th>Documento</th>
-            <th>Teléfono</th>
-            <th>Licencia</th>
-            <th>Estado</th>
-          </tr>
-        </thead>
-        <tbody id="rows"></tbody>
-      </table>
+  <section class="drivers-hero card">
+    <div class="decor"></div>
+    <div class="bg" id="heroBg"></div>
+
+    <div class="content">
+      <div class="hero-top">
+        <div>
+          <h1 class="hero-title">👨‍✈️ Módulo Conductores (CRUD)</h1>
+          <p class="hero-sub">Crea, edita, elimina y controla estado de conductores: ✅ ACTIVE · ⛔ INACTIVE. Todo queda guardado en Supabase.</p>
+        </div>
+
+        <div class="hero-tags">
+          <span class="chip" id="companyChip">🏷️ company_id: ...</span>
+          <span class="chip">🏢 EMPRESA_BUSES</span>
+        </div>
+      </div>
+
+      <div class="kpi-strip" id="kpis">
+        <div class="kpi"><div class="n">—</div><div class="l">TOTAL</div></div>
+        <div class="kpi"><div class="n">—</div><div class="l">ACTIVOS</div></div>
+        <div class="kpi"><div class="n">—</div><div class="l">INACTIVOS</div></div>
+      </div>
     </div>
   </section>
+
+  <section class="drivers-grid">
+
+    <!-- Form -->
+    <section class="card panel">
+      <div class="panel-title">
+        <h3 id="formTitle">➕ Registrar conductor</h3>
+        <span class="mini-muted" id="formHint">Gestiona tu equipo con estilo 😎</span>
+      </div>
+
+      <form id="driverForm" class="grid1">
+        <input type="hidden" id="driverId"/>
+
+        <div>
+          <label class="mini-muted">Nombre completo *</label>
+          <input class="input" id="fullName" placeholder="Ej: Juan Pérez" required maxlength="80"/>
+        </div>
+
+        <div class="grid2">
+          <div>
+            <label class="mini-muted">Tipo documento *</label>
+            <select class="input" id="docType" required>
+              <option value="CC">🪪 CC</option>
+              <option value="CE">🌎 CE</option>
+              <option value="PASSPORT">🛂 PASSPORT</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="mini-muted">Número documento *</label>
+            <input class="input" id="docNumber" placeholder="Ej: 123456789" required maxlength="30"/>
+          </div>
+        </div>
+
+        <div class="grid2">
+          <div>
+            <label class="mini-muted">Teléfono</label>
+            <input class="input" id="phone" placeholder="+57 3xx xxx xxxx (opcional)" maxlength="30"/>
+          </div>
+
+          <div>
+            <label class="mini-muted">Licencia *</label>
+            <input class="input" id="licenseNo" placeholder="Ej: LIC-998877" required maxlength="40"/>
+          </div>
+        </div>
+
+        <div>
+          <label class="mini-muted">Estado *</label>
+          <select class="input" id="status" required>
+            <option value="ACTIVE">✅ ACTIVE</option>
+            <option value="INACTIVE">⛔ INACTIVE</option>
+          </select>
+        </div>
+
+        <div class="actions-row">
+          <button class="btn btn-primary" type="submit" id="saveBtn">💾 Guardar</button>
+          <button class="btn-soft" type="button" id="cancelEditBtn" style="display:none;">↩️ Cancelar edición</button>
+          <button class="btn-soft btn-danger" type="button" id="clearBtn">🧹 Limpiar</button>
+        </div>
+
+        <div class="toast-ok" id="ok"></div>
+        <div class="toast-err" id="err"></div>
+
+        <div class="help">🔒 Si te sale “permission denied”, te faltan políticas RLS para CRUD en la tabla <b>drivers</b>.</div>
+        <div class="help">🧠 Nota: dentro de una empresa NO se puede repetir el mismo documento (por el índice único company_id + doc_type + doc_number).</div>
+      </form>
+    </section>
+
+    <!-- List -->
+    <section class="card panel">
+      <div class="panel-title">
+        <h3>📋 Lista de conductores</h3>
+        <button class="btn-soft" id="refreshBtn">🔄 Refrescar</button>
+      </div>
+
+      <div class="grid2" style="margin-bottom:10px;">
+        <input class="input" id="search" placeholder="Buscar por nombre / documento / licencia 🔎"/>
+        <select class="input" id="filterStatus">
+          <option value="">🎯 Todos los estados</option>
+          <option value="ACTIVE">✅ ACTIVE</option>
+          <option value="INACTIVE">⛔ INACTIVE</option>
+        </select>
+      </div>
+
+      <div style="overflow:auto;">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Conductor</th>
+              <th>Documento</th>
+              <th>Teléfono</th>
+              <th>Licencia</th>
+              <th>Estado</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </div>
+
+      <div id="empty" class="empty" style="display:none; margin-top:10px;">
+        <p class="t">😴 No hay conductores aún</p>
+        <p class="p">Crea el primero arriba y aparece aquí automático.</p>
+      </div>
+    </section>
+
+  </section>
+
 </main>
 
 <script type="module">
   import { requireAuthAndRole } from "../js/guard.js";
   import { signOut } from "../js/auth.js";
-  import { setText } from "../js/ui.js";
-  import { fetchMyCompanyDrivers } from "../js/drivers.js";
+  import { setText, setError, setOk } from "../js/ui.js";
+  import {
+    fetchCompanyDrivers,
+    createDriver,
+    updateDriver,
+    deleteDriver,
+    countCompanyDriversByStatus
+  } from "../js/drivers.js";
 
-  const profile = await requireAuthAndRole(2);
-  if (profile) setText("who", `@${profile.username}`);
+  // Imagen (URL web)
+  const HERO_IMG = "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1400&q=70";
+  document.getElementById("heroBg").style.backgroundImage = `url('${HERO_IMG}')`;
+
+  const profile = await requireAuthAndRole(2); // EMPRESA
+  if (!profile) throw new Error("No auth (guard redirige).");
+
+  setText("who", `@${profile.username}`);
+
+  const companyId = profile.company_id;
+  document.getElementById("companyChip").textContent =
+    companyId ? `🏷️ company_id: ${companyId}` : "⚠️ Sin company_id asignado";
+
+  // DOM
+  const form = document.getElementById("driverForm");
+  const driverIdEl = document.getElementById("driverId");
+
+  const fullNameEl = document.getElementById("fullName");
+  const docTypeEl = document.getElementById("docType");
+  const docNumberEl = document.getElementById("docNumber");
+  const phoneEl = document.getElementById("phone");
+  const licenseEl = document.getElementById("licenseNo");
+  const statusEl = document.getElementById("status");
+
+  const formTitle = document.getElementById("formTitle");
+  const formHint = document.getElementById("formHint");
+  const cancelEditBtn = document.getElementById("cancelEditBtn");
+  const clearBtn = document.getElementById("clearBtn");
+
+  const rowsEl = document.getElementById("rows");
+  const emptyEl = document.getElementById("empty");
+  const searchEl = document.getElementById("search");
+  const filterStatusEl = document.getElementById("filterStatus");
+  const refreshBtn = document.getElementById("refreshBtn");
+  const kpisEl = document.getElementById("kpis");
 
   document.getElementById("logout").addEventListener("click", async () => {
     await signOut();
     window.location.href = "login.html";
   });
 
-  function statusChip(status){
-    if (status === "ACTIVE") return `<span class="chip ok">ACTIVE</span>`;
-    return `<span class="chip bad">${status}</span>`;
+  // Si no hay company_id, bloqueamos el CRUD (company_id es NOT NULL en drivers)
+  if (!companyId){
+    for (const el of [fullNameEl, docTypeEl, docNumberEl, phoneEl, licenseEl, statusEl]) el.disabled = true;
+    form.querySelector("button[type='submit']").disabled = true;
+    setError("err", "Tu usuario EMPRESA no tiene company_id. Así no se pueden guardar conductores (drivers.company_id es NOT NULL).");
   }
 
-  const data = await fetchMyCompanyDrivers();
-  const tbody = document.getElementById("rows");
-  tbody.innerHTML = data.map(d => `
-    <tr>
-      <td>${d.full_name}</td>
-      <td>${d.doc_type} ${d.doc_number}</td>
-      <td>${d.phone || "—"}</td>
-      <td>${d.license_no}</td>
-      <td>${statusChip(d.status)}</td>
-    </tr>
-  `).join("") || `<tr><td colspan="5">No hay conductores registrados.</td></tr>`;
+  let all = [];
+
+  function esc(s){
+    return String(s ?? "")
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;")
+      .replaceAll("'","&#039;");
+  }
+
+  function statusChip(status){
+    if (status === "ACTIVE") return `<span class="chip ok">✅ ACTIVE</span>`;
+    return `<span class="chip bad">⛔ INACTIVE</span>`;
+  }
+
+  function clearForm(){
+    driverIdEl.value = "";
+    fullNameEl.value = "";
+    docTypeEl.value = "CC";
+    docNumberEl.value = "";
+    phoneEl.value = "";
+    licenseEl.value = "";
+    statusEl.value = "ACTIVE";
+
+    formTitle.textContent = "➕ Registrar conductor";
+    formHint.textContent = "Gestiona tu equipo con estilo 😎";
+    cancelEditBtn.style.display = "none";
+  }
+
+  function setEditMode(d){
+    driverIdEl.value = d.id;
+    fullNameEl.value = d.full_name || "";
+    docTypeEl.value = d.doc_type || "CC";
+    docNumberEl.value = d.doc_number || "";
+    phoneEl.value = d.phone || "";
+    licenseEl.value = d.license_no || "";
+    statusEl.value = d.status || "ACTIVE";
+
+    formTitle.textContent = "✏️ Editar conductor";
+    formHint.textContent = "Edita datos y guarda sin drama 😌";
+    cancelEditBtn.style.display = "inline-flex";
+
+    setOk("ok", "Modo edición activado ✅");
+    setError("err", "");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  async function renderKpis(){
+    if (!companyId) return;
+    const k = await countCompanyDriversByStatus(companyId);
+    kpisEl.innerHTML = `
+      <div class="kpi"><div class="n">${k.total}</div><div class="l">TOTAL</div></div>
+      <div class="kpi"><div class="n">${k.active}</div><div class="l">ACTIVOS</div></div>
+      <div class="kpi"><div class="n">${k.inactive}</div><div class="l">INACTIVOS</div></div>
+    `;
+  }
+
+  function renderTable(){
+    const q = (searchEl.value || "").trim().toLowerCase();
+    const st = filterStatusEl.value;
+
+    const filtered = all.filter(d => {
+      const hay = `${d.full_name || ""} ${d.doc_type || ""} ${d.doc_number || ""} ${d.license_no || ""}`.toLowerCase();
+      const okQ = !q || hay.includes(q);
+      const okS = !st || d.status === st;
+      return okQ && okS;
+    });
+
+    emptyEl.style.display = filtered.length ? "none" : "block";
+
+    rowsEl.innerHTML = filtered.map(d => `
+      <tr>
+        <td><b>${esc(d.full_name)}</b></td>
+        <td><span class="chip">${esc(d.doc_type)} · ${esc(d.doc_number)}</span></td>
+        <td>${esc(d.phone || "—")}</td>
+        <td>${esc(d.license_no)}</td>
+        <td>${statusChip(d.status)}</td>
+        <td>
+          <div class="row-actions">
+            <button class="pill-btn on icon" data-act="status" data-id="${d.id}" data-status="ACTIVE" title="Poner ACTIVE">✅</button>
+            <button class="pill-btn off icon" data-act="status" data-id="${d.id}" data-status="INACTIVE" title="Poner INACTIVE">⛔</button>
+            <button class="pill-btn icon" data-act="edit" data-id="${d.id}" title="Editar">✏️</button>
+            <button class="pill-btn off icon" data-act="delete" data-id="${d.id}" title="Eliminar">🗑️</button>
+          </div>
+        </td>
+      </tr>
+    `).join("") || "";
+  }
+
+  async function refresh(){
+    try{
+      setError("err", "");
+      setOk("ok", "");
+      if (!companyId) return;
+
+      all = await fetchCompanyDrivers(companyId);
+      renderTable();
+      await renderKpis();
+    }catch(e){
+      console.error(e);
+      setError("err", e?.message || String(e));
+    }
+  }
+
+  // Events
+  searchEl.addEventListener("input", renderTable);
+  filterStatusEl.addEventListener("change", renderTable);
+  refreshBtn.addEventListener("click", refresh);
+
+  cancelEditBtn.addEventListener("click", () => {
+    clearForm();
+    setOk("ok", "Edición cancelada 👍");
+    setError("err", "");
+  });
+
+  clearBtn.addEventListener("click", () => {
+    clearForm();
+    setOk("ok", "Formulario limpio 🧼");
+    setError("err", "");
+  });
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    try{
+      setError("err", "");
+      setOk("ok", "");
+      if (!companyId) return;
+
+      const id = driverIdEl.value;
+
+      const full_name = fullNameEl.value.trim();
+      const doc_type = docTypeEl.value.trim();
+      const doc_number = docNumberEl.value.trim();
+      const phone = phoneEl.value.trim();
+      const license_no = licenseEl.value.trim();
+      const status = statusEl.value;
+
+      if (!full_name) return setError("err", "Nombre obligatorio.");
+      if (!doc_number) return setError("err", "Número de documento obligatorio.");
+      if (!license_no) return setError("err", "Licencia obligatoria.");
+
+      if (!id){
+        await createDriver({
+          company_id: companyId,
+          full_name,
+          doc_type,
+          doc_number,
+          phone,
+          license_no,
+          status
+        });
+        setOk("ok", "Conductor creado ✅");
+      }else{
+        await updateDriver(id, companyId, {
+          full_name,
+          doc_type,
+          doc_number,
+          phone: phone || null,
+          license_no,
+          status
+        });
+        setOk("ok", "Conductor actualizado ✅");
+      }
+
+      clearForm();
+      await refresh();
+
+    }catch(e){
+      console.error(e);
+      const msg = (e?.message || String(e)).toLowerCase();
+
+      // Error típico: índice único (company_id, doc_type, doc_number)
+      if (msg.includes("duplicate") || msg.includes("unique")){
+        setError("err", "Ese documento ya existe en tu empresa (duplicado).");
+      }else{
+        setError("err", e?.message || String(e));
+      }
+    }
+  });
+
+  rowsEl.addEventListener("click", async (e) => {
+    const btn = e.target.closest("button");
+    if (!btn) return;
+
+    const act = btn.dataset.act;
+    const id = btn.dataset.id;
+    if (!act || !id) return;
+
+    try{
+      setError("err", "");
+      setOk("ok", "");
+
+      if (act === "edit"){
+        const d = all.find(x => x.id === id);
+        if (d) setEditMode(d);
+        return;
+      }
+
+      if (act === "delete"){
+        if (!confirm("¿Eliminar este conductor? 🗑️")) return;
+        await deleteDriver(id, companyId);
+        setOk("ok", "Conductor eliminado ✅");
+        if (driverIdEl.value === id) clearForm();
+        await refresh();
+        return;
+      }
+
+      if (act === "status"){
+        const newStatus = btn.dataset.status;
+        await updateDriver(id, companyId, { status: newStatus });
+        setOk("ok", `Estado actualizado a ${newStatus} ✅`);
+        await refresh();
+        return;
+      }
+
+    }catch(e2){
+      console.error(e2);
+      setError("err", e2?.message || String(e2));
+    }
+  });
+
+  // Init
+  await refresh();
 </script>
 
 </body>
