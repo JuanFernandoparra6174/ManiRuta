@@ -164,24 +164,34 @@ if (profile.company_id){
     });
 
     // Acciones placeholder
-    const go = (msg) => () => alert(msg);
-    document.getElementById("goFleet").addEventListener("click", () => {
-  window.location.href = "buses.html";
-});
-    document.getElementById("goDrivers").addEventListener("click", () => {
-  window.location.href = "drivers.html";
-});
-    document.getElementById("goStats").addEventListener("click", go("📌 Estadísticas (pendiente)"));
-    document.getElementById("goCfg").addEventListener("click", () => {
-  window.location.href = "company_settings.html";
+    // Acciones (safe)
+const on = (id, fn) => {
+  const el = document.getElementById(id);
+  if (!el) {
+    console.warn(`⚠️ No existe el elemento #${id} en el DOM`);
+    return;
+  }
+  el.addEventListener("click", fn);
+};
+
+on("logout", async () => {
+  await signOut();
+  window.location.href = "login.html";
 });
 
-    document.getElementById("menuBtn").addEventListener("click", () => alert("☰ Menú (pendiente)"));
-    document.getElementById("settingsBtn").addEventListener("click", () => alert("⚙️ Ajustes (pendiente)"));
+on("goFleet", () => window.location.href = "buses.html");
+on("goDrivers", () => window.location.href = "drivers.html");
+on("goStats", () => alert("📌 Estadísticas (pendiente)"));
+on("goCfg", () => window.location.href = "company_settings.html");
+
+// Menú / ajustes (si existen)
+on("menuBtn", () => alert("☰ Menú (pendiente)"));
+on("settingsBtn", () => window.location.href = "company_settings.html");
   </script>
 
 </body>
 </html>
+
 
 
 
