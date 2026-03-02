@@ -55,7 +55,6 @@
 
       <div class="footer-actions">
         <span class="badge">📍 Paraderos</span>
-        <span class="badge">🧭 Planificador</span>
         <span class="badge">🚨 Alertas</span>
         <span class="badge">🛡️ Denuncias</span>
       </div>
@@ -74,21 +73,6 @@
           <p>Consulta buses y paraderos en tiempo real.</p>
           <div class="small-row">
             <span class="help">Ver rutas disponibles</span>
-            <span class="chev">›</span>
-          </div>
-        </div>
-      </a>
-
-      <a class="feature" href="#" id="goPlanner">
-        <div class="feature-thumb">
-          <div class="img" id="imgPlanner"></div>
-          <div class="tag">🧭 Planificador</div>
-        </div>
-        <div>
-          <h2>Planificador</h2>
-          <p>Encuentra la mejor ruta según tu ubicación.</p>
-          <div class="small-row">
-            <span class="help">Optimiza tu viaje</span>
             <span class="chev">›</span>
           </div>
         </div>
@@ -133,12 +117,10 @@
 
     // Imágenes de prueba (cámbialas luego por tus links de Supabase Storage)
     const IMG_ROUTES    = "https://advancedfleetmanagementconsulting.com/wp-content/uploads/2016/11/calcula-mejor-ruta-660x400.png"; // bus
-    const IMG_PLANNER   = "https://blog.columbus-outdoor.com/wp-content/uploads/2018/12/como-hacer-una-ruta-google-maps-pc.jpg"; // mapa
     const IMG_INCIDENTS = "https://media.licdn.com/dms/image/v2/D4E12AQG4pe87F3YiGg/article-cover_image-shrink_720_1280/article-cover_image-shrink_720_1280/0/1663096582659?e=2147483647&v=beta&t=Q4Js9R1346mSwMneb3-RsMri04uondNEjJ7V-44kaWs"; // seguridad / alerta
     const IMG_ALERTS    = "https://www.dexiaabogados.com/wp-content/uploads/2021/01/denuncia.jpg"; // ciudad / notificación
 
     document.getElementById("imgRoutes").style.backgroundImage    = `url('${IMG_ROUTES}')`;
-    document.getElementById("imgPlanner").style.backgroundImage   = `url('${IMG_PLANNER}')`;
     document.getElementById("imgIncidents").style.backgroundImage = `url('${IMG_INCIDENTS}')`;
     document.getElementById("imgAlerts").style.backgroundImage    = `url('${IMG_ALERTS}')`;
 
@@ -159,10 +141,6 @@
     document.getElementById("goRoutes").addEventListener("click", (e) => {
       e.preventDefault();
       alert("📌 Aquí irá el módulo de Rutas (pendiente).");
-    });
-    document.getElementById("goPlanner").addEventListener("click", (e) => {
-      e.preventDefault();
-      alert("📌 Aquí irá el Planificador (pendiente).");
     });
     document.getElementById("goIncidents").addEventListener("click", (e) => {
       e.preventDefault();
