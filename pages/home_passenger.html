@@ -168,11 +168,9 @@
       e.preventDefault();
       window.location.href = "denuncias.html";;
     });
-    document.getElementById("goAlerts").addEventListener("click", (e) => {
-      e.preventDefault();
-      alert("📌 Aquí irán Alertas (pendiente).");
+    document.getElementById("goAlerts").addEventListener("click", () => {
+     window.location.href = "alerts_passenger.html"; 
     });
-
     // Menú/Ajustes placeholder
     document.getElementById("menuBtn").addEventListener("click", () => alert("☰ Menú (pendiente)"));
     document.getElementById("settingsBtn").addEventListener("click", () => alert("⚙️ Ajustes (pendiente)"));

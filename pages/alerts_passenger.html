@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8"/>
+    <title>Alertas en Vivo | ManiRuta</title>
+    <link rel="stylesheet" href="../css/base.css"/>
+    <link rel="stylesheet" href="../css/home.css"/>
+</head>
+<body>
+    <header class="nav">
+        <div class="container nav-inner">
+            <div class="brand"><span class="dot"></span> Alertas ManiRuta</div>
+            <a href="home_passenger.html" class="btn btn-ghost">Volver</a>
+        </div>
+    </header>
+
+    <main class="container page stack">
+        <h2 class="h1">📢 Novedades en Manizales</h2>
+        <div id="alertsContainer" class="stack">
+            </div>
+    </main>
+
+    <script type="module">
+        import { fetchActiveAlerts } from "../js/alerts_passenger.js";
+        import { requireAuthAndRole } from "../js/guard.js";
+
+        await requireAuthAndRole(1); // Solo pasajeros
+
+        async function load() {
+            const alerts = await fetchActiveAlerts();
+            const container = document.getElementById("alertsContainer");
+            
+            if (alerts.length === 0) {
+                container.innerHTML = `<div class="card help">No hay alertas activas en este momento. 🟢</div>`;
+                return;
+            }
+
+            container.innerHTML = alerts.map(a => `
+                <div class="card tile" style="border-left: 5px solid ${a.severity === 'CRITICAL' ? 'var(--danger)' : 'var(--primary)'}">
+                    <div style="display:flex; justify-content:space-between;">
+                        <b>${a.title}</b>
+                        <span class="chip">${a.alert_type}</span>
+                    </div>
+                    <p class="sub">${a.message}</p>
+                    <small class="mini-muted">${new Date(a.created_at).toLocaleString()}</small>
+                </div>
+            `).join('');
+        }
+        load();
+    </script>
+</body>
+</html>
