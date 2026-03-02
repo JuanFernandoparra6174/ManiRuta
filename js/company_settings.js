@@ -27,12 +27,3 @@ export async function updateCompany(companyId, fields) {
 
   if (error) throw error;
 }
-
-export async function deleteCompany(companyId) {
-  const { error } = await supabase
-    .from("companies")
-    .delete()
-    .eq("id", companyId);
-
-  if (error) throw error;
-}
