@@ -1,14 +1,15 @@
 import { supabase } from "./supabaseClient.js";
 
 export async function fetchAllRoutes() {
-    // Probamos trayendo solo los datos básicos de la tabla routes
+    // Traemos el nombre de la ruta, el sentido y el nombre de la empresa
     const { data, error } = await supabase
         .from('routes')
-        .select('*') 
-        .order('code', { ascending: true });
+        .select('*, companies(name)')
+        .eq('status', 'ACTIVE') 
+        .order('name', { ascending: true }); // Ordenamos por nombre
     
     if (error) {
-        console.error("Error detallado de Supabase:", error);
+        console.error("Error en Supabase:", error);
         throw error;
     }
     return data || [];

@@ -17,8 +17,7 @@
     <main class="container page stack">
         <section class="card tile">
             <h2 class="h1">🚌 Encuentra tu ruta</h2>
-            <p class="sub">Busca por nombre de barrio o código de ruta.</p>
-            <input type="text" id="routeSearch" class="input" placeholder="Ej: R-10, Chipre, Centro..." style="margin-top:10px;">
+            <input type="text" id="routeSearch" class="input" placeholder="Buscar por nombre (Ej: Chipre, Centro)..." style="margin-top:10px;">
         </section>
 
         <div id="routesList" class="stack">
@@ -29,8 +28,7 @@
         import { fetchAllRoutes } from "../js/routes_passenger.js";
         import { requireAuthAndRole } from "../js/guard.js";
 
-        // Verificamos que sea Pasajero (Rol 1)
-        await requireAuthAndRole(1);
+        await requireAuthAndRole(1); // Solo pasajeros
 
         const list = document.getElementById("routesList");
         const searchInput = document.getElementById("routeSearch");
@@ -41,38 +39,31 @@
                 allRoutes = await fetchAllRoutes();
                 render(allRoutes);
             } catch (err) {
-                console.error("Error al cargar rutas:", err);
-                list.innerHTML = `<p class="sub">Error al conectar con la base de datos.</p>`;
+                list.innerHTML = `<p class="sub" style="color:red;">Error al cargar: ${err.message}</p>`;
             }
         }
 
         function render(routes) {
             if (routes.length === 0) {
-                list.innerHTML = `<div class="card help">No se encontraron rutas que coincidan. 🔍</div>`;
+                list.innerHTML = `<div class="card help">No hay rutas activas en este momento. 🔍</div>`;
                 return;
             }
 
             list.innerHTML = routes.map(r => `
                 <div class="card tile" style="display: flex; align-items: center; gap: 15px; border-left: 5px solid var(--primary);">
-                    <div class="pill" style="font-weight: 1000; font-size: 1.1rem; min-width: 60px; text-align: center;">
-                        ${r.code}
-                    </div>
+                    <div class="pill" style="font-weight: 1000;">BUS</div>
                     <div style="flex: 1;">
                         <h3 style="margin: 0;">${r.name}</h3>
-                        <p class="sub" style="margin: 4px 0;">${r.description || 'Recorrido oficial de Manizales'}</p>
-                        <small class="mini-muted">Operado por: <b>${r.companies?.name || 'Empresa Aliada'}</b></small>
+                        <p class="sub" style="margin: 4px 0;">Sentido: <b>${r.direction || 'IDA'}</b></p>
+                        <small class="mini-muted">Empresa: ${r.companies?.name || 'ManiRuta'}</small>
                     </div>
                 </div>
             `).join('');
         }
 
-        // Buscador en tiempo real
         searchInput.addEventListener("input", (e) => {
             const term = e.target.value.toLowerCase();
-            const filtered = allRoutes.filter(r => 
-                r.name.toLowerCase().includes(term) || 
-                r.code.toLowerCase().includes(term)
-            );
+            const filtered = allRoutes.filter(r => r.name.toLowerCase().includes(term));
             render(filtered);
         });
 

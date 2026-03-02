@@ -4,19 +4,21 @@ export async function fetchAllRoutes() {
     const { data, error } = await supabase
         .from('routes')
         .select('*, companies(name)')
-        .order('code');
+        // Cambiamos .order('code') por .order('name') porque 'code' no existe
+        .order('name'); 
     if (error) throw error;
     return data || [];
 }
 
-export async function createRoute({ code, name, description, company_id }) {
+export async function createRoute({ name, company_id, origin_id, end_id, direction }) {
     const { error } = await supabase.from('routes').insert([{
         id: crypto.randomUUID(),
-        code, 
-        name, 
-        description, 
-        company_id,
-        status: 'ACTIVE'
+        name,           // Existe en tu tabla
+        company_id,     // Existe en tu tabla
+        origin_stop_id: origin_id || null, // Existe en tu tabla
+        end_stop_id: end_id || null,       // Existe en tu tabla
+        direction: direction || 'IDA',     // Existe en tu tabla
+        status: 'ACTIVE'                   // Existe en tu tabla
     }]);
     if (error) throw error;
 }

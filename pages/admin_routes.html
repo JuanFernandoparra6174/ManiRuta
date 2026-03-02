@@ -18,12 +18,17 @@
         <section class="card tile">
             <h2 class="h1">🗺️ Crear Nueva Ruta Oficial</h2>
             <form id="routeForm" class="stack" style="margin-top:15px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                <input type="text" id="rCode" class="input" placeholder="Código (Ej: R-10)" required>
-                <input type="text" id="rName" class="input" placeholder="Nombre (Ej: Chipre - Centro)" required>
+                <input type="text" id="rName" class="input" placeholder="Nombre (Ej: Chipre - Centro)" style="grid-column: span 2;" required>
+                
                 <select id="rCompany" class="input" required>
                     <option value="">Asignar a Empresa...</option>
                 </select>
-                <input type="text" id="rDesc" class="input" placeholder="Descripción del recorrido">
+
+                <select id="rDirection" class="input" required>
+                    <option value="IDA">Sentido: IDA</option>
+                    <option value="VUELTA">Sentido: VUELTA</option>
+                </select>
+
                 <button type="submit" class="btn btn-primary" style="grid-column: span 2;">➕ Guardar Ruta</button>
             </form>
         </section>
@@ -32,8 +37,8 @@
             <table class="table">
                 <thead>
                     <tr>
-                        <th>Código</th>
-                        <th>Ruta / Empresa</th>
+                        <th>Nombre de la Ruta</th>
+                        <th>Empresa Responsable</th>
                         <th>Estado</th>
                         <th>Acción</th>
                     </tr>
@@ -44,6 +49,7 @@
     </main>
 
     <script type="module">
+        // Importamos las funciones del js que actualizamos antes
         import { fetchAllRoutes, createRoute, deleteRoute } from "../js/routes.js";
         import { fetchCompanies } from "../js/companies.js";
         import { requireAuthAndRole } from "../js/guard.js";
@@ -55,37 +61,51 @@
         const companySelect = document.getElementById("rCompany");
 
         async function load() {
-            // Cargar select de empresas
-            const companies = await fetchCompanies();
-            companySelect.innerHTML = '<option value="">Asignar a Empresa...</option>' + 
-                companies.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+            try {
+                // Cargar empresas para el select
+                const companies = await fetchCompanies();
+                companySelect.innerHTML = '<option value="">Asignar a Empresa...</option>' + 
+                    companies.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
 
-            // Cargar tabla de rutas
-            const routes = await fetchAllRoutes();
-            table.innerHTML = routes.map(r => `
-                <tr>
-                    <td><span class="pill">${r.code}</span></td>
-                    <td><b>${r.name}</b><br><small>${r.companies?.name || 'Sin empresa'}</small></td>
-                    <td><span class="chip ok">${r.status}</span></td>
-                    <td><button class="btn-mini bad" onclick="removeRoute('${r.id}')">Eliminar</button></td>
-                </tr>
-            `).join('');
+                // Cargar tabla de rutas
+                const routes = await fetchAllRoutes();
+                table.innerHTML = routes.map(r => `
+                    <tr>
+                        <td><b>${r.name}</b><br><small>${r.direction || 'Sentido no definido'}</small></td>
+                        <td>${r.companies?.name || 'Empresa no asignada'}</td>
+                        <td><span class="chip ok">${r.status}</span></td>
+                        <td><button class="btn-mini bad" onclick="removeRoute('${r.id}')">Eliminar</button></td>
+                    </tr>
+                `).join('');
+            } catch (err) {
+                console.error("Error al cargar datos:", err);
+            }
         }
 
         form.onsubmit = async (e) => {
             e.preventDefault();
-            await createRoute({
-                code: document.getElementById("rCode").value,
-                name: document.getElementById("rName").value,
-                company_id: document.getElementById("rCompany").value,
-                description: document.getElementById("rDesc").value
-            });
-            form.reset();
-            load();
+            try {
+                // Enviamos solo lo que tu tabla "routes" acepta
+                await createRoute({
+                    name: document.getElementById("rName").value,
+                    company_id: document.getElementById("rCompany").value,
+                    direction: document.getElementById("rDirection").value
+                });
+                
+                alert("Ruta guardada correctamente 🛣️");
+                form.reset();
+                load();
+            } catch (err) {
+                alert("Error al guardar: " + err.message);
+                console.error(err);
+            }
         };
 
         window.removeRoute = async (id) => {
-            if(confirm("¿Eliminar esta ruta?")) { await deleteRoute(id); load(); }
+            if(confirm("¿Eliminar esta ruta?")) { 
+                await deleteRoute(id); 
+                load(); 
+            }
         };
 
         load();
