@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Configuración Empresa | ManiRuta</title>
+  <title>Configuración | ManiRuta</title>
 
   <link rel="stylesheet" href="../css/base.css"/>
   <link rel="stylesheet" href="../css/home.css"/>
@@ -24,46 +24,54 @@
   </div>
 </header>
 
-<main class="container settings-page">
+<main class="container company-page">
 
-  <section class="settings-hero card">
-    <div class="decor"></div>
+  <!-- HERO -->
+  <section class="company-hero card">
+    <div class="blob"></div>
+    <div class="ring"></div>
     <div class="bg" id="heroBg"></div>
 
     <div class="content">
       <div class="hero-top">
         <div>
-          <h1 class="hero-title">⚙️ Configuración de Empresa</h1>
-          <p class="hero-sub">Aquí editas lo permitido: <b>nombre</b>, <b>celular</b>, <b>email</b>, <b>dirección</b>, <b>estado</b>. Lo demás es solo lectura 🔒.</p>
+          <h1 class="hero-title">🏢 Tu empresa, a tu manera</h1>
+          <p class="hero-sub">
+            Ajusta nombre, contacto, dirección y estado. Lo sensible (ID, NIT, fecha de registro) se mantiene protegido 🔒.
+          </p>
         </div>
 
         <div class="hero-tags">
           <span class="chip" id="companyChip">🏷️ company_id: ...</span>
-          <span class="chip">🏢 EMPRESA_BUSES</span>
+          <span class="chip" id="statusChip">⏳ ...</span>
         </div>
       </div>
 
-      <div class="kpi-strip" id="kpis">
-        <div class="kpi"><div class="n" id="kName">—</div><div class="l">NOMBRE</div></div>
-        <div class="kpi"><div class="n" id="kStatus">—</div><div class="l">ESTADO</div></div>
-        <div class="kpi"><div class="n" id="kCreated">—</div><div class="l">CREADA</div></div>
+      <div class="hero-kpis">
+        <div class="kpi"><div class="n" id="kName">—</div><div class="l">EMPRESA</div></div>
+        <div class="kpi"><div class="n" id="kEmail">—</div><div class="l">EMAIL</div></div>
+        <div class="kpi"><div class="n" id="kUpdated">—</div><div class="l">ACTUALIZADO</div></div>
       </div>
     </div>
   </section>
 
-  <section class="settings-grid">
+  <!-- GRID -->
+  <section class="company-grid">
 
-    <!-- Editable -->
+    <!-- FORM CARD -->
     <section class="card panel">
-      <div class="panel-title">
-        <h3>🛠️ Editar datos (permitidos)</h3>
-        <button class="btn-soft" id="refreshBtn">🔄 Recargar</button>
+      <div class="panel-head">
+        <h3>🧩 Perfil</h3>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <button class="btn-soft" id="refreshBtn" type="button">🔄 Recargar</button>
+          <button class="btn-soft" id="copyIdBtn" type="button">📋 Copiar ID</button>
+        </div>
       </div>
 
       <form id="companyForm" class="grid1">
         <div>
           <label class="mini-muted">Nombre *</label>
-          <input class="input" id="name" placeholder="Nombre de la empresa" required maxlength="120"/>
+          <input class="input" id="name" placeholder="Nombre comercial" required maxlength="120"/>
         </div>
 
         <div class="grid2">
@@ -71,7 +79,6 @@
             <label class="mini-muted">Celular</label>
             <input class="input" id="phone" placeholder="+57 3xx xxx xxxx" maxlength="40"/>
           </div>
-
           <div>
             <label class="mini-muted">Email</label>
             <input class="input" id="email" placeholder="correo@empresa.com" maxlength="120"/>
@@ -83,82 +90,67 @@
           <input class="input" id="address" placeholder="Dirección" maxlength="160"/>
         </div>
 
-        <div>
-          <label class="mini-muted">Estado *</label>
-          <select class="input" id="status" required>
-            <option value="ACTIVE">✅ ACTIVE</option>
-            <option value="INACTIVE">⛔ INACTIVE</option>
-          </select>
+        <div class="grid2">
+          <div>
+            <label class="mini-muted">Estado</label>
+            <select class="input" id="status">
+              <option value="ACTIVE">✅ Activa</option>
+              <option value="INACTIVE">⛔ Inactiva</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="mini-muted">Acción rápida</label>
+            <button class="btn-ghosty" id="toggleBtn" type="button">⏳ ...</button>
+          </div>
         </div>
 
         <div class="actions-row">
-          <button class="btn btn-primary" type="submit">💾 Guardar cambios</button>
-          <button class="btn-soft btn-danger" type="button" id="resetBtn">↩️ Revertir</button>
+          <button class="btn btn-primary" type="submit">💾 Guardar</button>
+          <button class="btn-soft" id="revertBtn" type="button">↩️ Revertir</button>
         </div>
 
         <div class="toast-ok" id="ok"></div>
         <div class="toast-err" id="err"></div>
-
-        <div class="help">🧠 “updated_at” lo actualiza el sistema automático al guardar.</div>
-        <div class="help">🔒 Si aparece “permission denied”, te faltan políticas RLS para UPDATE/SELECT en <b>companies</b>.</div>
       </form>
     </section>
 
-    <!-- Read-only + Danger zone -->
+    <!-- INFO CARD -->
     <aside class="card panel">
-      <div class="panel-title">
-        <h3>🔎 Solo lectura</h3>
-        <span class="chip">📌 Datos bloqueados</span>
+      <div class="panel-head">
+        <h3>✨ Resumen</h3>
+        <span class="mini-muted">Detalles del registro</span>
       </div>
 
-      <div class="grid1">
-        <div>
-          <div class="mini-muted">ID</div>
-          <div class="readonly" id="roId">—</div>
+      <div class="tiles">
+        <div class="tile">
+          <p class="t">🆔 ID <span class="mini-muted">🔒</span></p>
+          <p class="v" id="roId">—</p>
         </div>
 
-        <div>
-          <div class="mini-muted">NIT</div>
-          <div class="readonly" id="roNit">—</div>
+        <div class="tile">
+          <p class="t">🧾 NIT <span class="mini-muted">🔒</span></p>
+          <p class="v" id="roNit">—</p>
         </div>
 
-        <div class="grid2">
-          <div>
-            <div class="mini-muted">Creada en</div>
-            <div class="readonly" id="roCreated">—</div>
-          </div>
-          <div>
-            <div class="mini-muted">Última actualización</div>
-            <div class="readonly" id="roUpdated">—</div>
-          </div>
+        <div class="tile">
+          <p class="t">📅 Creada</p>
+          <p class="v" id="roCreated">—</p>
         </div>
 
-        <div class="help">✨ Tip: copia el ID si lo necesitas para soporte.</div>
+        <div class="tile">
+          <p class="t">🕒 Última actualización</p>
+          <p class="v" id="roUpdated">—</p>
+        </div>
 
-        <hr style="border:none; border-top:1px solid rgba(15,23,42,.08); margin: 8px 0;">
-
-        <div class="danger card panel">
-          <div class="panel-title">
-            <h3>☠️ Zona peligrosa</h3>
-            <span class="badge-danger">🧨 ELIMINAR EMPRESA</span>
-          </div>
-
-          <p class="mini-muted" style="margin:0 0 6px;">
-            Esto intenta borrar la empresa de la BD. Si tienes buses/usuarios/rutas/conductores, puede fallar por llaves foráneas.
+        <div class="tile">
+          <p class="t">🚦 Estado actual</p>
+          <p class="v">
+            <span class="pill-status" id="statePill">—</span>
           </p>
-
-          <div class="help">
-            🧩 Si falla, elimina primero: <b>buses</b>, <b>drivers</b>, <b>routes</b> y revisa usuarios asociados.
-          </div>
-
-          <div class="grid1" style="margin-top:10px;">
-            <label class="mini-muted">Escribe <b>ELIMINAR</b> para confirmar</label>
-            <input class="input" id="confirmDelete" placeholder="ELIMINAR" />
-
-            <button class="btn-soft btn-danger" id="deleteBtn" type="button">
-              🗑️ Eliminar empresa definitivamente
-            </button>
-          </div>
+          <p class="mini-muted" style="margin:8px 0 0;">
+            Si la desactivas, queda como “inactiva” en la BD y puedes reactivarla cuando quieras.
+          </p>
         </div>
       </div>
     </aside>
@@ -171,19 +163,19 @@
   import { requireAuthAndRole } from "../js/guard.js";
   import { signOut } from "../js/auth.js";
   import { setText, setError, setOk } from "../js/ui.js";
-  import { fetchCompanyById, updateCompany, deleteCompany } from "../js/company_settings.js";
+  import { fetchCompanyById, updateCompany } from "../js/company_settings.js";
 
-  const HERO_IMG = "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=1400&q=70";
+  const HERO_IMG = "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=1600&q=70";
   document.getElementById("heroBg").style.backgroundImage = `url('${HERO_IMG}')`;
 
-  const profile = await requireAuthAndRole(2); // EMPRESA_BUSES
+  const profile = await requireAuthAndRole(2);
   if (!profile) throw new Error("No auth (guard redirige).");
 
   setText("who", `@${profile.username}`);
 
   const companyId = profile.company_id;
   document.getElementById("companyChip").textContent =
-    companyId ? `🏷️ company_id: ${companyId}` : "⚠️ Sin company_id asignado";
+    companyId ? `🏷️ company_id: ${companyId}` : "⚠️ Sin company_id";
 
   // DOM
   const form = document.getElementById("companyForm");
@@ -199,13 +191,16 @@
   const roUpdated = document.getElementById("roUpdated");
 
   const refreshBtn = document.getElementById("refreshBtn");
-  const resetBtn = document.getElementById("resetBtn");
-  const confirmDeleteEl = document.getElementById("confirmDelete");
-  const deleteBtn = document.getElementById("deleteBtn");
+  const revertBtn = document.getElementById("revertBtn");
+  const copyIdBtn = document.getElementById("copyIdBtn");
+  const toggleBtn = document.getElementById("toggleBtn");
+
+  const statusChip = document.getElementById("statusChip");
+  const statePill = document.getElementById("statePill");
 
   const kName = document.getElementById("kName");
-  const kStatus = document.getElementById("kStatus");
-  const kCreated = document.getElementById("kCreated");
+  const kEmail = document.getElementById("kEmail");
+  const kUpdated = document.getElementById("kUpdated");
 
   document.getElementById("logout").addEventListener("click", async () => {
     await signOut();
@@ -216,51 +211,54 @@
     if (!s) return "—";
     const d = new Date(s);
     if (Number.isNaN(d.getTime())) return String(s);
-    return d.toLocaleString("es-CO", { year:"numeric", month:"short", day:"2-digit", hour:"2-digit", minute:"2-digit" });
+    return d.toLocaleString("es-CO", {
+      year:"numeric", month:"short", day:"2-digit",
+      hour:"2-digit", minute:"2-digit"
+    });
   }
 
-  let snapshot = null;
+  function setStatusUI(status){
+    const isOn = status === "ACTIVE";
+    statusChip.textContent = isOn ? "✅ Activa" : "⛔ Inactiva";
 
-  function esc(s){
-    return String(s ?? "")
-      .replaceAll("&","&amp;")
-      .replaceAll("<","&lt;")
-      .replaceAll(">","&gt;")
-      .replaceAll('"',"&quot;")
-      .replaceAll("'","&#039;");
+    statePill.className = "pill-status " + (isOn ? "on" : "off");
+    statePill.textContent = isOn ? "✅ ACTIVE" : "⛔ INACTIVE";
+
+    toggleBtn.textContent = isOn ? "⛔ Desactivar" : "✅ Reactivar";
   }
 
   function lockAll(msg){
-    for (const el of [nameEl, phoneEl, emailEl, addressEl, statusEl, refreshBtn, resetBtn, deleteBtn, confirmDeleteEl]){
+    for (const el of [nameEl, phoneEl, emailEl, addressEl, statusEl, refreshBtn, revertBtn, copyIdBtn, toggleBtn]){
       el.disabled = true;
     }
     setError("err", msg);
   }
 
   if (!companyId){
-    lockAll("Tu usuario empresa no tiene company_id. No se puede leer/editar companies sin eso.");
+    lockAll("Tu usuario empresa no tiene company_id. No se puede leer/editar la empresa sin eso.");
   }
+
+  let snapshot = null;
 
   function fillUI(c){
     snapshot = c;
 
-    // editable
     nameEl.value = c.name || "";
     phoneEl.value = c.phone || "";
     emailEl.value = c.email || "";
     addressEl.value = c.address || "";
     statusEl.value = c.status || "ACTIVE";
 
-    // readonly
     roId.textContent = c.id || "—";
     roNit.textContent = c.nit || "—";
     roCreated.textContent = fmtDate(c.created_at);
     roUpdated.textContent = fmtDate(c.updated_at);
 
-    // hero kpis
-    kName.textContent = (c.name || "—").slice(0, 16) + ((c.name || "").length > 16 ? "…" : "");
-    kStatus.textContent = c.status === "ACTIVE" ? "✅ ACTIVE" : "⛔ INACTIVE";
-    kCreated.textContent = fmtDate(c.created_at).split(",")[0] || "—";
+    setStatusUI(c.status);
+
+    kName.textContent = (c.name || "—").slice(0, 18) + ((c.name || "").length > 18 ? "…" : "");
+    kEmail.textContent = c.email ? "📩 OK" : "📩 —";
+    kUpdated.textContent = c.updated_at ? fmtDate(c.updated_at).split(",")[0] : "—";
   }
 
   async function load(){
@@ -279,10 +277,39 @@
 
   refreshBtn.addEventListener("click", load);
 
-  resetBtn.addEventListener("click", () => {
+  revertBtn.addEventListener("click", () => {
     if (snapshot) fillUI(snapshot);
-    setOk("ok", "Revertido a los datos guardados ✅");
+    setOk("ok", "Listo. Volviste al último estado guardado ✅");
     setError("err", "");
+  });
+
+  copyIdBtn.addEventListener("click", async () => {
+    try{
+      await navigator.clipboard.writeText(roId.textContent || "");
+      setOk("ok", "ID copiado 📋");
+      setError("err", "");
+    }catch{
+      setError("err", "No se pudo copiar (tu navegador bloqueó el portapapeles).");
+    }
+  });
+
+  toggleBtn.addEventListener("click", async () => {
+    try{
+      setError("err", "");
+      setOk("ok", "");
+      if (!companyId) return;
+
+      const newStatus = (statusEl.value === "ACTIVE") ? "INACTIVE" : "ACTIVE";
+      statusEl.value = newStatus;
+
+      await updateCompany(companyId, { status: newStatus });
+
+      setOk("ok", newStatus === "ACTIVE" ? "Empresa activa ✅" : "Empresa inactiva ⛔");
+      await load();
+    }catch(e){
+      console.error(e);
+      setError("err", e?.message || String(e));
+    }
   });
 
   form.addEventListener("submit", async (e) => {
@@ -301,7 +328,6 @@
 
       if (!name) return setError("err", "El nombre es obligatorio.");
 
-      // validación email básica (suave)
       if (email && !/^\S+@\S+\.\S+$/.test(email)){
         return setError("err", "Email inválido.");
       }
@@ -314,48 +340,16 @@
         status
       });
 
-      setOk("ok", "Cambios guardados en Supabase ✅");
+      setOk("ok", "Guardado ✅ (ya quedó en Supabase)");
       await load();
 
     }catch(e2){
       console.error(e2);
       const msg = (e2?.message || String(e2)).toLowerCase();
       if (msg.includes("duplicate") || msg.includes("unique")){
-        setError("err", "Ya existe una empresa con ese nombre o NIT (únicos). Cambia el nombre.");
+        setError("err", "Ese nombre ya está en uso. Usa otro.");
       }else{
         setError("err", e2?.message || String(e2));
-      }
-    }
-  });
-
-  deleteBtn.addEventListener("click", async () => {
-    try{
-      setError("err", "");
-      setOk("ok", "");
-      if (!companyId) return;
-
-      const confirmText = (confirmDeleteEl.value || "").trim().toUpperCase();
-      if (confirmText !== "ELIMINAR"){
-        return setError("err", "Escribe ELIMINAR para habilitar el borrado.");
-      }
-
-      const sure = confirm("⚠️ Esto intentará borrar la empresa de la BD. ¿Seguro? (Si hay dependencias, fallará)");
-      if (!sure) return;
-
-      await deleteCompany(companyId);
-
-      setOk("ok", "Empresa eliminada ✅ (si tenías RLS/llaves OK). Cerrando sesión…");
-      await signOut();
-      window.location.href = "login.html";
-
-    }catch(e3){
-      console.error(e3);
-      // errores típicos: foreign key
-      const msg = e3?.message || String(e3);
-      if (msg.toLowerCase().includes("foreign key") || msg.toLowerCase().includes("violates")){
-        setError("err", "No se puede eliminar: hay registros dependientes (buses/drivers/routes/usuarios). Elimina esos primero.");
-      }else{
-        setError("err", msg);
       }
     }
   });
