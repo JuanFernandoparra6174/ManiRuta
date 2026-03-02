@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Estadísticas | ManiRuta</title>
+
+  <link rel="stylesheet" href="../css/base.css"/>
+  <link rel="stylesheet" href="../css/home.css"/>
+  <link rel="stylesheet" href="../css/company_stats.css"/>
+</head>
+<body>
+
+<header class="nav">
+  <div class="container nav-inner">
+    <div class="brand"><span class="dot"></span> Estadísticas</div>
+
+    <div class="nav-right">
+      <span class="pill" id="who">...</span>
+      <a class="btn btn-ghost" href="home_company.html">Volver</a>
+      <button class="btn btn-ghost" id="logout">Salir</button>
+    </div>
+  </div>
+</header>
+
+<main class="container stats-page">
+
+  <!-- HERO -->
+  <section class="stats-hero card">
+    <div class="shape s1"></div>
+    <div class="shape s2"></div>
+
+    <div class="hero-bg" id="heroBg"></div>
+
+    <div class="hero-content">
+      <div class="hero-head">
+        <div>
+          <h1 class="hero-title">📊 Panel visual de tu operación</h1>
+          <p class="hero-sub">Todo se calcula en tiempo real desde Supabase: buses 🚍 y conductores 👨‍✈️.</p>
+        </div>
+
+        <div class="hero-tags">
+          <span class="chip" id="companyChip">🏷️ company_id: ...</span>
+          <button class="btn-soft" id="refreshBtn" type="button">🔄 Actualizar</button>
+        </div>
+      </div>
+
+      <div class="kpi-row" id="kpis">
+        <div class="kpi">
+          <div class="kpi-ico">🚍</div>
+          <div>
+            <div class="kpi-n" id="kpiBuses">—</div>
+            <div class="kpi-l">Buses (total)</div>
+          </div>
+        </div>
+
+        <div class="kpi">
+          <div class="kpi-ico">👨‍✈️</div>
+          <div>
+            <div class="kpi-n" id="kpiDrivers">—</div>
+            <div class="kpi-l">Conductores (total)</div>
+          </div>
+        </div>
+
+        <div class="kpi">
+          <div class="kpi-ico">✅</div>
+          <div>
+            <div class="kpi-n" id="kpiActive">—</div>
+            <div class="kpi-l">Activos (buses + drivers)</div>
+          </div>
+        </div>
+
+        <div class="kpi">
+          <div class="kpi-ico">⛔</div>
+          <div>
+            <div class="kpi-n" id="kpiInactive">—</div>
+            <div class="kpi-l">Inactivos (buses + drivers)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GRID -->
+  <section class="stats-grid">
+
+    <!-- CHARTS -->
+    <section class="card panel">
+      <div class="panel-head">
+        <h3>🎯 Distribución</h3>
+        <span class="mini-muted">buses y conductores</span>
+      </div>
+
+      <div class="charts">
+        <div class="chart-card">
+          <div class="chart-title">🚍 Buses</div>
+          <div class="chart-wrap">
+            <div class="donut" id="donutBuses"></div>
+            <div class="legend" id="legendBuses"></div>
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <div class="chart-title">👨‍✈️ Conductores</div>
+          <div class="chart-wrap">
+            <div class="donut" id="donutDrivers"></div>
+            <div class="legend" id="legendDrivers"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bars">
+        <div class="bar-card">
+          <div class="bar-head">
+            <b>🚍 Buses por estado</b>
+            <span class="mini-muted" id="busBarInfo">—</span>
+          </div>
+          <div class="bar" id="barBuses"></div>
+        </div>
+
+        <div class="bar-card">
+          <div class="bar-head">
+            <b>👨‍✈️ Conductores por estado</b>
+            <span class="mini-muted" id="driverBarInfo">—</span>
+          </div>
+          <div class="bar" id="barDrivers"></div>
+        </div>
+      </div>
+
+      <div class="toast-err" id="err"></div>
+      <div class="toast-ok" id="ok"></div>
+    </section>
+
+    <!-- LISTS -->
+    <aside class="card panel">
+      <div class="panel-head">
+        <h3>🧠 “Cuáles” (listas rápidas)</h3>
+        <span class="mini-muted">top recientes</span>
+      </div>
+
+      <div class="list-block">
+        <div class="list-title">🚍 Buses activos</div>
+        <div class="chips" id="busActiveList"></div>
+      </div>
+
+      <div class="list-block">
+        <div class="list-title">🧰 Buses en mantenimiento</div>
+        <div class="chips" id="busMaintList"></div>
+      </div>
+
+      <div class="list-block">
+        <div class="list-title">⛔ Buses inactivos</div>
+        <div class="chips" id="busInactiveList"></div>
+      </div>
+
+      <hr class="sep"/>
+
+      <div class="list-block">
+        <div class="list-title">👨‍✈️ Conductores activos</div>
+        <div class="chips" id="driverActiveList"></div>
+      </div>
+
+      <div class="list-block">
+        <div class="list-title">⛔ Conductores inactivos</div>
+        <div class="chips" id="driverInactiveList"></div>
+      </div>
+
+      <div class="mini-muted" style="margin-top:10px;">
+        Tip: si una lista está vacía, es porque no hay registros en ese estado.
+      </div>
+    </aside>
+
+  </section>
+
+</main>
+
+<script type="module">
+  import { requireAuthAndRole } from "../js/guard.js";
+  import { signOut } from "../js/auth.js";
+  import { setText, setError, setOk } from "../js/ui.js";
+  import { loadCompanyStats } from "../js/company_stats.js";
+
+  const HERO_IMG = "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1600&q=70";
+  document.getElementById("heroBg").style.backgroundImage = `url('${HERO_IMG}')`;
+
+  const profile = await requireAuthAndRole(2); // EMPRESA
+  if (!profile) throw new Error("No auth");
+
+  setText("who", `@${profile.username}`);
+
+  const companyId = profile.company_id;
+  document.getElementById("companyChip").textContent =
+    companyId ? `🏷️ company_id: ${companyId}` : "⚠️ Sin company_id";
+
+  document.getElementById("logout").addEventListener("click", async () => {
+    await signOut();
+    window.location.href = "login.html";
+  });
+
+  const refreshBtn = document.getElementById("refreshBtn");
+  refreshBtn.addEventListener("click", run);
+
+  async function run(){
+    try{
+      setError("err", "");
+      setOk("ok", "");
+      if (!companyId){
+        setError("err", "Tu usuario EMPRESA no tiene company_id. No se pueden calcular estadísticas.");
+        return;
+      }
+
+      const stats = await loadCompanyStats(companyId);
+
+      // KPIs
+      document.getElementById("kpiBuses").textContent = stats.buses.total;
+      document.getElementById("kpiDrivers").textContent = stats.drivers.total;
+      document.getElementById("kpiActive").textContent = stats.buses.active + stats.drivers.active;
+      document.getElementById("kpiInactive").textContent = stats.buses.inactive + stats.drivers.inactive;
+
+      // Donuts + legends
+      document.getElementById("donutBuses").innerHTML = stats.buses.donutSvg;
+      document.getElementById("legendBuses").innerHTML = stats.buses.legendHtml;
+
+      document.getElementById("donutDrivers").innerHTML = stats.drivers.donutSvg;
+      document.getElementById("legendDrivers").innerHTML = stats.drivers.legendHtml;
+
+      // Bars
+      document.getElementById("barBuses").innerHTML = stats.buses.barHtml;
+      document.getElementById("busBarInfo").textContent = `${stats.buses.total} total`;
+
+      document.getElementById("barDrivers").innerHTML = stats.drivers.barHtml;
+      document.getElementById("driverBarInfo").textContent = `${stats.drivers.total} total`;
+
+      // Lists
+      const fillChips = (id, arr, emptyText) => {
+        const el = document.getElementById(id);
+        if (!arr.length){
+          el.innerHTML = `<span class="chip soft">${emptyText}</span>`;
+          return;
+        }
+        el.innerHTML = arr.map(x => `<span class="chip">${x}</span>`).join("");
+      };
+
+      fillChips("busActiveList", stats.buses.list.active, "— sin buses activos");
+      fillChips("busMaintList", stats.buses.list.maintenance, "— sin mantenimiento");
+      fillChips("busInactiveList", stats.buses.list.inactive, "— sin buses inactivos");
+
+      fillChips("driverActiveList", stats.drivers.list.active, "— sin conductores activos");
+      fillChips("driverInactiveList", stats.drivers.list.inactive, "— sin conductores inactivos");
+
+      setOk("ok", "Listo ✅ Estadísticas actualizadas");
+    }catch(e){
+      console.error(e);
+      setError("err", e?.message || String(e));
+    }
+  }
+
+  await run();
+</script>
+
+</body>
+</html>
