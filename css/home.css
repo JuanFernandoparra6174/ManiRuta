@@ -417,7 +417,42 @@
   .fleet-hero .hero-img{ height: 220px; }
 }
 
+/* =========================
+   MAP & GPS STYLES
+   ========================= */
 
+#map { 
+  height: 300px; 
+  width: 100%; 
+  border-radius: var(--radius); /* Usamos tu variable de radio para que combine */
+  margin: 14px 0 20px;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08); /* Misma sombra que tus tarjetas */
+  border: 1px solid rgba(15,23,42,.08);
+  z-index: 1; 
+}
+
+/* Estilo para el popup del GPS */
+.leaflet-popup-content-wrapper {
+  border-radius: 12px;
+  font-family: inherit;
+  padding: 4px;
+}
+
+.leaflet-popup-content {
+  font-weight: 800;
+  font-size: 13px;
+  margin: 8px 12px;
+}
+
+/* Personalización del marcador circular (Paraderos) */
+.leaflet-interactive {
+  stroke-width: 2;
+  transition: r 0.2s ease;
+}
+
+@media (min-width: 900px) {
+  #map { height: 400px; }
+}
 
 
 

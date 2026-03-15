@@ -6,61 +6,48 @@
   <title>Inicio Pasajero | ManiRuta</title>
   <link rel="stylesheet" href="../css/base.css"/>
   <link rel="stylesheet" href="../css/home.css"/>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <style>
+    #map { 
+      height: 300px; 
+      width: 100%; 
+      border-radius: 15px; 
+      margin-bottom: 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      z-index: 1; 
+    }
+  </style>
 </head>
 <body>
 
-  <!-- NAV -->
   <header class="nav">
     <div class="container nav-inner">
       <div class="nav-left">
-        <button class="icon-btn" id="menuBtn" title="Menú" aria-label="Menú">
-          <!-- hamburger -->
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-            <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-          </svg>
+        <button class="icon-btn" id="menuBtn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
         </button>
-
-        <div class="brand">
-          <span class="dot"></span> ManiRuta
-        </div>
+        <div class="brand"><span class="dot"></span> ManiRuta</div>
       </div>
-
       <div class="nav-right">
         <span class="pill" id="who">...</span>
-
-        <button class="icon-btn" id="settingsBtn" title="Ajustes" aria-label="Ajustes">
-          <!-- gear -->
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-            <path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z" stroke="currentColor" stroke-width="2"/>
-            <path d="M19.4 15a7.9 7.9 0 0 0 .1-2l2-1.2-2-3.4-2.3.7a7.4 7.4 0 0 0-1.7-1l-.3-2.4H10.8l-.3 2.4a7.4 7.4 0 0 0-1.7 1l-2.3-.7-2 3.4 2 1.2a7.9 7.9 0 0 0 .1 2l-2 1.2 2 3.4 2.3-.7c.5.4 1.1.7 1.7 1l.3 2.4h4.4l.3-2.4c.6-.3 1.2-.6 1.7-1l2.3.7 2-3.4-2-1.2Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
-          </svg>
-        </button>
-
         <button class="btn btn-ghost" id="logout">Salir</button>
       </div>
     </div>
   </header>
 
   <main class="container home-wrap">
-
-    <!-- Welcome -->
     <section class="card welcome">
       <div class="welcome-top">
         <div>
           <h1 id="welcomeTitle">👋 Hola, pasajero</h1>
-          <p>Consulta rutas en tiempo real, planea tu viaje y reporta incidentes rápido.</p>
+          <p>Consulta rutas en tiempo real y reporta incidentes rápido.</p>
         </div>
-        <span class="pill">🚌 Tiempo real</span>
-      </div>
-
-      <div class="footer-actions">
-        <span class="badge">📍 Paraderos</span>
-        <span class="badge">🚨 Alertas</span>
-        <span class="badge">🛡️ Denuncias</span>
+        <span class="pill">🚌 GPS Activo</span>
       </div>
     </section>
 
-    <!-- Modules list (mockup style) -->
+    <div id="map"></div>
+
     <section class="feature-list">
 
       <a class="feature" href="#" id="goRoutes">
@@ -111,51 +98,39 @@
     </section>
   </main>
 
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
   <script type="module">
     import { requireAuthAndRole } from "../js/guard.js";
     import { signOut } from "../js/auth.js";
+    // AQUÍ VA LA IMPORTACIÓN DE LOS PARADEROS Y GPS
+    import { startGPS, loadStopsOnMap } from "../js/map_engine.js";
 
-    // Imágenes de prueba (cámbialas luego por tus links de Supabase Storage)
-    const IMG_ROUTES    = "https://advancedfleetmanagementconsulting.com/wp-content/uploads/2016/11/calcula-mejor-ruta-660x400.png"; // bus
-    const IMG_INCIDENTS = "https://media.licdn.com/dms/image/v2/D4E12AQG4pe87F3YiGg/article-cover_image-shrink_720_1280/article-cover_image-shrink_720_1280/0/1663096582659?e=2147483647&v=beta&t=Q4Js9R1346mSwMneb3-RsMri04uondNEjJ7V-44kaWs"; // seguridad / alerta
-    const IMG_ALERTS    = "https://www.dexiaabogados.com/wp-content/uploads/2021/01/denuncia.jpg"; // ciudad / notificación
+    // Restauración de imágenes originales
+    const IMG_ROUTES    = "https://advancedfleetmanagementconsulting.com/wp-content/uploads/2016/11/calcula-mejor-ruta-660x400.png";
+    const IMG_INCIDENTS = "https://media.licdn.com/dms/image/v2/D4E12AQG4pe87F3YiGg/article-cover_image-shrink_720_1280/0/1663096582659?e=2147483647&v=beta&t=Q4Js9R1346mSwMneb3-RsMri04uondNEjJ7V-44kaWs";
+    const IMG_ALERTS    = "https://www.dexiaabogados.com/wp-content/uploads/2021/01/denuncia.jpg";
 
     document.getElementById("imgRoutes").style.backgroundImage    = `url('${IMG_ROUTES}')`;
     document.getElementById("imgIncidents").style.backgroundImage = `url('${IMG_INCIDENTS}')`;
     document.getElementById("imgAlerts").style.backgroundImage    = `url('${IMG_ALERTS}')`;
 
-    // Protección + perfil
-    const profile = await requireAuthAndRole(1); // 1 = PASAJERO
+    // Perfil
+    const profile = await requireAuthAndRole(1); 
     if (profile){
       document.getElementById("who").textContent = `@${profile.username}`;
       document.getElementById("welcomeTitle").textContent = `👋 Hola, ${profile.username}`;
     }
 
-    // Logout
-    document.getElementById("logout").addEventListener("click", async () => {
-      await signOut();
-      window.location.href = "login.html"; // estás dentro de /pages/
-    });
+    // INICIAR MAPA Y CARGAR PARADEROS DE LA DB
+    startGPS();
+    loadStopsOnMap();
 
-    // Botones (por ahora placeholder)
-    document.getElementById("goRoutes").addEventListener("click", () => {
-    window.location.href = "view_routes.html"; 
-    });
-    document.getElementById("goIncidents").addEventListener("click", (e) => {
-      e.preventDefault();
-      window.location.href = "denuncias.html";;
-    });
-    document.getElementById("goAlerts").addEventListener("click", () => {
-     window.location.href = "alerts_passenger.html"; 
-    });
-    // Menú/Ajustes placeholder
-    document.getElementById("menuBtn").addEventListener("click", () => alert("☰ Menú (pendiente)"));
-    document.getElementById("settingsBtn").addEventListener("click", () => alert("⚙️ Ajustes (pendiente)"));
+    // Navegación
+    document.getElementById("logout").onclick = async () => { await signOut(); window.location.href = "login.html"; };
+    document.getElementById("goRoutes").onclick = (e) => { e.preventDefault(); window.location.href = "view_routes.html"; };
+    document.getElementById("goIncidents").onclick = (e) => { e.preventDefault(); window.location.href = "denuncias.html"; };
+    document.getElementById("goAlerts").onclick = (e) => { e.preventDefault(); window.location.href = "alerts_passenger.html"; };
   </script>
 </body>
 </html>
-
-
-
-
-
