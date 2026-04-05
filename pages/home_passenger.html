@@ -49,7 +49,6 @@
     <div id="map"></div>
 
     <section class="feature-list">
-
       <a class="feature" href="#" id="goRoutes">
         <div class="feature-thumb">
           <div class="img" id="imgRoutes"></div>
@@ -58,10 +57,7 @@
         <div>
           <h2>Rutas</h2>
           <p>Consulta buses y paraderos en tiempo real.</p>
-          <div class="small-row">
-            <span class="help">Ver rutas disponibles</span>
-            <span class="chev">›</span>
-          </div>
+          <div class="small-row"><span class="help">Ver rutas</span><span class="chev">›</span></div>
         </div>
       </a>
 
@@ -73,10 +69,7 @@
         <div>
           <h2>Denuncias</h2>
           <p>Reporta incidentes de forma rápida y anónima.</p>
-          <div class="small-row">
-            <span class="help">Crear denuncia</span>
-            <span class="chev">›</span>
-          </div>
+          <div class="small-row"><span class="help">Crear reporte</span><span class="chev">›</span></div>
         </div>
       </a>
 
@@ -87,14 +80,10 @@
         </div>
         <div>
           <h2>Alertas</h2>
-          <p>Recibe notificaciones sobre desvíos y eventos.</p>
-          <div class="small-row">
-            <span class="help">Ver alertas</span>
-            <span class="chev">›</span>
-          </div>
+          <p>Recibe notificaciones sobre desvíos.</p>
+          <div class="small-row"><span class="help">Ver avisos</span><span class="chev">›</span></div>
         </div>
       </a>
-
     </section>
   </main>
 
@@ -103,10 +92,10 @@
   <script type="module">
     import { requireAuthAndRole } from "../js/guard.js";
     import { signOut } from "../js/auth.js";
-    // AQUÍ VA LA IMPORTACIÓN DE LOS PARADEROS Y GPS
-    import { startGPS, loadStopsOnMap } from "../js/map_engine.js";
+    // IMPORTACIÓN ÚNICA
+    import { startGPS, loadStopsOnMap, loadRealRoutes } from "../js/map_engine.js";
 
-    // Restauración de imágenes originales
+    // Restaurar imágenes originales
     const IMG_ROUTES    = "https://advancedfleetmanagementconsulting.com/wp-content/uploads/2016/11/calcula-mejor-ruta-660x400.png";
     const IMG_INCIDENTS = "https://media.licdn.com/dms/image/v2/D4E12AQG4pe87F3YiGg/article-cover_image-shrink_720_1280/0/1663096582659?e=2147483647&v=beta&t=Q4Js9R1346mSwMneb3-RsMri04uondNEjJ7V-44kaWs";
     const IMG_ALERTS    = "https://www.dexiaabogados.com/wp-content/uploads/2021/01/denuncia.jpg";
@@ -115,18 +104,21 @@
     document.getElementById("imgIncidents").style.backgroundImage = `url('${IMG_INCIDENTS}')`;
     document.getElementById("imgAlerts").style.backgroundImage    = `url('${IMG_ALERTS}')`;
 
-    // Perfil
     const profile = await requireAuthAndRole(1); 
     if (profile){
       document.getElementById("who").textContent = `@${profile.username}`;
       document.getElementById("welcomeTitle").textContent = `👋 Hola, ${profile.username}`;
     }
 
-    // INICIAR MAPA Y CARGAR PARADEROS DE LA DB
-    startGPS();
-    loadStopsOnMap();
+    // CARGAR MAPA
+    async function initMap() {
+      startGPS();
+      await loadStopsOnMap();
+      await loadRealRoutes(); // Esto dibujará las rutas sin mezclarlas
+    }
+    initMap();
 
-    // Navegación
+    // Botones
     document.getElementById("logout").onclick = async () => { await signOut(); window.location.href = "login.html"; };
     document.getElementById("goRoutes").onclick = (e) => { e.preventDefault(); window.location.href = "view_routes.html"; };
     document.getElementById("goIncidents").onclick = (e) => { e.preventDefault(); window.location.href = "denuncias.html"; };
