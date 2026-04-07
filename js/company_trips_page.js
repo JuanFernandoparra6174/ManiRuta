@@ -3,6 +3,7 @@ import { signOut } from "./auth.js";
 import {
     createTrip,
     deleteTrip,
+    fetchCompanyTripById,
     fetchCompanyTripFormOptions,
     fetchCompanyTrips,
     updateTripStatus
@@ -111,6 +112,7 @@ function renderTripsTable() {
             <td>${formatDateTime(trip.end_at)}</td>
             <td><span class="chip ${trip.status === "IN_PROGRESS" ? "ok" : trip.status === "FINISHED" ? "" : "bad"}">${escapeHtml(trip.status)}</span></td>
             <td class="stop-row-actions">
+                <button class="btn-mini secondary" data-trip-action="follow" data-trip-id="${trip.id}" ${trip.status !== "IN_PROGRESS" ? "disabled" : ""}>Seguir viaje</button>
                 <button class="btn-mini secondary" data-trip-action="finish" data-trip-id="${trip.id}" ${trip.status !== "IN_PROGRESS" ? "disabled" : ""}>Finalizar</button>
                 <button class="btn-mini route-remove-btn" data-trip-action="cancel" data-trip-id="${trip.id}" ${trip.status !== "IN_PROGRESS" ? "disabled" : ""}>Cancelar</button>
                 <button class="btn-mini route-remove-btn" data-trip-action="delete" data-trip-id="${trip.id}">Eliminar</button>
@@ -188,6 +190,12 @@ async function handleTripsTableClick(event) {
 
     try {
         clearMessages();
+
+        if (action === "follow") {
+            const trip = await fetchCompanyTripById(tripId, state.companyId);
+            window.location.href = `company_trip_live.html?trip_id=${trip.id}`;
+            return;
+        }
 
         if (action === "finish") {
             await updateTripStatus(tripId, state.companyId, {

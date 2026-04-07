@@ -53,6 +53,7 @@
         <span class="badge">Conductores</span>
         <span class="badge">Rutas</span>
         <span class="badge">Viajes</span>
+        <span class="badge">Estadisticas</span>
         <span class="badge">Configuracion</span>
       </div>
     </section>
@@ -101,6 +102,17 @@
           <button class="btn-mini secondary" id="goTrips">gestionar</button>
         </div>
       </article>
+
+      <article class="company-card">
+        <div class="company-top">
+          <div class="company-avatar"><div class="img" id="imgStats"></div></div>
+        </div>
+        <p class="company-title">Estadisticas</p>
+        <p class="company-sub">Resumen operativo de viajes, uso, GPS e incidencias</p>
+        <div class="company-actions">
+          <button class="btn-mini" id="goStats">abrir</button>
+        </div>
+      </article>
     </section>
 
     <div class="section-title">vista de flotas</div>
@@ -125,12 +137,14 @@
     const IMG_DRIVERS = "https://images.unsplash.com/photo-1529070538774-1843cb3265df?auto=format&fit=crop&w=900&q=70";
     const IMG_ROUTES = "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=900&q=70";
     const IMG_TRIPS = "https://images.unsplash.com/photo-1519003722824-194d4455a60c?auto=format&fit=crop&w=900&q=70";
+    const IMG_STATS = "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=900&q=70";
     const IMG_HERO = "https://bogota.gov.co/sites/default/files/styles/1050px/public/2024-06/busesbogota-1-2.png";
 
     $("imgFleet").style.backgroundImage = `url('${IMG_FLEET}')`;
     $("imgDrivers").style.backgroundImage = `url('${IMG_DRIVERS}')`;
     $("imgRoutes").style.backgroundImage = `url('${IMG_ROUTES}')`;
     $("imgTrips").style.backgroundImage = `url('${IMG_TRIPS}')`;
+    $("imgStats").style.backgroundImage = `url('${IMG_STATS}')`;
     $("imgHero").style.backgroundImage = `url('${IMG_HERO}')`;
 
     const profile = await requireAuthAndRole(2);
@@ -169,6 +183,7 @@
     on("goDrivers", () => window.location.href = "drivers.html");
     on("goRoutes", () => window.location.href = "company_routes.html");
     on("goTrips", () => window.location.href = "company_trips.html");
+    on("goStats", () => window.location.href = "company_stats.html");
     on("menuBtn", () => alert("Menu pendiente"));
     on("settingsBtn", () => window.location.href = "company_settings.html");
   </script>

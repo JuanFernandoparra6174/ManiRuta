@@ -147,6 +147,20 @@ export async function fetchCompanyTrips(companyId) {
         }));
 }
 
+export async function fetchCompanyTripById(tripId, companyId) {
+    const trips = await fetchCompanyTrips(companyId);
+    const trip = trips.find((item) => item.id === tripId);
+
+    if (!trip) {
+        throw new Error("No se encontro el viaje solicitado.");
+    }
+
+    return {
+        ...trip,
+        route_stops: trip.route?.stops || []
+    };
+}
+
 export async function updateTripStatus(tripId, companyId, { status, end_at }) {
     if (!TRIP_STATUSES.includes(status)) {
         throw new Error("Estado de viaje no valido.");

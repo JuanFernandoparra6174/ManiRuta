@@ -3,8 +3,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Estadísticas | ManiRuta</title>
-
+  <title>Estadisticas | ManiRuta</title>
   <link rel="stylesheet" href="../css/base.css"/>
   <link rel="stylesheet" href="../css/home.css"/>
   <link rel="stylesheet" href="../css/company_stats.css"/>
@@ -13,8 +12,7 @@
 
 <header class="nav">
   <div class="container nav-inner">
-    <div class="brand"><span class="dot"></span> Estadísticas</div>
-
+    <div class="brand"><span class="dot"></span> Estadisticas</div>
     <div class="nav-right">
       <span class="pill" id="who">...</span>
       <a class="btn btn-ghost" href="home_company.html">Volver</a>
@@ -24,106 +22,116 @@
 </header>
 
 <main class="container stats-page">
-
-  <!-- HERO -->
   <section class="stats-hero card">
     <div class="shape s1"></div>
     <div class="shape s2"></div>
-
     <div class="hero-bg" id="heroBg"></div>
 
     <div class="hero-content">
       <div class="hero-head">
         <div>
-          <h1 class="hero-title">📊 Panel visual de tu operación</h1>
-          <p class="hero-sub">Todo se calcula en tiempo real desde Supabase: buses 🚍 y conductores 👨‍✈️.</p>
+          <h1 class="hero-title">Panel operativo de la empresa</h1>
+          <p class="hero-sub">Viajes, uso de rutas, buses, conductores, GPS e incidencias con la informacion disponible hoy en Supabase.</p>
         </div>
 
         <div class="hero-tags">
-          <span class="chip" id="companyChip">🏷️ company_id: ...</span>
-          <button class="btn-soft" id="refreshBtn" type="button">🔄 Actualizar</button>
+          <span class="chip" id="companyChip">company_id: ...</span>
+          <div class="stats-toolbar">
+            <select id="rangeSelect" class="stats-select">
+              <option value="today">Hoy</option>
+              <option value="7d">Ultimos 7 dias</option>
+              <option value="30d" selected>Ultimos 30 dias</option>
+              <option value="all">Todo</option>
+            </select>
+            <button class="btn-soft" id="refreshBtn" type="button">Actualizar</button>
+          </div>
         </div>
       </div>
 
-      <div class="kpi-row" id="kpis">
+      <div class="kpi-row">
         <div class="kpi">
-          <div class="kpi-ico">🚍</div>
+          <div class="kpi-ico">Hoy</div>
           <div>
-            <div class="kpi-n" id="kpiBuses">—</div>
-            <div class="kpi-l">Buses (total)</div>
+            <div class="kpi-n" id="kpiTripsToday">-</div>
+            <div class="kpi-l">Viajes iniciados hoy</div>
           </div>
         </div>
-
         <div class="kpi">
-          <div class="kpi-ico">👨‍✈️</div>
+          <div class="kpi-ico">Live</div>
           <div>
-            <div class="kpi-n" id="kpiDrivers">—</div>
-            <div class="kpi-l">Conductores (total)</div>
+            <div class="kpi-n" id="kpiTripsLive">-</div>
+            <div class="kpi-l">Viajes en progreso</div>
           </div>
         </div>
-
         <div class="kpi">
-          <div class="kpi-ico">✅</div>
+          <div class="kpi-ico">OK</div>
           <div>
-            <div class="kpi-n" id="kpiActive">—</div>
-            <div class="kpi-l">Activos (buses + drivers)</div>
+            <div class="kpi-n" id="kpiTripsFinished">-</div>
+            <div class="kpi-l">Finalizados en el periodo</div>
           </div>
         </div>
-
         <div class="kpi">
-          <div class="kpi-ico">⛔</div>
+          <div class="kpi-ico">X</div>
           <div>
-            <div class="kpi-n" id="kpiInactive">—</div>
-            <div class="kpi-l">Inactivos (buses + drivers)</div>
+            <div class="kpi-n" id="kpiTripsCanceled">-</div>
+            <div class="kpi-l">Cancelados en el periodo</div>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- GRID -->
   <section class="stats-grid">
-
-    <!-- CHARTS -->
     <section class="card panel">
       <div class="panel-head">
-        <h3>🎯 Distribución</h3>
-        <span class="mini-muted">buses y conductores</span>
+        <h3>Resumen del periodo</h3>
+        <span class="mini-muted" id="rangeLabel">Ultimos 30 dias</span>
       </div>
 
-      <div class="charts">
-        <div class="chart-card">
-          <div class="chart-title">🚍 Buses</div>
-          <div class="chart-wrap">
-            <div class="donut" id="donutBuses"></div>
-            <div class="legend" id="legendBuses"></div>
-          </div>
+      <div class="mini-kpis">
+        <div class="mini-card">
+          <span class="mini-label">Viajes hoy</span>
+          <strong id="miniTripsToday">-</strong>
         </div>
-
-        <div class="chart-card">
-          <div class="chart-title">👨‍✈️ Conductores</div>
-          <div class="chart-wrap">
-            <div class="donut" id="donutDrivers"></div>
-            <div class="legend" id="legendDrivers"></div>
-          </div>
+        <div class="mini-card">
+          <span class="mini-label">Esta semana</span>
+          <strong id="miniTripsWeek">-</strong>
+        </div>
+        <div class="mini-card">
+          <span class="mini-label">Este mes</span>
+          <strong id="miniTripsMonth">-</strong>
+        </div>
+        <div class="mini-card">
+          <span class="mini-label">Duracion promedio</span>
+          <strong id="miniAvgDuration">-</strong>
         </div>
       </div>
 
-      <div class="bars">
-        <div class="bar-card">
-          <div class="bar-head">
-            <b>🚍 Buses por estado</b>
-            <span class="mini-muted" id="busBarInfo">—</span>
-          </div>
-          <div class="bar" id="barBuses"></div>
+      <div class="bar-card">
+        <div class="bar-head">
+          <b>Estado de viajes</b>
+          <span class="mini-muted" id="tripStatusInfo">-</span>
         </div>
+        <div class="bar" id="tripStatusBar"></div>
+        <div class="legend compact" id="tripStatusLegend"></div>
+      </div>
 
-        <div class="bar-card">
-          <div class="bar-head">
-            <b>👨‍✈️ Conductores por estado</b>
-            <span class="mini-muted" id="driverBarInfo">—</span>
-          </div>
-          <div class="bar" id="barDrivers"></div>
+      <div class="mini-kpis secondary">
+        <div class="mini-card">
+          <span class="mini-label">Rutas configuradas</span>
+          <strong id="opsRoutesConfigured">-</strong>
+        </div>
+        <div class="mini-card">
+          <span class="mini-label">Rutas activas</span>
+          <strong id="opsRoutesActive">-</strong>
+        </div>
+        <div class="mini-card">
+          <span class="mini-label">Rutas con viajes</span>
+          <strong id="opsRoutesUsed">-</strong>
+        </div>
+        <div class="mini-card">
+          <span class="mini-label">Buses con GPS reciente</span>
+          <strong id="opsGpsBuses">-</strong>
         </div>
       </div>
 
@@ -131,47 +139,85 @@
       <div class="toast-ok" id="ok"></div>
     </section>
 
-    <!-- LISTS -->
     <aside class="card panel">
       <div class="panel-head">
-        <h3>🧠 “Cuáles” (listas rápidas)</h3>
-        <span class="mini-muted">top recientes</span>
+        <h3>Estado operativo</h3>
+        <span class="mini-muted">Flota y personal</span>
+      </div>
+
+      <div class="bar-card">
+        <div class="bar-head">
+          <b>Disponibilidad de flota</b>
+          <span class="mini-muted" id="fleetInfo">-</span>
+        </div>
+        <div class="bar" id="fleetStatusBar"></div>
+        <div class="legend compact" id="fleetStatusLegend"></div>
       </div>
 
       <div class="list-block">
-        <div class="list-title">🚍 Buses activos</div>
-        <div class="chips" id="busActiveList"></div>
+        <div class="list-title">Buses reportando ubicacion recientemente</div>
+        <div class="chips" id="recentGpsList"></div>
       </div>
 
       <div class="list-block">
-        <div class="list-title">🧰 Buses en mantenimiento</div>
-        <div class="chips" id="busMaintList"></div>
-      </div>
-
-      <div class="list-block">
-        <div class="list-title">⛔ Buses inactivos</div>
-        <div class="chips" id="busInactiveList"></div>
-      </div>
-
-      <hr class="sep"/>
-
-      <div class="list-block">
-        <div class="list-title">👨‍✈️ Conductores activos</div>
-        <div class="chips" id="driverActiveList"></div>
-      </div>
-
-      <div class="list-block">
-        <div class="list-title">⛔ Conductores inactivos</div>
-        <div class="chips" id="driverInactiveList"></div>
-      </div>
-
-      <div class="mini-muted" style="margin-top:10px;">
-        Tip: si una lista está vacía, es porque no hay registros en ese estado.
+        <div class="list-title">Notas de datos</div>
+        <div class="notes-list" id="notesList"></div>
       </div>
     </aside>
 
-  </section>
+    <section class="card panel">
+      <div class="panel-head">
+        <h3>Rankings del periodo</h3>
+        <span class="mini-muted">Uso real del sistema</span>
+      </div>
 
+      <div class="rank-grid">
+        <div class="rank-card">
+          <div class="list-title">Rutas mas usadas</div>
+          <div id="topRoutes"></div>
+        </div>
+        <div class="rank-card">
+          <div class="list-title">Buses mas activos</div>
+          <div id="topBuses"></div>
+        </div>
+        <div class="rank-card">
+          <div class="list-title">Conductores con mas viajes</div>
+          <div id="topDrivers"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card panel">
+      <div class="panel-head">
+        <h3>Incidencias</h3>
+        <span class="mini-muted">Solo si existen datos registrados</span>
+      </div>
+
+      <div class="mini-kpis secondary">
+        <div class="mini-card">
+          <span class="mini-label">Total en el periodo</span>
+          <strong id="incTotal">-</strong>
+        </div>
+        <div class="mini-card">
+          <span class="mini-label">Nuevas</span>
+          <strong id="incNew">-</strong>
+        </div>
+        <div class="mini-card">
+          <span class="mini-label">En revision</span>
+          <strong id="incReview">-</strong>
+        </div>
+        <div class="mini-card">
+          <span class="mini-label">Resueltas</span>
+          <strong id="incResolved">-</strong>
+        </div>
+      </div>
+
+      <div class="list-block">
+        <div class="list-title">Rutas con mas incidencias</div>
+        <div id="incidentRoutes"></div>
+      </div>
+    </section>
+  </section>
 </main>
 
 <script type="module">
@@ -180,80 +226,138 @@
   import { setText, setError, setOk } from "../js/ui.js";
   import { loadCompanyStats } from "../js/company_stats.js";
 
-  const HERO_IMG = "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1600&q=70";
+  const HERO_IMG = "https://images.unsplash.com/photo-1553531384-cc64ac80f931?auto=format&fit=crop&w=1600&q=70";
   document.getElementById("heroBg").style.backgroundImage = `url('${HERO_IMG}')`;
 
-  const profile = await requireAuthAndRole(2); // EMPRESA
+  const profile = await requireAuthAndRole(2);
   if (!profile) throw new Error("No auth");
 
-  setText("who", `@${profile.username}`);
-
   const companyId = profile.company_id;
-  document.getElementById("companyChip").textContent =
-    companyId ? `🏷️ company_id: ${companyId}` : "⚠️ Sin company_id";
+  setText("who", `@${profile.username}`);
+  setText("companyChip", companyId ? `company_id: ${companyId}` : "Sin company_id");
 
+  function renderStackBar(barId, legendId, segments, infoId = null) {
+    const bar = document.getElementById(barId);
+    const legend = document.getElementById(legendId);
+
+    bar.innerHTML = segments
+      .filter((segment) => segment.value > 0)
+      .map((segment) => `<div class="seg" style="width:${segment.width}%; background:${segment.color};"></div>`)
+      .join("");
+
+    if (!bar.innerHTML) {
+      bar.innerHTML = `<div class="seg seg-empty" style="width:100%;"></div>`;
+    }
+
+    legend.innerHTML = segments.map((segment) => `
+      <div class="leg compact-item">
+        <span><span class="dot" style="background:${segment.color}"></span>${segment.label}</span>
+        <span>${segment.value}</span>
+      </div>
+    `).join("");
+
+    if (infoId) {
+      const total = segments.reduce((sum, item) => sum + item.value, 0);
+      setText(infoId, `${total} total`);
+    }
+  }
+
+  function renderRanking(containerId, items, emptyText) {
+    const container = document.getElementById(containerId);
+
+    if (!items.length) {
+      container.innerHTML = `<div class="route-empty">${emptyText}</div>`;
+      return;
+    }
+
+    const max = Math.max(...items.map((item) => item.count), 1);
+    container.innerHTML = items.map((item) => `
+      <div class="ranking-item">
+        <div class="ranking-head">
+          <strong>${item.label}</strong>
+          <span>${item.count}</span>
+        </div>
+        <div class="ranking-bar-shell">
+          <div class="ranking-bar-fill" style="width:${(item.count / max) * 100}%;"></div>
+        </div>
+      </div>
+    `).join("");
+  }
+
+  function renderChips(id, items, emptyText) {
+    const el = document.getElementById(id);
+    if (!items.length) {
+      el.innerHTML = `<span class="chip soft">${emptyText}</span>`;
+      return;
+    }
+    el.innerHTML = items.map((item) => `<span class="chip">${item}</span>`).join("");
+  }
+
+  function renderNotes(notes) {
+    document.getElementById("notesList").innerHTML = notes
+      .map((note) => `<div class="note-item">${note}</div>`)
+      .join("");
+  }
+
+  async function run() {
+    try {
+      setError("err", "");
+      setOk("ok", "");
+
+      if (!companyId) {
+        setError("err", "Tu usuario empresa no tiene company_id. No se pueden calcular estadisticas.");
+        return;
+      }
+
+      const range = document.getElementById("rangeSelect").value;
+      const stats = await loadCompanyStats(companyId, range);
+
+      setText("rangeLabel", stats.travelWindows.selectedRangeLabel);
+      setText("kpiTripsToday", stats.overview.tripsToday);
+      setText("kpiTripsLive", stats.overview.tripsInProgress);
+      setText("kpiTripsFinished", stats.overview.finishedInRange);
+      setText("kpiTripsCanceled", stats.overview.canceledInRange);
+
+      setText("miniTripsToday", stats.travelWindows.today);
+      setText("miniTripsWeek", stats.travelWindows.week);
+      setText("miniTripsMonth", stats.travelWindows.month);
+      setText("miniAvgDuration", stats.operations.averageDurationMinutes == null ? "Sin dato" : `${stats.operations.averageDurationMinutes} min`);
+
+      setText("opsRoutesConfigured", stats.operations.routesConfigured);
+      setText("opsRoutesActive", stats.operations.routesActive);
+      setText("opsRoutesUsed", stats.operations.routesWithTripsInRange);
+      setText("opsGpsBuses", `${stats.operations.busesReportingRecently}/${stats.operations.busesTotal}`);
+
+      setText("fleetInfo", `${stats.fleet.buses.total} buses · ${stats.fleet.drivers.total} conductores`);
+      renderStackBar("tripStatusBar", "tripStatusLegend", stats.segments.tripStatus, "tripStatusInfo");
+      renderStackBar("fleetStatusBar", "fleetStatusLegend", stats.segments.fleetStatus);
+
+      renderRanking("topRoutes", stats.rankings.routes, "No hay viajes suficientes para construir el ranking de rutas.");
+      renderRanking("topBuses", stats.rankings.buses, "No hay viajes suficientes para construir el ranking de buses.");
+      renderRanking("topDrivers", stats.rankings.drivers, "No hay viajes suficientes para construir el ranking de conductores.");
+      renderRanking("incidentRoutes", stats.incidents.topRoutes, "No hay incidencias registradas para mostrar.");
+
+      renderChips("recentGpsList", stats.fleet.recentGpsBuses, "Sin buses con GPS reciente");
+      renderNotes(stats.notes);
+
+      setText("incTotal", stats.incidents.totalInRange);
+      setText("incNew", stats.incidents.new);
+      setText("incReview", stats.incidents.inReview);
+      setText("incResolved", stats.incidents.resolved);
+
+      setOk("ok", "Estadisticas actualizadas.");
+    } catch (error) {
+      console.error(error);
+      setError("err", error?.message || String(error));
+    }
+  }
+
+  document.getElementById("refreshBtn").addEventListener("click", run);
+  document.getElementById("rangeSelect").addEventListener("change", run);
   document.getElementById("logout").addEventListener("click", async () => {
     await signOut();
     window.location.href = "login.html";
   });
-
-  const refreshBtn = document.getElementById("refreshBtn");
-  refreshBtn.addEventListener("click", run);
-
-  async function run(){
-    try{
-      setError("err", "");
-      setOk("ok", "");
-      if (!companyId){
-        setError("err", "Tu usuario EMPRESA no tiene company_id. No se pueden calcular estadísticas.");
-        return;
-      }
-
-      const stats = await loadCompanyStats(companyId);
-
-      // KPIs
-      document.getElementById("kpiBuses").textContent = stats.buses.total;
-      document.getElementById("kpiDrivers").textContent = stats.drivers.total;
-      document.getElementById("kpiActive").textContent = stats.buses.active + stats.drivers.active;
-      document.getElementById("kpiInactive").textContent = stats.buses.inactive + stats.drivers.inactive;
-
-      // Donuts + legends
-      document.getElementById("donutBuses").innerHTML = stats.buses.donutSvg;
-      document.getElementById("legendBuses").innerHTML = stats.buses.legendHtml;
-
-      document.getElementById("donutDrivers").innerHTML = stats.drivers.donutSvg;
-      document.getElementById("legendDrivers").innerHTML = stats.drivers.legendHtml;
-
-      // Bars
-      document.getElementById("barBuses").innerHTML = stats.buses.barHtml;
-      document.getElementById("busBarInfo").textContent = `${stats.buses.total} total`;
-
-      document.getElementById("barDrivers").innerHTML = stats.drivers.barHtml;
-      document.getElementById("driverBarInfo").textContent = `${stats.drivers.total} total`;
-
-      // Lists
-      const fillChips = (id, arr, emptyText) => {
-        const el = document.getElementById(id);
-        if (!arr.length){
-          el.innerHTML = `<span class="chip soft">${emptyText}</span>`;
-          return;
-        }
-        el.innerHTML = arr.map(x => `<span class="chip">${x}</span>`).join("");
-      };
-
-      fillChips("busActiveList", stats.buses.list.active, "— sin buses activos");
-      fillChips("busMaintList", stats.buses.list.maintenance, "— sin mantenimiento");
-      fillChips("busInactiveList", stats.buses.list.inactive, "— sin buses inactivos");
-
-      fillChips("driverActiveList", stats.drivers.list.active, "— sin conductores activos");
-      fillChips("driverInactiveList", stats.drivers.list.inactive, "— sin conductores inactivos");
-
-      setOk("ok", "Listo ✅ Estadísticas actualizadas");
-    }catch(e){
-      console.error(e);
-      setError("err", e?.message || String(e));
-    }
-  }
 
   await run();
 </script>

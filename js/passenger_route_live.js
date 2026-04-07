@@ -4,6 +4,12 @@ import {
     fetchCurrentVehiclePosition,
     fetchPassengerRouteDetail
 } from "./routes_passenger.js";
+import {
+    computeRemainingStops,
+    detectCurrentGeofenceStop,
+    findNearestRouteStopToCoords,
+    GEOFENCE_RADIUS_METERS
+} from "./trip_tracking_shared.js";
 
 const state = {
     routeId: null,
@@ -17,7 +23,10 @@ const state = {
     stopsLayer: null,
     vehicleMarker: null,
     passengerMarker: null,
-    vehiclePollId: null
+    vehiclePollId: null,
+    nearestRouteStop: null,
+    followTripId: null,
+    lastEventKey: null
 };
 
 const busIcon = L.divIcon({
@@ -188,48 +197,58 @@ function renderRouteTimeline(detail) {
     }).join("");
 }
 
-function haversineDistanceInMeters(lat1, lng1, lat2, lng2) {
-    const toRad = (value) => (value * Math.PI) / 180;
-    const earthRadius = 6371000;
-    const dLat = toRad(lat2 - lat1);
-    const dLng = toRad(lng2 - lng1);
+function renderPassengerGeofenceIdle() {
+    $("passengerGeofenceCard").innerHTML = `
+        <div class="route-empty">Activa el seguimiento de un viaje para ver eventos de geofencing.</div>
+    `;
+}
 
-    const a =
-        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-        Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
-        Math.sin(dLng / 2) * Math.sin(dLng / 2);
+function renderPassengerGeofenceWaitingForBus() {
+    $("passengerGeofenceCard").innerHTML = `
+        <div class="route-empty">El conductor aun no comparte ubicacion para este viaje.</div>
+    `;
+}
 
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    return earthRadius * c;
+function renderPassengerGeofenceOutsideRadius() {
+    $("passengerGeofenceCard").innerHTML = `
+        <div class="route-empty">El bus aun no esta dentro del radio de ${GEOFENCE_RADIUS_METERS} m de un paradero.</div>
+    `;
+}
+
+function renderPassengerGeofenceEvent(event) {
+    $("passengerGeofenceCard").innerHTML = `
+        <div class="trip-summary-grid company-monitor-grid">
+            <div class="trip-summary-item">
+                <span class="chip ok">Paradero actual del bus</span>
+                <strong>${escapeHtml(event.currentStop.name)}</strong>
+                <small class="help">${escapeHtml(event.currentStop.address || "Sin direccion")}</small>
+            </div>
+            <div class="trip-summary-item">
+                <span class="chip ok">Paradero mas cercano a ti</span>
+                <strong>${escapeHtml(event.passengerStop.name)}</strong>
+                <small class="help">A ${Math.round(event.passengerDistanceMeters)} m de tu ubicacion</small>
+            </div>
+            <div class="trip-summary-item">
+                <span class="chip ok">Paraderos restantes</span>
+                <strong>${event.remainingStopsToPassenger}</strong>
+                <small class="help">Faltan para llegar a tu paradero mas cercano</small>
+            </div>
+        </div>
+    `;
 }
 
 function updateNearestStop() {
     const routeStops = state.detail?.stops?.filter((item) => item.stop) || [];
     if (!state.passengerCoords || !routeStops.length) return;
 
-    let nearest = null;
-    let shortestDistance = Number.POSITIVE_INFINITY;
-
-    for (const item of routeStops) {
-        const distance = haversineDistanceInMeters(
-            state.passengerCoords.latitude,
-            state.passengerCoords.longitude,
-            Number(item.stop.lat),
-            Number(item.stop.lng)
-        );
-
-        if (distance < shortestDistance) {
-            shortestDistance = distance;
-            nearest = item.stop;
-        }
-    }
-
-    state.nearestStopId = nearest?.id || null;
+    const nearest = findNearestRouteStopToCoords(routeStops, state.passengerCoords);
+    state.nearestRouteStop = nearest;
+    state.nearestStopId = nearest?.stop?.id || null;
     renderRouteTimeline(state.detail);
     drawStops(state.detail.stops);
 
     if (nearest) {
-        setMessage($("routeOk"), `Paradero mas cercano: ${nearest.name} a ${Math.round(shortestDistance)} m de tu ubicacion.`);
+        setMessage($("routeOk"), `Paradero mas cercano: ${nearest.stop.name} a ${Math.round(nearest.distanceMeters)} m de tu ubicacion.`);
     }
 }
 
@@ -241,11 +260,12 @@ function renderTripsList(trips) {
     }
 
     container.innerHTML = trips.map((trip) => `
-        <button class="passenger-trip-card ${trip.id === state.selectedTripId ? "selected" : ""}" data-trip-id="${trip.id}">
+        <div class="passenger-trip-card ${trip.id === state.selectedTripId ? "selected" : ""}">
             <strong>Viaje ${trip.id.slice(0, 8)}</strong>
             <span class="help">Inicio: ${new Date(trip.start_at).toLocaleString("es-CO")}</span>
             <span class="chip ok">${escapeHtml(trip.status)}</span>
-        </button>
+            <button class="btn-mini secondary passenger-follow-btn" data-trip-id="${trip.id}">Seguimiento de viaje</button>
+        </div>
     `).join("");
 }
 
@@ -254,11 +274,49 @@ async function selectTrip(tripId) {
     renderTripsList(state.trips);
     stopVehiclePolling();
     clearMessages();
+    state.followTripId = tripId;
 
     const updateVehicle = async () => {
         try {
             const vehiclePosition = await fetchCurrentVehiclePosition(tripId);
             drawVehiclePosition(vehiclePosition);
+
+            if (!vehiclePosition) {
+                renderPassengerGeofenceWaitingForBus();
+                return;
+            }
+
+            if (!state.nearestRouteStop) {
+                renderPassengerGeofenceIdle();
+                return;
+            }
+
+            const currentStopEvent = detectCurrentGeofenceStop(vehiclePosition, state.detail?.stops || []);
+            if (!currentStopEvent) {
+                renderPassengerGeofenceOutsideRadius();
+                setMessage($("routeOk"), `Ubicacion del vehiculo actualizada: ${new Date(vehiclePosition.recorded_at).toLocaleTimeString("es-CO")}`);
+                return;
+            }
+
+            const passengerStopOrder = state.nearestRouteStop.routeStop.stop_order;
+            const geofenceEvent = {
+                currentStop: currentStopEvent.stop,
+                currentStopOrder: currentStopEvent.stopOrder,
+                passengerStop: state.nearestRouteStop.stop,
+                passengerStopOrder: passengerStopOrder,
+                passengerDistanceMeters: state.nearestRouteStop.distanceMeters,
+                remainingStopsToPassenger: computeRemainingStops(currentStopEvent.stopOrder, passengerStopOrder)
+            };
+
+            renderPassengerGeofenceEvent(geofenceEvent);
+            const eventKey = `${currentStopEvent.stop.id}:${currentStopEvent.stopOrder}:${passengerStopOrder}`;
+            setMessage(
+                $("routeOk"),
+                state.lastEventKey === eventKey
+                    ? `Bus en ${currentStopEvent.stop.name}. Seguimiento actualizado.`
+                    : `Bus en ${currentStopEvent.stop.name}. Faltan ${geofenceEvent.remainingStopsToPassenger} paraderos para tu parada mas cercana.`
+            );
+            state.lastEventKey = eventKey;
         } catch (error) {
             setMessage($("routeErr"), error.message || "No fue posible consultar la ubicacion del vehiculo.");
         }
@@ -300,9 +358,11 @@ async function loadRouteContext(routeId) {
     updateNearestStop();
 
     if (trips.length) {
+        renderPassengerGeofenceIdle();
         await selectTrip(trips[0].id);
     } else {
         drawVehiclePosition(null);
+        renderPassengerGeofenceIdle();
     }
 }
 
@@ -320,9 +380,9 @@ async function initPassengerRouteLivePage() {
     await loadRouteContext(state.routeId);
 
     $("activeTripsList").addEventListener("click", async (event) => {
-        const card = event.target.closest("[data-trip-id]");
-        if (!card) return;
-        await selectTrip(card.dataset.tripId);
+        const button = event.target.closest("button[data-trip-id]");
+        if (!button) return;
+        await selectTrip(button.dataset.tripId);
     });
 
     window.addEventListener("beforeunload", stopVehiclePolling);
