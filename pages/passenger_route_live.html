@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Detalle de Ruta | ManiRuta</title>
+  <link rel="stylesheet" href="../css/base.css"/>
+  <link rel="stylesheet" href="../css/home.css"/>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+</head>
+<body>
+
+<header class="nav">
+  <div class="container nav-inner">
+    <div class="brand"><span class="dot"></span> Ruta en Vivo</div>
+    <div class="nav-right">
+      <a class="btn btn-ghost" href="view_routes.html">Volver</a>
+    </div>
+  </div>
+</header>
+
+<main class="container page stack">
+  <section class="card tile passenger-live-layout">
+    <section class="passenger-side">
+      <div class="page-title">
+        <div>
+          <h1 class="h1" id="routeTitle">Ruta</h1>
+          <p class="sub">Selecciona un viaje activo para ver el vehiculo en el mapa.</p>
+        </div>
+      </div>
+
+      <div class="footer-actions" id="routeMeta"></div>
+
+      <section class="card tile passenger-trips-card">
+        <div class="page-title">
+          <div>
+            <h2 class="h1">Viajes activos</h2>
+            <p class="sub">Elige el viaje que quieres seguir.</p>
+          </div>
+        </div>
+        <div id="activeTripsList" class="passenger-trips-list"></div>
+      </section>
+
+      <section class="card tile passenger-timeline-card">
+        <div class="page-title">
+          <div>
+            <h2 class="h1">Recorrido completo</h2>
+            <p class="sub">Origen, paraderos intermedios y destino final en texto.</p>
+          </div>
+        </div>
+        <div id="routeTimeline" class="route-timeline"></div>
+      </section>
+
+      <div id="routeOk" class="toast" style="display:none;"></div>
+      <div id="routeErr" class="error" style="display:none;"></div>
+    </section>
+
+    <section class="passenger-map-card">
+      <div id="passengerMap"></div>
+    </section>
+  </section>
+</main>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script type="module" src="../js/passenger_route_live.js"></script>
+
+</body>
+</html>

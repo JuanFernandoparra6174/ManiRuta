@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Inicio Conductor | ManiRuta</title>
+  <link rel="stylesheet" href="../css/base.css"/>
+  <link rel="stylesheet" href="../css/home.css"/>
+</head>
+<body>
+
+<header class="nav">
+  <div class="container nav-inner">
+    <div class="brand"><span class="dot"></span> Conductor</div>
+    <div class="nav-right">
+      <span class="pill" id="who">...</span>
+      <button class="btn btn-ghost" id="logout">Salir</button>
+    </div>
+  </div>
+</header>
+
+<main class="container home-wrap">
+  <section class="card welcome">
+    <div class="welcome-top">
+      <div>
+        <h1 id="welcomeTitle">Hola, conductor</h1>
+        <p>Revisa tus viajes asignados, historial y el estado del seguimiento.</p>
+      </div>
+      <span class="pill">CONDUCTOR</span>
+    </div>
+  </section>
+
+  <section class="company-grid">
+    <article class="company-card">
+      <p class="company-title">Mis viajes</p>
+      <p class="company-sub">Ver viajes activos y abrir el seguimiento</p>
+      <div class="company-actions"><button class="btn-mini" id="goTrips">ver</button></div>
+    </article>
+
+    <article class="company-card">
+      <p class="company-title">Historial</p>
+      <p class="company-sub">Consultar viajes finalizados o cancelados</p>
+      <div class="company-actions"><button class="btn-mini secondary" id="goHistory">historial</button></div>
+    </article>
+
+    <article class="company-card">
+      <p class="company-title">Viaje en curso</p>
+      <p class="company-sub" id="activeTrip">Buscando viaje activo...</p>
+      <div class="company-actions"><button class="btn-mini" id="goLive">abrir</button></div>
+    </article>
+
+    <article class="company-card">
+      <p class="company-title">Perfil</p>
+      <p class="company-sub" id="driverInfo">...</p>
+    </article>
+  </section>
+</main>
+
+<script type="module" src="../js/driver_home_page.js"></script>
+
+</body>
+</html>

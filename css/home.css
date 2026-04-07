@@ -454,6 +454,403 @@
   #map { height: 400px; }
 }
 
+/* =========================
+   STOPS ADMIN
+   ========================= */
+
+.stops-layout{
+  display:grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  margin-top: 14px;
+}
+
+.stop-form{
+  display:flex;
+  flex-direction:column;
+  gap: 12px;
+}
+
+.stops-grid{
+  display:grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+.stop-hint{
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: rgba(84,188,189,.08);
+  border: 1px solid rgba(84,188,189,.18);
+}
+
+.stop-actions{
+  display:flex;
+  gap: 10px;
+  flex-wrap:wrap;
+}
+
+.stop-map-card{
+  min-width: 0;
+}
+
+.stop-map-card #map{
+  margin: 0;
+  min-height: 360px;
+}
+
+.stop-list-head{
+  align-items: end;
+}
+
+.stop-search{
+  max-width: 320px;
+}
+
+.stop-table-wrap{
+  overflow:auto;
+}
+
+.stop-row-actions{
+  display:flex;
+  gap: 8px;
+  flex-wrap:wrap;
+}
+
+.stop-delete-btn{
+  background: rgba(239,68,68,.12);
+  color: var(--text);
+  border: 1px solid rgba(239,68,68,.25);
+  box-shadow:none;
+}
+
+.stop-empty{
+  text-align:center;
+  color: var(--muted);
+  padding: 18px 12px;
+}
+
+@media (min-width: 900px){
+  .stops-layout{
+    grid-template-columns: minmax(320px, 420px) minmax(0, 1fr);
+    align-items:start;
+  }
+
+  .stops-grid{
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .stop-map-card #map{
+    min-height: 420px;
+  }
+}
+
+/* =========================
+   COMPANY ROUTES
+   ========================= */
+
+.routes-layout{
+  display:grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  margin-top: 14px;
+}
+
+.route-form-panel{
+  display:flex;
+  flex-direction:column;
+  gap: 16px;
+}
+
+.route-form{
+  display:flex;
+  flex-direction:column;
+  gap: 12px;
+}
+
+.route-hint{
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: rgba(84,188,189,.08);
+  border: 1px solid rgba(84,188,189,.18);
+}
+
+.route-map-panel #routesMap{
+  height: 420px;
+  width: 100%;
+  border-radius: var(--radius);
+  border: 1px solid rgba(15,23,42,.08);
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+}
+
+.route-sequence-card{
+  padding: 14px;
+}
+
+.route-sequence-list{
+  display:flex;
+  flex-direction:column;
+  gap: 10px;
+}
+
+.route-stop-item{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap: 10px;
+  padding: 12px;
+  border-radius: 14px;
+  background: rgba(255,255,255,.85);
+  border: 1px solid rgba(15,23,42,.08);
+}
+
+.route-stop-meta{
+  display:flex;
+  align-items:center;
+  gap: 10px;
+}
+
+.route-stop-name{
+  font-weight: 900;
+  font-size: 14px;
+}
+
+.route-stop-actions{
+  display:flex;
+  align-items:center;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content:flex-end;
+}
+
+.route-remove-btn{
+  background: rgba(239,68,68,.12);
+  color: var(--text);
+  border: 1px solid rgba(239,68,68,.25);
+  box-shadow:none;
+}
+
+.route-empty{
+  text-align:center;
+  color: var(--muted);
+  padding: 18px 12px;
+  border-radius: 14px;
+  background: rgba(255,255,255,.75);
+  border: 1px dashed rgba(15,23,42,.12);
+}
+
+@media (min-width: 960px){
+  .routes-layout{
+    grid-template-columns: minmax(340px, 420px) minmax(0, 1fr);
+    align-items:start;
+  }
+
+  .route-map-panel #routesMap{
+    height: 640px;
+  }
+}
+
+/* =========================
+   COMPANY TRIPS
+   ========================= */
+
+.trip-form{
+  display:flex;
+  flex-direction:column;
+  gap: 12px;
+}
+
+.trip-summary-card{
+  padding: 14px;
+}
+
+.trip-summary-grid{
+  display:grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+.trip-summary-item{
+  display:flex;
+  flex-direction:column;
+  gap: 8px;
+  padding: 14px;
+  border-radius: 14px;
+  background: rgba(255,255,255,.85);
+  border: 1px solid rgba(15,23,42,.08);
+}
+
+@media (min-width: 900px){
+  .trip-summary-grid{
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+#driverMap{
+  height: 420px;
+  width: 100%;
+  border-radius: var(--radius);
+  border: 1px solid rgba(15,23,42,.08);
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+}
+
+/* =========================
+   PASSENGER ROUTES
+   ========================= */
+
+.passenger-route-card{
+  display:flex;
+  align-items:center;
+  gap: 15px;
+  border-left: 5px solid var(--primary);
+}
+
+.passenger-route-pill{
+  font-weight: 1000;
+}
+
+.passenger-live-layout{
+  display:grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+.passenger-side{
+  display:flex;
+  flex-direction:column;
+  gap: 14px;
+}
+
+.passenger-trips-card{
+  padding: 14px;
+}
+
+.passenger-timeline-card{
+  padding: 14px;
+}
+
+.passenger-trips-list{
+  display:flex;
+  flex-direction:column;
+  gap: 10px;
+}
+
+.route-timeline{
+  display:flex;
+  flex-direction:column;
+  gap: 0;
+}
+
+.timeline-item{
+  display:grid;
+  grid-template-columns: 28px minmax(0, 1fr);
+  gap: 12px;
+}
+
+.timeline-node{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+
+.timeline-dot{
+  width: 14px;
+  height: 14px;
+  border-radius: 999px;
+  background: var(--primary);
+  border: 3px solid rgba(84,188,189,.18);
+  flex: 0 0 auto;
+}
+
+.timeline-line{
+  width: 2px;
+  flex: 1 1 auto;
+  background: rgba(15,23,42,.12);
+  margin-top: 4px;
+}
+
+.timeline-content{
+  display:flex;
+  flex-direction:column;
+  gap: 6px;
+  padding: 0 0 16px;
+}
+
+.timeline-item.origin .timeline-dot{
+  background: #1d9d74;
+}
+
+.timeline-item.destination .timeline-dot{
+  background: #ea580c;
+}
+
+.timeline-item.nearest .timeline-dot{
+  background: #1d4ed8;
+  box-shadow: 0 0 0 6px rgba(96,165,250,.18);
+}
+
+.timeline-item.nearest .timeline-content{
+  background: rgba(96,165,250,.08);
+  border-radius: 12px;
+  padding: 10px 12px 16px;
+}
+
+.passenger-trip-card{
+  width:100%;
+  text-align:left;
+  display:flex;
+  flex-direction:column;
+  gap: 8px;
+  padding: 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(15,23,42,.08);
+  background: rgba(255,255,255,.85);
+  cursor:pointer;
+}
+
+.passenger-trip-card.selected{
+  border-color: rgba(84,188,189,.45);
+  box-shadow: 0 0 0 4px rgba(84,188,189,.12);
+}
+
+.passenger-map-card #passengerMap{
+  height: 520px;
+  width: 100%;
+  border-radius: var(--radius);
+  border: 1px solid rgba(15,23,42,.08);
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+}
+
+.bus-marker-icon{
+  background: transparent;
+  border: 0;
+}
+
+.bus-marker-shell{
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background: #ffffff;
+  border: 2px solid #ea580c;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.18);
+  font-size: 18px;
+  line-height: 1;
+}
+
+@media (min-width: 960px){
+  .passenger-live-layout{
+    grid-template-columns: minmax(320px, 420px) minmax(0, 1fr);
+    align-items:start;
+  }
+
+  .passenger-map-card #passengerMap{
+    height: 640px;
+  }
+}
+
 
 
 

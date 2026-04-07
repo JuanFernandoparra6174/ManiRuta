@@ -23,7 +23,6 @@
 </header>
 
 <main class="container drivers-page">
-
   <section class="drivers-hero card">
     <div class="decor"></div>
     <div class="bg" id="heroBg"></div>
@@ -31,31 +30,29 @@
     <div class="content">
       <div class="hero-top">
         <div>
-          <h1 class="hero-title">👨‍✈️ Módulo Conductores (CRUD)</h1>
-          <p class="hero-sub">Crea, edita, elimina y controla estado de conductores: ✅ ACTIVE · ⛔ INACTIVE. Todo queda guardado en Supabase.</p>
+          <h1 class="hero-title">Modulo Conductores</h1>
+          <p class="hero-sub">La empresa registra al conductor y crea tambien su acceso al sistema.</p>
         </div>
 
         <div class="hero-tags">
-          <span class="chip" id="companyChip">🏷️ company_id: ...</span>
-          <span class="chip">🏢 EMPRESA_BUSES</span>
+          <span class="chip" id="companyChip">company_id: ...</span>
+          <span class="chip">EMPRESA_BUSES</span>
         </div>
       </div>
 
       <div class="kpi-strip" id="kpis">
-        <div class="kpi"><div class="n">—</div><div class="l">TOTAL</div></div>
-        <div class="kpi"><div class="n">—</div><div class="l">ACTIVOS</div></div>
-        <div class="kpi"><div class="n">—</div><div class="l">INACTIVOS</div></div>
+        <div class="kpi"><div class="n">-</div><div class="l">TOTAL</div></div>
+        <div class="kpi"><div class="n">-</div><div class="l">ACTIVOS</div></div>
+        <div class="kpi"><div class="n">-</div><div class="l">INACTIVOS</div></div>
       </div>
     </div>
   </section>
 
   <section class="drivers-grid">
-
-    <!-- Form -->
     <section class="card panel">
       <div class="panel-title">
-        <h3 id="formTitle">➕ Registrar conductor</h3>
-        <span class="mini-muted" id="formHint">Gestiona tu equipo con estilo 😎</span>
+        <h3 id="formTitle">Registrar conductor</h3>
+        <span class="mini-muted" id="formHint">Crea el perfil operativo y su acceso de inicio de sesion.</span>
       </div>
 
       <form id="driverForm" class="grid1">
@@ -63,29 +60,29 @@
 
         <div>
           <label class="mini-muted">Nombre completo *</label>
-          <input class="input" id="fullName" placeholder="Ej: Juan Pérez" required maxlength="80"/>
+          <input class="input" id="fullName" placeholder="Ej: Juan Perez" required maxlength="80"/>
         </div>
 
         <div class="grid2">
           <div>
             <label class="mini-muted">Tipo documento *</label>
             <select class="input" id="docType" required>
-              <option value="CC">🪪 CC</option>
-              <option value="CE">🌎 CE</option>
-              <option value="PASSPORT">🛂 PASSPORT</option>
+              <option value="CC">CC</option>
+              <option value="CE">CE</option>
+              <option value="PASSPORT">PASSPORT</option>
             </select>
           </div>
 
           <div>
-            <label class="mini-muted">Número documento *</label>
+            <label class="mini-muted">Numero documento *</label>
             <input class="input" id="docNumber" placeholder="Ej: 123456789" required maxlength="30"/>
           </div>
         </div>
 
         <div class="grid2">
           <div>
-            <label class="mini-muted">Teléfono</label>
-            <input class="input" id="phone" placeholder="+57 3xx xxx xxxx (opcional)" maxlength="30"/>
+            <label class="mini-muted">Telefono</label>
+            <input class="input" id="phone" placeholder="+57 3xx xxx xxxx" maxlength="30"/>
           </div>
 
           <div>
@@ -94,40 +91,54 @@
           </div>
         </div>
 
+        <div class="grid2">
+          <div>
+            <label class="mini-muted">Usuario de acceso *</label>
+            <input class="input" id="username" placeholder="Ej: juan.conductor" maxlength="50"/>
+          </div>
+
+          <div>
+            <label class="mini-muted">Correo de acceso *</label>
+            <input class="input" id="email" type="email" placeholder="conductor@empresa.com"/>
+          </div>
+        </div>
+
+        <div>
+          <label class="mini-muted">Contrasena temporal *</label>
+          <input class="input" id="password" type="password" minlength="8" placeholder="Minimo 8 caracteres"/>
+        </div>
+
         <div>
           <label class="mini-muted">Estado *</label>
           <select class="input" id="status" required>
-            <option value="ACTIVE">✅ ACTIVE</option>
-            <option value="INACTIVE">⛔ INACTIVE</option>
+            <option value="ACTIVE">ACTIVE</option>
+            <option value="INACTIVE">INACTIVE</option>
           </select>
         </div>
 
         <div class="actions-row">
-          <button class="btn btn-primary" type="submit" id="saveBtn">💾 Guardar</button>
-          <button class="btn-soft" type="button" id="cancelEditBtn" style="display:none;">↩️ Cancelar edición</button>
-          <button class="btn-soft btn-danger" type="button" id="clearBtn">🧹 Limpiar</button>
+          <button class="btn btn-primary" type="submit">Guardar</button>
+          <button class="btn-soft" type="button" id="cancelEditBtn" style="display:none;">Cancelar edicion</button>
+          <button class="btn-soft btn-danger" type="button" id="clearBtn">Limpiar</button>
         </div>
 
         <div class="toast-ok" id="ok"></div>
         <div class="toast-err" id="err"></div>
-
-        
       </form>
     </section>
 
-    <!-- List -->
     <section class="card panel">
       <div class="panel-title">
-        <h3>📋 Lista de conductores</h3>
-        <button class="btn-soft" id="refreshBtn">🔄 Refrescar</button>
+        <h3>Lista de conductores</h3>
+        <button class="btn-soft" id="refreshBtn">Refrescar</button>
       </div>
 
       <div class="grid2" style="margin-bottom:10px;">
-        <input class="input" id="search" placeholder="Buscar por nombre / documento / licencia 🔎"/>
+        <input class="input" id="search" placeholder="Buscar por nombre / documento / licencia"/>
         <select class="input" id="filterStatus">
-          <option value="">🎯 Todos los estados</option>
-          <option value="ACTIVE">✅ ACTIVE</option>
-          <option value="INACTIVE">⛔ INACTIVE</option>
+          <option value="">Todos los estados</option>
+          <option value="ACTIVE">ACTIVE</option>
+          <option value="INACTIVE">INACTIVE</option>
         </select>
       </div>
 
@@ -137,8 +148,9 @@
             <tr>
               <th>Conductor</th>
               <th>Documento</th>
-              <th>Teléfono</th>
+              <th>Telefono</th>
               <th>Licencia</th>
+              <th>Acceso</th>
               <th>Estado</th>
               <th>Acciones</th>
             </tr>
@@ -148,13 +160,11 @@
       </div>
 
       <div id="empty" class="empty" style="display:none; margin-top:10px;">
-        <p class="t">😴 No hay conductores aún</p>
-        <p class="p">Crea el primero arriba y aparece aquí automático.</p>
+        <p class="t">No hay conductores aun</p>
+        <p class="p">Crea el primero arriba y aparecera aqui automaticamente.</p>
       </div>
     </section>
-
   </section>
-
 </main>
 
 <script type="module">
@@ -163,34 +173,34 @@
   import { setText, setError, setOk } from "../js/ui.js";
   import {
     fetchCompanyDrivers,
-    createDriver,
+    createDriverWithAccount,
     updateDriver,
     deleteDriver,
     countCompanyDriversByStatus
   } from "../js/drivers.js";
 
-  // Imagen (URL web)
   const HERO_IMG = "https://vivirenelpoblado.com/wp-content/uploads/2022/10/Nelson-Tirado-el-conductor-mas-amable-en-la-estacion-Poblado-del-Metro.jpg";
   document.getElementById("heroBg").style.backgroundImage = `url('${HERO_IMG}')`;
 
-  const profile = await requireAuthAndRole(2); // EMPRESA
-  if (!profile) throw new Error("No auth (guard redirige).");
+  const profile = await requireAuthAndRole(2);
+  if (!profile) throw new Error("No auth");
 
   setText("who", `@${profile.username}`);
 
   const companyId = profile.company_id;
   document.getElementById("companyChip").textContent =
-    companyId ? `🏷️ company_id: ${companyId}` : "⚠️ Sin company_id asignado";
+    companyId ? `company_id: ${companyId}` : "Sin company_id asignado";
 
-  // DOM
   const form = document.getElementById("driverForm");
   const driverIdEl = document.getElementById("driverId");
-
   const fullNameEl = document.getElementById("fullName");
   const docTypeEl = document.getElementById("docType");
   const docNumberEl = document.getElementById("docNumber");
   const phoneEl = document.getElementById("phone");
   const licenseEl = document.getElementById("licenseNo");
+  const usernameEl = document.getElementById("username");
+  const emailEl = document.getElementById("email");
+  const passwordEl = document.getElementById("password");
   const statusEl = document.getElementById("status");
 
   const formTitle = document.getElementById("formTitle");
@@ -205,18 +215,6 @@
   const refreshBtn = document.getElementById("refreshBtn");
   const kpisEl = document.getElementById("kpis");
 
-  document.getElementById("logout").addEventListener("click", async () => {
-    await signOut();
-    window.location.href = "login.html";
-  });
-
-  // Si no hay company_id, bloqueamos el CRUD (company_id es NOT NULL en drivers)
-  if (!companyId){
-    for (const el of [fullNameEl, docTypeEl, docNumberEl, phoneEl, licenseEl, statusEl]) el.disabled = true;
-    form.querySelector("button[type='submit']").disabled = true;
-    setError("err", "Tu usuario EMPRESA no tiene company_id. Así no se pueden guardar conductores (drivers.company_id es NOT NULL).");
-  }
-
   let all = [];
 
   function esc(s){
@@ -229,8 +227,19 @@
   }
 
   function statusChip(status){
-    if (status === "ACTIVE") return `<span class="chip ok">✅ ACTIVE</span>`;
-    return `<span class="chip bad">⛔ INACTIVE</span>`;
+    if (status === "ACTIVE") return `<span class="chip ok">ACTIVE</span>`;
+    return `<span class="chip bad">INACTIVE</span>`;
+  }
+
+  function accessChip(driver){
+    if (driver.user_id) return `<span class="chip ok">Con acceso</span>`;
+    return `<span class="chip warn">Sin acceso</span>`;
+  }
+
+  function toggleCredentialFields(disabled) {
+    usernameEl.disabled = disabled;
+    emailEl.disabled = disabled;
+    passwordEl.disabled = disabled;
   }
 
   function clearForm(){
@@ -240,27 +249,35 @@
     docNumberEl.value = "";
     phoneEl.value = "";
     licenseEl.value = "";
+    usernameEl.value = "";
+    emailEl.value = "";
+    passwordEl.value = "";
     statusEl.value = "ACTIVE";
 
-    formTitle.textContent = "➕ Registrar conductor";
-    formHint.textContent = "Gestiona tu equipo con estilo 😎";
+    toggleCredentialFields(false);
+    formTitle.textContent = "Registrar conductor";
+    formHint.textContent = "Crea el perfil operativo y su acceso de inicio de sesion.";
     cancelEditBtn.style.display = "none";
   }
 
-  function setEditMode(d){
-    driverIdEl.value = d.id;
-    fullNameEl.value = d.full_name || "";
-    docTypeEl.value = d.doc_type || "CC";
-    docNumberEl.value = d.doc_number || "";
-    phoneEl.value = d.phone || "";
-    licenseEl.value = d.license_no || "";
-    statusEl.value = d.status || "ACTIVE";
+  function setEditMode(driver){
+    driverIdEl.value = driver.id;
+    fullNameEl.value = driver.full_name || "";
+    docTypeEl.value = driver.doc_type || "CC";
+    docNumberEl.value = driver.doc_number || "";
+    phoneEl.value = driver.phone || "";
+    licenseEl.value = driver.license_no || "";
+    usernameEl.value = "";
+    emailEl.value = "";
+    passwordEl.value = "";
+    statusEl.value = driver.status || "ACTIVE";
 
-    formTitle.textContent = "✏️ Editar conductor";
-    formHint.textContent = "Edita datos y guarda sin drama 😌";
+    toggleCredentialFields(true);
+    formTitle.textContent = "Editar conductor";
+    formHint.textContent = "Los datos de acceso se crean al registrar y no se editan desde esta pantalla.";
     cancelEditBtn.style.display = "inline-flex";
 
-    setOk("ok", "Modo edición activado ✅");
+    setOk("ok", "Modo edicion activado.");
     setError("err", "");
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
@@ -279,32 +296,33 @@
     const q = (searchEl.value || "").trim().toLowerCase();
     const st = filterStatusEl.value;
 
-    const filtered = all.filter(d => {
-      const hay = `${d.full_name || ""} ${d.doc_type || ""} ${d.doc_number || ""} ${d.license_no || ""}`.toLowerCase();
+    const filtered = all.filter((driver) => {
+      const hay = `${driver.full_name || ""} ${driver.doc_type || ""} ${driver.doc_number || ""} ${driver.license_no || ""}`.toLowerCase();
       const okQ = !q || hay.includes(q);
-      const okS = !st || d.status === st;
+      const okS = !st || driver.status === st;
       return okQ && okS;
     });
 
     emptyEl.style.display = filtered.length ? "none" : "block";
 
-    rowsEl.innerHTML = filtered.map(d => `
+    rowsEl.innerHTML = filtered.map((driver) => `
       <tr>
-        <td><b>${esc(d.full_name)}</b></td>
-        <td><span class="chip">${esc(d.doc_type)} · ${esc(d.doc_number)}</span></td>
-        <td>${esc(d.phone || "—")}</td>
-        <td>${esc(d.license_no)}</td>
-        <td>${statusChip(d.status)}</td>
+        <td><b>${esc(driver.full_name)}</b></td>
+        <td><span class="chip">${esc(driver.doc_type)} · ${esc(driver.doc_number)}</span></td>
+        <td>${esc(driver.phone || "—")}</td>
+        <td>${esc(driver.license_no)}</td>
+        <td>${accessChip(driver)}</td>
+        <td>${statusChip(driver.status)}</td>
         <td>
           <div class="row-actions">
-            <button class="pill-btn on icon" data-act="status" data-id="${d.id}" data-status="ACTIVE" title="Poner ACTIVE">✅</button>
-            <button class="pill-btn off icon" data-act="status" data-id="${d.id}" data-status="INACTIVE" title="Poner INACTIVE">⛔</button>
-            <button class="pill-btn icon" data-act="edit" data-id="${d.id}" title="Editar">✏️</button>
-            <button class="pill-btn off icon" data-act="delete" data-id="${d.id}" title="Eliminar">🗑️</button>
+            <button class="pill-btn on icon" data-act="status" data-id="${driver.id}" data-status="ACTIVE" title="Poner ACTIVE">A</button>
+            <button class="pill-btn off icon" data-act="status" data-id="${driver.id}" data-status="INACTIVE" title="Poner INACTIVE">I</button>
+            <button class="pill-btn icon" data-act="edit" data-id="${driver.id}" title="Editar">E</button>
+            <button class="pill-btn off icon" data-act="delete" data-id="${driver.id}" title="Eliminar">X</button>
           </div>
         </td>
       </tr>
-    `).join("") || "";
+    `).join("");
   }
 
   async function refresh(){
@@ -316,53 +334,74 @@
       all = await fetchCompanyDrivers(companyId);
       renderTable();
       await renderKpis();
-    }catch(e){
-      console.error(e);
-      setError("err", e?.message || String(e));
+    }catch(error){
+      console.error(error);
+      setError("err", error?.message || String(error));
     }
   }
 
-  // Events
+  if (!companyId) {
+    for (const element of [fullNameEl, docTypeEl, docNumberEl, phoneEl, licenseEl, usernameEl, emailEl, passwordEl, statusEl]) {
+      element.disabled = true;
+    }
+    form.querySelector("button[type='submit']").disabled = true;
+    setError("err", "Tu usuario EMPRESA no tiene company_id. Asi no se pueden guardar conductores.");
+  }
+
+  document.getElementById("logout").addEventListener("click", async () => {
+    await signOut();
+    window.location.href = "login.html";
+  });
+
   searchEl.addEventListener("input", renderTable);
   filterStatusEl.addEventListener("change", renderTable);
   refreshBtn.addEventListener("click", refresh);
 
   cancelEditBtn.addEventListener("click", () => {
     clearForm();
-    setOk("ok", "Edición cancelada 👍");
+    setOk("ok", "Edicion cancelada.");
     setError("err", "");
   });
 
   clearBtn.addEventListener("click", () => {
     clearForm();
-    setOk("ok", "Formulario limpio 🧼");
+    setOk("ok", "Formulario limpio.");
     setError("err", "");
   });
 
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
 
-    try{
+    try {
       setError("err", "");
       setOk("ok", "");
       if (!companyId) return;
 
       const id = driverIdEl.value;
-
       const full_name = fullNameEl.value.trim();
       const doc_type = docTypeEl.value.trim();
       const doc_number = docNumberEl.value.trim();
       const phone = phoneEl.value.trim();
       const license_no = licenseEl.value.trim();
+      const username = usernameEl.value.trim();
+      const email = emailEl.value.trim().toLowerCase();
+      const password = passwordEl.value;
       const status = statusEl.value;
 
       if (!full_name) return setError("err", "Nombre obligatorio.");
-      if (!doc_number) return setError("err", "Número de documento obligatorio.");
+      if (!doc_number) return setError("err", "Numero de documento obligatorio.");
       if (!license_no) return setError("err", "Licencia obligatoria.");
 
-      if (!id){
-        await createDriver({
+      if (!id) {
+        if (!username) return setError("err", "Usuario de acceso obligatorio.");
+        if (!email) return setError("err", "Correo de acceso obligatorio.");
+        if (password.length < 8) return setError("err", "La contrasena temporal debe tener minimo 8 caracteres.");
+
+        const created = await createDriverWithAccount({
           company_id: companyId,
+          username,
+          email,
+          password,
           full_name,
           doc_type,
           doc_number,
@@ -370,8 +409,9 @@
           license_no,
           status
         });
-        setOk("ok", "Conductor creado ✅");
-      }else{
+        setOk("ok", `Conductor creado. Acceso listo para ${created.email}.`);
+        alert(`Conductor creado correctamente.\n\nUsuario: ${created.username}\nCorreo: ${created.email}\n\nComparte la contrasena temporal registrada en el formulario con el conductor.`);
+      } else {
         await updateDriver(id, companyId, {
           full_name,
           doc_type,
@@ -380,67 +420,60 @@
           license_no,
           status
         });
-        setOk("ok", "Conductor actualizado ✅");
+        setOk("ok", "Conductor actualizado.");
       }
 
       clearForm();
       await refresh();
-
-    }catch(e){
-      console.error(e);
-      const msg = (e?.message || String(e)).toLowerCase();
-
-      // Error típico: índice único (company_id, doc_type, doc_number)
-      if (msg.includes("duplicate") || msg.includes("unique")){
-        setError("err", "Ese documento ya existe en tu empresa (duplicado).");
-      }else{
-        setError("err", e?.message || String(e));
+    } catch (error) {
+      console.error(error);
+      const msg = (error?.message || String(error)).toLowerCase();
+      if (msg.includes("duplicate") || msg.includes("unique")) {
+        setError("err", "Ya existe un conductor o acceso con esos datos.");
+      } else {
+        setError("err", error?.message || String(error));
       }
     }
   });
 
-  rowsEl.addEventListener("click", async (e) => {
-    const btn = e.target.closest("button");
-    if (!btn) return;
+  rowsEl.addEventListener("click", async (event) => {
+    const button = event.target.closest("button");
+    if (!button) return;
 
-    const act = btn.dataset.act;
-    const id = btn.dataset.id;
-    if (!act || !id) return;
+    const action = button.dataset.act;
+    const id = button.dataset.id;
+    if (!action || !id) return;
 
-    try{
+    try {
       setError("err", "");
       setOk("ok", "");
 
-      if (act === "edit"){
-        const d = all.find(x => x.id === id);
-        if (d) setEditMode(d);
+      if (action === "edit") {
+        const driver = all.find((item) => item.id === id);
+        if (driver) setEditMode(driver);
         return;
       }
 
-      if (act === "delete"){
-        if (!confirm("¿Eliminar este conductor? 🗑️")) return;
+      if (action === "delete") {
+        if (!confirm("¿Eliminar este conductor?")) return;
         await deleteDriver(id, companyId);
-        setOk("ok", "Conductor eliminado ✅");
+        setOk("ok", "Conductor eliminado.");
         if (driverIdEl.value === id) clearForm();
         await refresh();
         return;
       }
 
-      if (act === "status"){
-        const newStatus = btn.dataset.status;
-        await updateDriver(id, companyId, { status: newStatus });
-        setOk("ok", `Estado actualizado a ${newStatus} ✅`);
+      if (action === "status") {
+        await updateDriver(id, companyId, { status: button.dataset.status });
+        setOk("ok", `Estado actualizado a ${button.dataset.status}.`);
         await refresh();
-        return;
       }
-
-    }catch(e2){
-      console.error(e2);
-      setError("err", e2?.message || String(e2));
+    } catch (error) {
+      console.error(error);
+      setError("err", error?.message || String(error));
     }
   });
 
-  // Init
   await refresh();
 </script>
 

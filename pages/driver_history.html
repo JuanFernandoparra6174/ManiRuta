@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Historial de Viajes | ManiRuta</title>
+  <link rel="stylesheet" href="../css/base.css"/>
+  <link rel="stylesheet" href="../css/home.css"/>
+</head>
+<body>
+
+<header class="nav">
+  <div class="container nav-inner">
+    <div class="brand"><span class="dot"></span> Historial</div>
+    <div class="nav-right">
+      <span class="pill" id="who">...</span>
+      <a class="btn btn-ghost" href="home_driver.html">Volver</a>
+      <button class="btn btn-ghost" id="logout">Salir</button>
+    </div>
+  </div>
+</header>
+
+<main class="container page stack">
+  <section class="card tile">
+    <div class="page-title">
+      <div>
+        <h1 class="h1">Historial de viajes</h1>
+        <p class="sub">Consulta los viajes cerrados o cancelados.</p>
+      </div>
+    </div>
+
+    <div class="stop-table-wrap">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Ruta</th>
+            <th>Bus</th>
+            <th>Inicio</th>
+            <th>Fin</th>
+            <th>Estado</th>
+          </tr>
+        </thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+  </section>
+</main>
+
+<script type="module" src="../js/driver_history_page.js"></script>
+
+</body>
+</html>

@@ -2,6 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <title>Rutas Disponibles | ManiRuta</title>
     <link rel="stylesheet" href="../css/base.css"/>
     <link rel="stylesheet" href="../css/home.css"/>
@@ -16,58 +17,66 @@
 
     <main class="container page stack">
         <section class="card tile">
-            <h2 class="h1">🚌 Encuentra tu ruta</h2>
-            <input type="text" id="routeSearch" class="input" placeholder="Buscar por nombre (Ej: Chipre, Centro)..." style="margin-top:10px;">
+            <h2 class="h1">Encuentra tu ruta</h2>
+            <input type="text" id="routeSearch" class="input" placeholder="Buscar por nombre..." style="margin-top:10px;">
         </section>
 
-        <div id="routesList" class="stack">
-            </div>
+        <div id="routesList" class="stack"></div>
     </main>
 
     <script type="module">
         import { fetchAllRoutes } from "../js/routes_passenger.js";
         import { requireAuthAndRole } from "../js/guard.js";
 
-        await requireAuthAndRole(1); // Solo pasajeros
+        await requireAuthAndRole(1);
 
         const list = document.getElementById("routesList");
         const searchInput = document.getElementById("routeSearch");
         let allRoutes = [];
 
+        function escapeHtml(value) {
+            return String(value ?? "")
+                .replaceAll("&", "&amp;")
+                .replaceAll("<", "&lt;")
+                .replaceAll(">", "&gt;")
+                .replaceAll('"', "&quot;")
+                .replaceAll("'", "&#039;");
+        }
+
+        function render(routes) {
+            if (!routes.length) {
+                list.innerHTML = `<div class="card help">No hay rutas activas en este momento.</div>`;
+                return;
+            }
+
+            list.innerHTML = routes.map((route) => `
+                <div class="card tile passenger-route-card">
+                    <div class="pill passenger-route-pill">RUTA</div>
+                    <div style="flex:1;">
+                        <h3 style="margin:0;">${escapeHtml(route.name)}</h3>
+                        <p class="sub" style="margin:4px 0;">Sentido: <b>${escapeHtml(route.direction || "IDA")}</b></p>
+                    </div>
+                    <a class="btn btn-primary" href="passenger_route_live.html?route_id=${route.id}">Ver viajes</a>
+                </div>
+            `).join("");
+        }
+
         async function load() {
             try {
                 allRoutes = await fetchAllRoutes();
                 render(allRoutes);
-            } catch (err) {
-                list.innerHTML = `<p class="sub" style="color:red;">Error al cargar: ${err.message}</p>`;
+            } catch (error) {
+                list.innerHTML = `<p class="sub" style="color:red;">Error al cargar: ${escapeHtml(error.message)}</p>`;
             }
         }
 
-        function render(routes) {
-            if (routes.length === 0) {
-                list.innerHTML = `<div class="card help">No hay rutas activas en este momento. 🔍</div>`;
-                return;
-            }
-
-            list.innerHTML = routes.map(r => `
-                <div class="card tile" style="display: flex; align-items: center; gap: 15px; border-left: 5px solid var(--primary);">
-                    <div class="pill" style="font-weight: 1000;">BUS</div>
-                    <div style="flex: 1;">
-                        <h3 style="margin: 0;">${r.name}</h3>
-                        <p class="sub" style="margin: 4px 0;">Sentido: <b>${r.direction || 'IDA'}</b></p>
-                        <small class="mini-muted">Empresa: ${r.companies?.name || 'ManiRuta'}</small>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        searchInput.addEventListener("input", (e) => {
-            const term = e.target.value.toLowerCase();
-            const filtered = allRoutes.filter(r => r.name.toLowerCase().includes(term));
+        searchInput.addEventListener("input", (event) => {
+            const term = event.target.value.toLowerCase();
+            const filtered = allRoutes.filter((route) => route.name.toLowerCase().includes(term));
             render(filtered);
         });
 
-        load();
+        await load();
     </script>
 </body>
 </html>

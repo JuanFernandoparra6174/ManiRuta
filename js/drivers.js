@@ -1,5 +1,5 @@
 // js/drivers.js
-import { supabase } from "./supabaseClient.js";
+import { supabase, SUPABASE_ANON_KEY, SUPABASE_URL } from "./supabaseClient.js";
 
 export const DRIVER_STATUSES = ["ACTIVE", "INACTIVE"];
 export const DRIVER_DOC_TYPES = ["CC", "CE", "PASSPORT"];
@@ -7,7 +7,7 @@ export const DRIVER_DOC_TYPES = ["CC", "CE", "PASSPORT"];
 export async function fetchCompanyDrivers(companyId) {
   let q = supabase
     .from("drivers")
-    .select("id, company_id, full_name, doc_type, doc_number, phone, license_no, status, created_at, updated_at")
+    .select("id, company_id, user_id, full_name, doc_type, doc_number, phone, license_no, status, created_at, updated_at")
     .order("created_at", { ascending: false });
 
   if (companyId) q = q.eq("company_id", companyId);
@@ -15,6 +15,60 @@ export async function fetchCompanyDrivers(companyId) {
   const { data, error } = await q;
   if (error) throw error;
   return data || [];
+}
+
+export async function createDriverWithAccount({
+  company_id,
+  username,
+  email,
+  password,
+  full_name,
+  doc_type,
+  doc_number,
+  phone,
+  license_no,
+  status
+}) {
+  const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+  if (sessionError) throw sessionError;
+
+  const accessToken = sessionData?.session?.access_token;
+  if (!accessToken) {
+    throw new Error("No hay una sesion activa para crear el conductor.");
+  }
+
+  const response = await fetch(`${SUPABASE_URL}/functions/v1/create-driver-account`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      apikey: SUPABASE_ANON_KEY,
+      Authorization: `Bearer ${accessToken}`
+    },
+    body: JSON.stringify({
+      company_id,
+      username,
+      email,
+      password,
+      full_name,
+      doc_type,
+      doc_number,
+      phone,
+      license_no,
+      status
+    })
+  });
+
+  const data = await response.json().catch(() => null);
+
+  if (!response.ok) {
+    throw new Error(data?.error || "No fue posible crear la cuenta del conductor.");
+  }
+
+  if (data?.error) {
+    throw new Error(data.error);
+  }
+
+  return data;
 }
 
 export async function createDriver({ company_id, full_name, doc_type, doc_number, phone, license_no, status }) {
