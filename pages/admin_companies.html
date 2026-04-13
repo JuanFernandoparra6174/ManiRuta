@@ -17,50 +17,53 @@
 
     <main class="container page stack">
         <section class="card tile">
-            <h2 class="h1">🏢 Registrar Empresa de Bus</h2>
+            <h2 class="h1">🏢 Registrar Empresa y Usuario</h2>
+            <p class="sub">Al llenar este formulario, se creará la empresa y el acceso para que el dueño inicie sesión.</p>
+            
             <form id="companyForm" class="stack" style="margin-top:15px;">
                 <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
                     <input type="text" id="compName" class="input" placeholder="Nombre Empresa" required>
-                    <input type="text" id="compNit" class="input" placeholder="NIT">
+                    <input type="text" id="compNit" class="input" placeholder="NIT" required>
                 </div>
-                <input type="email" id="compEmail" class="input" placeholder="Correo Electrónico" required>
-                <button type="submit" class="btn btn-primary">Registrar Empresa</button>
+                
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                    <input type="email" id="compEmail" class="input" placeholder="Correo Electrónico (Para Login)" required>
+                    <input type="password" id="compPassword" class="input" placeholder="Contraseña de acceso" required minlength="6">
+                </div>
+                
+                <button type="submit" class="btn btn-primary">Crear Empresa y Cuenta</button>
             </form>
         </section>
 
-        <section class="card tile">
-            <h2 class="h1">Lista de Empresas</h2>
-            <table class="table" style="margin-top:10px;">
+        <section class="card tile" style="overflow-x:auto;">
+            <table class="table">
                 <thead>
                     <tr>
-                        <th>Nombre</th>
+                        <th>Empresa</th>
                         <th>NIT</th>
-                        <th>Email</th>
+                        <th>Email de Acceso</th>
                     </tr>
                 </thead>
-                <tbody id="companiesTable">
-                    </tbody>
+                <tbody id="companiesTable"></tbody>
             </table>
         </section>
     </main>
 
     <script type="module">
-        import { fetchCompanies, createCompany } from "../js/companies.js";
+        import { fetchCompanies, createCompanyWithAccount } from "../js/companies.js";
         import { requireAuthAndRole } from "../js/guard.js";
 
-        // Protegemos la ruta para que solo entre el Admin
-        await requireAuthAndRole(3);
+        await requireAuthAndRole(3); // Solo Admin
 
         const form = document.getElementById("companyForm");
         const tableBody = document.getElementById("companiesTable");
 
-        // Función para cargar la lista de empresas
         async function loadCompanies() {
             try {
                 const companies = await fetchCompanies();
                 tableBody.innerHTML = companies.map(c => `
                     <tr>
-                        <td>${c.name}</td>
+                        <td><b>${c.name}</b></td>
                         <td>${c.nit || '—'}</td>
                         <td>${c.email || '—'}</td>
                     </tr>
@@ -70,26 +73,27 @@
             }
         }
 
-        // Evento para guardar
         form.addEventListener("submit", async (e) => {
             e.preventDefault();
             
-            const name = document.getElementById("compName").value;
-            const nit = document.getElementById("compNit").value;
-            const email = document.getElementById("compEmail").value;
+            const name = document.getElementById("compName").value.trim();
+            const nit = document.getElementById("compNit").value.trim();
+            const email = document.getElementById("compEmail").value.trim();
+            const password = document.getElementById("compPassword").value;
 
             try {
-                await createCompany({ name, nit, email });
-                alert("✅ Empresa registrada con éxito");
+                // Llamamos a la nueva función
+                await createCompanyWithAccount({ name, nit, email, password });
+                
+                alert("✅ Empresa y cuenta de usuario creadas con éxito.");
                 form.reset();
-                loadCompanies(); // Recargamos la tabla
+                loadCompanies();
             } catch (err) {
-                alert("❌ Error al guardar: " + err.message);
+                alert("❌ Error: " + err.message);
                 console.error(err);
             }
         });
 
-        // Cargar al iniciar
         loadCompanies();
     </script>
 </body>
