@@ -14,7 +14,7 @@ export async function signUpPassenger({ username, email, phone, password }) {
 
   if (error) throw error;
 
-  // Si session es null → necesita confirmar correo
+  // Si session es null -> necesita confirmar correo
   const needsEmailConfirm = !data.session;
 
   return {
@@ -39,11 +39,36 @@ export async function signIn({ email, password }) {
 
 
 // =============================
+// PASSWORD RESET
+// =============================
+export async function requestPasswordReset({ email, redirectTo }) {
+  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo
+  });
+
+  if (error) throw error;
+}
+
+export async function getAuthSession() {
+  const { data, error } = await supabase.auth.getSession();
+  if (error) throw error;
+  return data.session;
+}
+
+export async function updatePassword({ password }) {
+  const { data, error } = await supabase.auth.updateUser({
+    password
+  });
+
+  if (error) throw error;
+  return data.user;
+}
+
+
+// =============================
 // LOGOUT
 // =============================
 export async function signOut() {
   const { error } = await supabase.auth.signOut();
   if (error) throw error;
 }
-
-
