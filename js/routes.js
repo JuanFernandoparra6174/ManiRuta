@@ -111,6 +111,64 @@ export async function fetchCompanyRoutes(companyId) {
     });
 }
 
+export async function fetchAdminRoutes() {
+    const [routesResult, companiesResult] = await Promise.all([
+        supabase
+            .from("routes")
+            .select("id, company_id, name, origin_stop_id, end_stop_id, direction, status, created_at, updated_at")
+            .order("name", { ascending: true }),
+        supabase
+            .from("companies")
+            .select("id, name")
+    ]);
+
+    const { data: routes, error: routesError } = routesResult;
+    const { data: companies, error: companiesError } = companiesResult;
+
+    if (routesError) throw routesError;
+    if (companiesError) throw companiesError;
+
+    const routeIds = (routes || []).map((route) => route.id);
+    if (!routeIds.length) return [];
+
+    const { data: routeStops, error: routeStopsError } = await supabase
+        .from("route_stops")
+        .select("route_id, stop_id, stop_order")
+        .in("route_id", routeIds)
+        .order("stop_order");
+
+    if (routeStopsError) throw routeStopsError;
+
+    const companyMap = new Map((companies || []).map((company) => [company.id, company]));
+    const stopMap = await fetchStopsMapByIds((routeStops || []).map((item) => item.stop_id));
+    const stopsByRoute = new Map();
+
+    for (const item of routeStops || []) {
+        if (!stopsByRoute.has(item.route_id)) {
+            stopsByRoute.set(item.route_id, []);
+        }
+
+        stopsByRoute.get(item.route_id).push({
+            ...item,
+            stop: stopMap.get(item.stop_id) || null
+        });
+    }
+
+    return (routes || []).map((route) => {
+        const orderedStops = stopsByRoute.get(route.id) || [];
+        const company = companyMap.get(route.company_id) || null;
+        return {
+            ...route,
+            company: company || null,
+            company_name: company?.name || null,
+            stops: orderedStops,
+            stop_count: orderedStops.length,
+            origin_stop: orderedStops[0]?.stop || null,
+            end_stop: orderedStops[orderedStops.length - 1]?.stop || null
+        };
+    });
+}
+
 export async function fetchRouteStops(routeId) {
     const { data, error } = await supabase
         .from("route_stops")

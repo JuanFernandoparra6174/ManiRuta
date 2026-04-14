@@ -639,6 +639,51 @@
   border: 1px dashed rgba(15,23,42,.12);
 }
 
+.admin-routes-layout{
+  align-items:start;
+}
+
+.route-search{
+  max-width: 320px;
+}
+
+.route-detail-card{
+  padding: 14px;
+}
+
+.route-detail-grid{
+  display:grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+.route-detail-item{
+  display:flex;
+  flex-direction:column;
+  gap: 6px;
+  padding: 14px;
+  border-radius: 14px;
+  background: rgba(255,255,255,.85);
+  border: 1px solid rgba(15,23,42,.08);
+}
+
+.route-detail-label{
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+
+.route-detail-value{
+  font-size: 14px;
+  font-weight: 900;
+}
+
+.route-row-selected td{
+  background: rgba(84,188,189,.12);
+}
+
 @media (min-width: 960px){
   .routes-layout{
     grid-template-columns: minmax(340px, 420px) minmax(0, 1fr);
@@ -647,6 +692,10 @@
 
   .route-map-panel #routesMap{
     height: 640px;
+  }
+
+  .route-detail-grid{
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 

@@ -2,113 +2,95 @@
 <html lang="es">
 <head>
     <meta charset="utf-8"/>
-    <title>Admin - Rutas | ManiRuta</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <title>Admin - Consultar Rutas | ManiRuta</title>
     <link rel="stylesheet" href="../css/base.css"/>
     <link rel="stylesheet" href="../css/home.css"/>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 </head>
 <body>
     <header class="nav">
         <div class="container nav-inner">
-            <div class="brand"><span class="dot"></span> Definición de Rutas</div>
+            <div class="brand"><span class="dot"></span> Consulta de Rutas</div>
             <a href="home_admin.html" class="btn btn-ghost">Volver</a>
         </div>
     </header>
 
     <main class="container page stack">
-        <section class="card tile">
-            <h2 class="h1">🗺️ Crear Nueva Ruta Oficial</h2>
-            <form id="routeForm" class="stack" style="margin-top:15px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                <input type="text" id="rName" class="input" placeholder="Nombre (Ej: Chipre - Centro)" style="grid-column: span 2;" required>
-                
-                <select id="rCompany" class="input" required>
-                    <option value="">Asignar a Empresa...</option>
-                </select>
+        <section class="card tile route-panel">
+            <div class="page-title">
+                <div>
+                    <h1 class="h1">Consultar rutas oficiales</h1>
+                    <p class="sub">Visualiza empresa responsable, recorrido y paraderos asociados sin editar informacion.</p>
+                </div>
+                <span class="chip ok">ADMIN</span>
+            </div>
 
-                <select id="rDirection" class="input" required>
-                    <option value="IDA">Sentido: IDA</option>
-                    <option value="VUELTA">Sentido: VUELTA</option>
-                </select>
+            <div class="routes-layout admin-routes-layout">
+                <section class="route-form-panel">
+                    <section class="card tile route-detail-card">
+                        <div class="page-title stop-list-head">
+                            <div>
+                                <h2 class="h1">Rutas registradas</h2>
+                                <p class="sub">Selecciona una ruta para consultar su detalle y trazado.</p>
+                            </div>
+                            <input
+                                type="search"
+                                id="routeSearch"
+                                class="input route-search"
+                                placeholder="Buscar por ruta o empresa"
+                            >
+                        </div>
 
-                <button type="submit" class="btn btn-primary" style="grid-column: span 2;">➕ Guardar Ruta</button>
-            </form>
-        </section>
+                        <div id="routeErr" class="error" style="display:none;"></div>
 
-        <section class="card tile">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Nombre de la Ruta</th>
-                        <th>Empresa Responsable</th>
-                        <th>Estado</th>
-                        <th>Acción</th>
-                    </tr>
-                </thead>
-                <tbody id="routesTable"></tbody>
-            </table>
+                        <div class="stop-table-wrap">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Ruta</th>
+                                        <th>Empresa</th>
+                                        <th>Estado</th>
+                                        <th>Accion</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="routesTable"></tbody>
+                            </table>
+                        </div>
+                    </section>
+
+                    <section class="card tile route-detail-card">
+                        <div class="page-title">
+                            <div>
+                                <h2 class="h1">Informacion de la ruta</h2>
+                                <p class="sub" id="routeDetailHint">Selecciona una ruta del listado para ver sus datos.</p>
+                            </div>
+                        </div>
+
+                        <div id="routeDetail" class="route-detail-grid">
+                            <div class="route-empty">Aun no has seleccionado una ruta.</div>
+                        </div>
+                    </section>
+
+                    <section class="card tile route-sequence-card">
+                        <div class="page-title">
+                            <div>
+                                <h2 class="h1">Recorrido</h2>
+                                <p class="sub" id="selectedStopsCount">0 paraderos</p>
+                            </div>
+                        </div>
+                        <div id="selectedStopsList" class="route-sequence-list"></div>
+                    </section>
+                </section>
+
+                <section class="route-map-panel">
+                    <div id="routesMap"></div>
+                </section>
+            </div>
         </section>
     </main>
 
-    <script type="module">
-        // Importamos las funciones del js que actualizamos antes
-        import { fetchAllRoutes, createRoute, deleteRoute } from "../js/routes.js";
-        import { fetchCompanies } from "../js/companies.js";
-        import { requireAuthAndRole } from "../js/guard.js";
-
-        await requireAuthAndRole(3);
-
-        const table = document.getElementById("routesTable");
-        const form = document.getElementById("routeForm");
-        const companySelect = document.getElementById("rCompany");
-
-        async function load() {
-            try {
-                // Cargar empresas para el select
-                const companies = await fetchCompanies();
-                companySelect.innerHTML = '<option value="">Asignar a Empresa...</option>' + 
-                    companies.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
-
-                // Cargar tabla de rutas
-                const routes = await fetchAllRoutes();
-                table.innerHTML = routes.map(r => `
-                    <tr>
-                        <td><b>${r.name}</b><br><small>${r.direction || 'Sentido no definido'}</small></td>
-                        <td>${r.companies?.name || 'Empresa no asignada'}</td>
-                        <td><span class="chip ok">${r.status}</span></td>
-                        <td><button class="btn-mini bad" onclick="removeRoute('${r.id}')">Eliminar</button></td>
-                    </tr>
-                `).join('');
-            } catch (err) {
-                console.error("Error al cargar datos:", err);
-            }
-        }
-
-        form.onsubmit = async (e) => {
-            e.preventDefault();
-            try {
-                // Enviamos solo lo que tu tabla "routes" acepta
-                await createRoute({
-                    name: document.getElementById("rName").value,
-                    company_id: document.getElementById("rCompany").value,
-                    direction: document.getElementById("rDirection").value
-                });
-                
-                alert("Ruta guardada correctamente 🛣️");
-                form.reset();
-                load();
-            } catch (err) {
-                alert("Error al guardar: " + err.message);
-                console.error(err);
-            }
-        };
-
-        window.removeRoute = async (id) => {
-            if(confirm("¿Eliminar esta ruta?")) { 
-                await deleteRoute(id); 
-                load(); 
-            }
-        };
-
-        load();
-    </script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script type="module" src="../js/admin_routes_page.js"></script>
 </body>
 </html>

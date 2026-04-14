@@ -25,7 +25,7 @@
     <section class="card welcome">
       <div class="welcome-top">
         <div>
-          <h1 id="welcomeTitle">🛡️ Panel de Control</h1>
+          <h1 id="welcomeTitle">Panel de Control</h1>
           <p>Gestiona paraderos, empresas y publica alertas para toda la ciudad.</p>
         </div>
         <span class="pill">SUPER_ADMIN</span>
@@ -37,7 +37,7 @@
       <a class="admin-card" href="admin_stops.html">
         <div class="admin-img" style="background-image: url('https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=400&q=60')"></div>
         <div class="admin-body">
-          <div class="admin-title">📍 Gestionar Paraderos</div>
+          <div class="admin-title">Gestionar Paraderos</div>
           <div class="admin-sub">Crear, editar y eliminar puntos de parada en el mapa.</div>
         </div>
       </a>
@@ -45,15 +45,15 @@
       <a class="admin-card" href="admin_alerts.html">
         <div class="admin-img" style="background-image: url('https://static.vecteezy.com/system/resources/previews/002/637/645/non_2x/warning-alert-sign-free-vector.jpg')"></div>
         <div class="admin-body">
-          <div class="admin-title">🔔 Alertas Operativas</div>
-          <div class="admin-sub">Publica desvíos o cierres viales en tiempo real.</div>
+          <div class="admin-title">Alertas Operativas</div>
+          <div class="admin-sub">Publica desvios o cierres viales en tiempo real.</div>
         </div>
       </a>
 
       <a class="admin-card" href="admin_companies.html">
         <div class="admin-img" style="background-image: url('https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&w=400&q=60')"></div>
         <div class="admin-body">
-          <div class="admin-title">🏢 Empresas de Bus</div>
+          <div class="admin-title">Empresas de Bus</div>
           <div class="admin-sub">Registra y administra las empresas de transporte.</div>
         </div>
       </a>
@@ -61,7 +61,7 @@
       <a class="admin-card" href="incidents_admin.html">
         <div class="admin-img" style="background-image: url('https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=400&q=60')"></div>
         <div class="admin-body">
-          <div class="admin-title">🚨 Revisar Incidentes</div>
+          <div class="admin-title">Revisar Incidentes</div>
           <div class="admin-sub">Ver denuncias de robo, acoso o mal comportamiento.</div>
         </div>
       </a>
@@ -69,8 +69,8 @@
       <a class="admin-card" href="admin_routes.html">
         <div class="admin-img" style="background-image: url('https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&w=400&q=60')"></div>
         <div class="admin-body">
-          <div class="admin-title">🛣️ Definir Rutas</div>
-          <div class="admin-sub">Configurar trayectos oficiales y asignar empresas.</div>
+          <div class="admin-title">Consultar Rutas</div>
+          <div class="admin-sub">Ver trayectos oficiales, empresas y recorridos en el mapa.</div>
         </div>
       </a>
     </section>
@@ -80,11 +80,10 @@
     import { requireAuthAndRole } from "../js/guard.js";
     import { signOut } from "../js/auth.js";
 
-    // Seguridad: Solo Admins (Role 3)
-    const profile = await requireAuthAndRole(3); 
+    const profile = await requireAuthAndRole(3);
     if (profile){
       document.getElementById("who").textContent = `@${profile.username}`;
-      document.getElementById("welcomeTitle").textContent = `🛡️ Bienvenido, ${profile.username}`;
+      document.getElementById("welcomeTitle").textContent = `Bienvenido, ${profile.username}`;
     }
 
     document.getElementById("logout").addEventListener("click", async () => {
@@ -94,6 +93,3 @@
   </script>
 </body>
 </html>
-
-
-
