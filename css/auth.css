@@ -103,4 +103,283 @@
   text-decoration: underline;
 }
 
+/* Shared dark auth system based on Plantilla_Login. */
+body:is(.auth-login, .auth-signup, .auth-reset){
+  background: #101010;
+}
 
+:is(.auth-login, .auth-signup, .auth-reset) .auth-wrap{
+  min-height: 100%;
+  padding: 28px 16px;
+  background:
+    radial-gradient(620px 480px at 50% 45%, rgba(0, 255, 127, .09), transparent 62%),
+    #101010;
+}
+
+:is(.auth-login, .auth-signup, .auth-reset) .auth-bg{
+  background: none;
+}
+
+:is(.auth-login, .auth-signup, .auth-reset) .auth{
+  display: block;
+}
+
+.auth-login .auth{
+  width: min(360px, 100%);
+}
+
+.auth-signup .auth{
+  width: min(560px, 100%);
+}
+
+.auth-reset .auth{
+  width: min(360px, 100%);
+}
+
+:is(.auth-login, .auth-signup, .auth-reset) .hero{
+  display: none;
+}
+
+:is(.auth-login, .auth-signup, .auth-reset) .panel{
+  position: relative;
+  padding: 32px 30px 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: #161616;
+  border: 0;
+  outline: 1px solid #2b9962;
+  border-radius: 10px;
+  box-shadow: 0 15px 60px rgba(0, 255, 127, .78);
+  overflow: visible;
+  backdrop-filter: none;
+}
+
+.auth-login .panel{
+  min-height: 500px;
+}
+
+.auth-reset .panel{
+  min-height: 500px;
+}
+
+.auth-signup .panel{
+  min-height: 590px;
+  padding-inline: 34px;
+}
+
+:is(.auth-login, .auth-signup, .auth-reset) .panel::before,
+:is(.auth-login, .auth-signup, .auth-reset) .panel::after{
+  content: "";
+  position: absolute;
+  bottom: -50px;
+  height: 8px;
+  border-radius: 10px;
+}
+
+:is(.auth-login, .auth-signup, .auth-reset) .panel::before{
+  left: calc(50% - 33px);
+  width: 28px;
+  background: #00ff7f;
+}
+
+:is(.auth-login, .auth-signup, .auth-reset) .panel::after{
+  left: calc(50% + 15px);
+  width: 8px;
+  background: #ececec;
+  box-shadow: 18px 0 0 #ececec;
+}
+
+:is(.auth-login, .auth-signup, .auth-reset) .topbar{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  margin: 0 0 30px;
+  text-align: center;
+}
+
+:is(.auth-login, .auth-signup, .auth-reset) .topbar .btn-ghost{
+  position: static;
+}
+
+:is(.auth-login, .auth-signup, .auth-reset) .auth-title{
+  margin-top: 14px;
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1;
+}
+
+:is(.auth-login, .auth-signup, .auth-reset) .auth-logo{
+  display: block;
+  width: min(220px, 100%);
+  height: auto;
+  margin: 0 auto;
+  object-fit: contain;
+  filter: drop-shadow(0 0 18px rgba(0, 255, 127, .24));
+}
+
+:is(.auth-login, .auth-signup, .auth-reset) .form{
+  gap: 15px;
+}
+
+:is(.auth-login, .auth-signup, .auth-reset) .form > div:not(.row):not(.auth-inline):not(.error):not(.help):not(.toast):not(#ok){
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.auth-signup .row{
+  gap: 12px;
+}
+
+.auth-signup .row > div{
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+:is(.auth-login, .auth-signup, .auth-reset) .help{
+  color: #868686;
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+:is(.auth-login, .auth-signup, .auth-reset) label.help{
+  color: #e3e3e3;
+}
+
+:is(.auth-login, .auth-signup, .auth-reset) .input{
+  width: 100%;
+  padding: 11px 25px;
+  color: #00ff7f;
+  background: transparent;
+  border: 1px solid #e3e3e3;
+  border-radius: 8px;
+  outline: none;
+  font-size: 13.4px;
+  line-height: 1;
+  box-shadow: none;
+}
+
+:is(.auth-login, .auth-signup, .auth-reset) .input::placeholder{
+  color: rgba(0, 255, 127, .58);
+}
+
+:is(.auth-login, .auth-signup, .auth-reset) .input:focus{
+  border-color: #00ff7f;
+  box-shadow: 0 0 0 3px rgba(0, 255, 127, .16);
+}
+
+:is(.auth-login, .auth-signup, .auth-reset) .btn{
+  border-radius: 8px;
+  transition: all ease-in-out .3s;
+}
+
+:is(.auth-login, .auth-signup, .auth-reset) .btn-primary{
+  width: 100%;
+  margin-top: 5px;
+  padding: 14px 13px 12px;
+  color: #00ff7f;
+  background: transparent;
+  outline: 1px solid #00ff7f;
+  box-shadow: none;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+:is(.auth-login, .auth-signup, .auth-reset) .btn-primary:hover,
+:is(.auth-login, .auth-signup, .auth-reset) .btn-primary:focus-visible{
+  color: #161616;
+  background: #00ff7f;
+}
+
+:is(.auth-login, .auth-signup, .auth-reset) .btn-primary:active{
+  transform: translateY(1px);
+}
+
+:is(.auth-login, .auth-signup, .auth-reset) .btn-ghost{
+  padding: 10px 16px;
+  color: #00ff7f;
+  background: transparent;
+  border: 1px solid rgba(0, 255, 127, .42);
+  font-size: 12px;
+  font-weight: 600;
+  box-shadow: none;
+}
+
+:is(.auth-login, .auth-signup, .auth-reset) .btn-ghost:hover,
+:is(.auth-login, .auth-signup, .auth-reset) .btn-ghost:focus-visible{
+  color: #161616;
+  background: #00ff7f;
+  border-color: #00ff7f;
+}
+
+.auth-login .auth-inline{
+  justify-content: center;
+  gap: 6px;
+  margin-top: -5px;
+  text-align: center;
+}
+
+:is(.auth-login, .auth-signup, .auth-reset) .auth-link{
+  color: #868686;
+  font-size: 12px;
+  font-weight: 400;
+  text-decoration: none;
+  transition: color ease-in-out .2s;
+}
+
+:is(.auth-login, .auth-signup, .auth-reset) .auth-link:hover,
+:is(.auth-login, .auth-signup, .auth-reset) .auth-link:focus-visible{
+  color: #00ff7f;
+  text-decoration: none;
+}
+
+:is(.auth-login, .auth-signup, .auth-reset) .error{
+  padding: 10px 12px;
+  color: #ff8a8a;
+  background: rgba(255, 60, 60, .09);
+  border: 1px solid rgba(255, 90, 90, .35);
+  border-radius: 8px;
+  font-size: 12px;
+}
+
+:is(.auth-signup, .auth-reset) #ok,
+.auth-reset .toast{
+  padding: 10px 12px;
+  color: #00ff7f;
+  background: rgba(0, 255, 127, .09);
+  border: 1px solid rgba(0, 255, 127, .35);
+  border-radius: 8px;
+  font-weight: 600 !important;
+}
+
+:is(.auth-login, .auth-signup, .auth-reset) .form > .help{
+  margin-top: -5px;
+  text-align: center;
+}
+
+@media (max-width: 620px){
+  .auth-signup .auth{
+    width: min(360px, 100%);
+  }
+
+  .auth-signup .panel{
+    min-height: auto;
+    padding: 28px 24px 30px;
+  }
+}
+
+@media (max-width: 380px){
+  .auth-login .panel{
+    min-height: 478px;
+    padding: 22px;
+  }
+
+  :is(.auth-login, .auth-signup, .auth-reset) .auth-logo{
+    width: min(190px, 100%);
+  }
+}

@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="../css/base.css" />
   <link rel="stylesheet" href="../css/auth.css" />
 </head>
-<body>
+<body class="auth-login">
   <div class="auth-wrap">
     <div class="auth-bg"></div>
 
@@ -16,21 +16,21 @@
         <div class="img" id="heroImg"></div>
 
         <div class="brand"><span class="dot"></span> ManiRuta</div>
-        <h1>Transporte público<br/>con información real.</h1>
-        <p>Rutas y alertas en una sola plataforma. Denuncia incidentes de forma rápida y segura.</p>
+        <h1>Transporte publico<br/>con informacion real.</h1>
+        <p>Rutas y alertas en una sola plataforma. Denuncia incidentes de forma rapida y segura.</p>
         <div class="stats">
-          <span class="badge">🚌 Tiempo real</span>
-          <span class="badge">📍 Paraderos</span>
-          <span class="badge">🚨 Alertas</span>
-          <span class="badge">🛡️ Denuncias</span>
+          <span class="badge">Tiempo real</span>
+          <span class="badge">Paraderos</span>
+          <span class="badge">Alertas</span>
+          <span class="badge">Denuncias</span>
         </div>
       </section>
 
       <section class="panel card">
         <div class="topbar">
           <div>
-            <div class="help">Bienvenido</div>
-            <div style="font-weight:900; font-size:20px;">Iniciar sesión</div>
+            <img class="auth-logo" src="https://ruunbwmuizhaetgubzjt.supabase.co/storage/v1/object/public/MOVANZA/Logo%20MOVANZA.png" alt="MOVANZA" />
+            <div class="auth-title">Bienvenido</div>
           </div>
           <a class="btn btn-ghost" href="signup.html">Crear cuenta</a>
         </div>
@@ -38,25 +38,25 @@
         <form class="form" id="loginForm" autocomplete="on">
           <div>
             <label class="help">Correo</label>
-            <input class="input" type="email" id="email" required placeholder="tucorreo@ejemplo.com"/>
+            <input class="input" type="email" id="email" required placeholder="Dirección de correo"/>
           </div>
 
           <div>
             <label class="help">Contraseña</label>
-            <input class="input" type="password" id="password" required placeholder="••••••••"/>
+            <input class="input" type="password" id="password" required placeholder="Contraseña"/>
           </div>
 
           <div class="auth-inline">
             <span class="help">¿Olvidaste tu contraseña?</span>
-            <a class="auth-link" href="forgot_password.html">Restablécela aquí</a>
+            <a class="auth-link" href="forgot_password.html">Restablecela aquí</a>
           </div>
 
           <div id="err" class="error" style="display:none;"></div>
 
-          <button class="btn btn-primary" type="submit">🔐 Entrar</button>
+          <button class="btn btn-primary" type="submit">Login</button>
 
           <div class="help">
-            ¿No tienes cuenta? <a href="signup.html" style="color:var(--primary); font-weight:900;">Regístrate</a>
+            ¿No tienes cuenta? <a class="auth-link" href="signup.html">Registrate</a>
           </div>
         </form>
       </section>
@@ -82,21 +82,9 @@
         await signIn({ email, password });
         await redirectToRoleHome();
       } catch(err){
-        setError("err", err?.message || "Error iniciando sesión");
+        setError("err", err?.message || "Error iniciando sesion");
       }
     });
   </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
