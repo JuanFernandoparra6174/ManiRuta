@@ -5,162 +5,269 @@
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Inicio Empresa | ManiRuta</title>
   <link rel="stylesheet" href="../css/base.css"/>
+  <link rel="stylesheet" href="../css/company_design_system.css"/>
   <link rel="stylesheet" href="../css/home.css"/>
 </head>
-<body>
+<body class="company-theme company-dashboard">
 
-  <header class="nav">
-    <div class="container nav-inner">
-      <div class="nav-left">
-        <button class="icon-btn" id="menuBtn" title="Menu" aria-label="Menu">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-            <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-          </svg>
-        </button>
+  <div class="company-shell">
+    <aside class="company-sidebar" aria-label="Navegacion Empresa">
+      <div class="company-sidebar-brand">
+        <a class="company-logo-link" href="home_company.html" aria-label="MOVANZA inicio">
+          <img class="company-logo-img" src="https://ruunbwmuizhaetgubzjt.supabase.co/storage/v1/object/public/MOVANZA/Logo%20MOVANZA.png" alt="MOVANZA"/>
+        </a>
       </div>
 
-      <div class="brand">
-        <span class="dot"></span> Inicio
+      <nav class="company-nav-list">
+        <p class="label-caps company-nav-label">Empresa</p>
+        <a class="company-nav-item is-active" href="home_company.html" aria-current="page">
+          <span class="company-nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+            </svg>
+          </span>
+          Inicio
+        </a>
+        <a class="company-nav-item" href="buses.html">
+          <span class="company-nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M6 19v2M18 19v2M5 11h14M6 4h12a2 2 0 0 1 2 2v10a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3V6a2 2 0 0 1 2-2Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+          Mi Flota
+        </a>
+        <a class="company-nav-item" href="drivers.html">
+          <span class="company-nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+          Conductores
+        </a>
+        <a class="company-nav-item" href="company_routes.html">
+          <span class="company-nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M9 18l-6 3V6l6-3 6 3 6-3v15l-6 3-6-3ZM9 3v15M15 6v15" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+          Rutas
+        </a>
+        <a class="company-nav-item" href="company_trips.html">
+          <span class="company-nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M6 19a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM18 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM6 13V9a4 4 0 0 1 4-4h5M18 11v4a4 4 0 0 1-4 4H9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+          Viajes
+        </a>
+        <a class="company-nav-item" href="company_stats.html">
+          <span class="company-nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M3 3v18h18M7 15l4-4 3 3 5-7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+          Estadisticas
+        </a>
+      </nav>
+
+      <div class="company-sidebar-footer">
+        <a class="company-nav-item" href="company_settings.html">
+          <span class="company-nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z" stroke="currentColor" stroke-width="1.8"/>
+              <path d="M19.4 15a7.9 7.9 0 0 0 .1-2l2-1.2-2-3.4-2.3.7a7.4 7.4 0 0 0-1.7-1l-.3-2.4H10.8l-.3 2.4a7.4 7.4 0 0 0-1.7 1l-2.3-.7-2 3.4 2 1.2a7.9 7.9 0 0 0 .1 2l-2 1.2 2 3.4 2.3-.7c.5.4 1.1.7 1.7 1l.3 2.4h4.4l.3-2.4c.6-.3 1.2-.6 1.7-1l2.3.7 2-3.4-2-1.2Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+            </svg>
+          </span>
+          Ajustes
+        </a>
       </div>
+    </aside>
 
-      <div class="nav-right">
-        <span class="pill" id="who">...</span>
+    <div class="company-content">
+      <header class="nav company-topbar">
+        <div class="nav-inner company-topbar-inner">
+          <div class="nav-left company-header-identity">
+            <button class="icon-btn" id="menuBtn" title="Menu" aria-label="Menu">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </button>
 
-        <button class="icon-btn" id="settingsBtn" title="Ajustes" aria-label="Ajustes">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-            <path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z" stroke="currentColor" stroke-width="2"/>
-            <path d="M19.4 15a7.9 7.9 0 0 0 .1-2l2-1.2-2-3.4-2.3.7a7.4 7.4 0 0 0-1.7-1l-.3-2.4H10.8l-.3 2.4a7.4 7.4 0 0 0-1.7 1l-2.3-.7-2 3.4 2 1.2a7.9 7.9 0 0 0 .1 2l-2 1.2 2 3.4 2.3-.7c.5.4 1.1.7 1.7 1l.3 2.4h4.4l.3-2.4c.6-.3 1.2-.6 1.7-1l2.3.7 2-3.4-2-1.2Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
-          </svg>
-        </button>
+            <a class="company-header-logo" href="home_company.html" aria-label="MOVANZA inicio">
+              <img src="https://ruunbwmuizhaetgubzjt.supabase.co/storage/v1/object/public/MOVANZA/Logo%20MOVANZA.png" alt="MOVANZA"/>
+            </a>
+          </div>
 
-        <button class="btn btn-ghost" id="logout">Salir</button>
-      </div>
+          <div class="company-header-pattern" aria-hidden="true"></div>
+
+          <div class="nav-right company-user-actions">
+            <span class="company-user-chip" id="who">...</span>
+            <button class="company-logout-btn" id="logout">Salir</button>
+          </div>
+        </div>
+      </header>
+
+      <main class="container home-wrap company-main">
+        <div class="legacy-home-hooks" aria-hidden="true">
+          <div id="companyInfo"></div>
+        </div>
+
+        <section class="card welcome company-overview">
+          <div class="welcome-top">
+            <div>
+              <p class="label-caps">Resumen operativo</p>
+              <h1 id="welcomeTitle">Panel Empresa</h1>
+              <p>Estado esencial de flota, personal y viajes en curso.</p>
+            </div>
+            <span class="pill" id="companyStatus">...</span>
+          </div>
+        </section>
+
+        <section class="dashboard-layout">
+          <section class="dashboard-primary" aria-label="Resumen operativo Empresa">
+            <section class="kpi-grid">
+              <article class="metric-card">
+                <p class="label-caps">Buses activos</p>
+                <strong id="kpiActiveBuses">-</strong>
+                <span>Disponibles para operar</span>
+              </article>
+
+              <article class="metric-card">
+                <p class="label-caps">Mantenimiento</p>
+                <strong id="kpiMaintenanceBuses">-</strong>
+                <span>Requieren seguimiento</span>
+              </article>
+
+              <article class="metric-card">
+                <p class="label-caps">Conductores activos</p>
+                <strong id="kpiActiveDrivers">-</strong>
+                <span>Personal disponible</span>
+              </article>
+
+              <article class="metric-card">
+                <p class="label-caps">Viajes en curso</p>
+                <strong id="kpiLiveTrips">-</strong>
+                <span>Operacion en tiempo real</span>
+              </article>
+            </section>
+
+            <section class="card attention-card">
+              <div class="panel-heading">
+                <div>
+                  <p class="label-caps">Atencion requerida</p>
+                  <h2>Prioridades operativas</h2>
+                </div>
+                <span class="status-dot" id="attentionStatus">...</span>
+              </div>
+
+              <div class="attention-list">
+                <div class="attention-item">
+                  <span class="attention-icon warning"></span>
+                  <div>
+                    <strong id="attentionMaintenance">-</strong>
+                    <p>Buses en mantenimiento</p>
+                  </div>
+                </div>
+
+                <div class="attention-item">
+                  <span class="attention-icon critical"></span>
+                  <div>
+                    <strong id="attentionIncidents">-</strong>
+                    <p>Incidencias abiertas</p>
+                  </div>
+                </div>
+
+                <div class="attention-item">
+                  <span class="attention-icon active"></span>
+                  <div>
+                    <strong id="routesActive">-</strong>
+                    <p>Rutas activas configuradas</p>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </section>
+
+          <aside class="dashboard-side">
+            <section class="card company-status-card">
+              <div class="company-identity-content">
+                <p class="label-caps">Empresa</p>
+                <h2 id="companyName">...</h2>
+                <p id="companyMeta">Estado de registro</p>
+                <div class="company-divider"></div>
+                <div class="compact-stats">
+                  <div>
+                    <strong id="fleetKpi">-</strong>
+                    <span>Flota total</span>
+                  </div>
+                  <div>
+                    <strong id="gpsRecent">-</strong>
+                    <span>GPS reciente</span>
+                  </div>
+                </div>
+                <p class="help" id="dashboardNote">Cargando lectura operativa...</p>
+              </div>
+            </section>
+          </aside>
+        </section>
+      </main>
     </div>
-  </header>
-
-  <main class="container home-wrap">
-    <section class="card welcome">
-      <div class="welcome-top">
-        <div>
-          <h1 id="welcomeTitle">Panel Empresa</h1>
-          <p>Gestiona tu flota, conductores, rutas y revisa configuracion operativa.</p>
-        </div>
-        <span class="pill">EMPRESA_BUSES</span>
-      </div>
-
-      <div class="footer-actions">
-        <span class="badge">Flota</span>
-        <span class="badge">Conductores</span>
-        <span class="badge">Rutas</span>
-        <span class="badge">Viajes</span>
-        <span class="badge">Estadisticas</span>
-        <span class="badge">Configuracion</span>
-      </div>
-    </section>
-
-    <section class="company-grid">
-      <article class="company-card">
-        <div class="company-top">
-          <div class="company-avatar"><div class="img" id="imgFleet"></div></div>
-        </div>
-        <p class="company-title">Mi Flota</p>
-        <p class="company-sub">Buses activos y estado general</p>
-        <div class="company-actions">
-          <button class="btn-mini" id="goFleet">ver</button>
-        </div>
-      </article>
-
-      <article class="company-card">
-        <div class="company-top">
-          <div class="company-avatar"><div class="img" id="imgDrivers"></div></div>
-        </div>
-        <p class="company-title">Conductores</p>
-        <p class="company-sub">Lista y gestion de conductores</p>
-        <div class="company-actions">
-          <button class="btn-mini secondary" id="goDrivers">manejar</button>
-        </div>
-      </article>
-
-      <article class="company-card">
-        <div class="company-top">
-          <div class="company-avatar"><div class="img" id="imgRoutes"></div></div>
-        </div>
-        <p class="company-title">Rutas</p>
-        <p class="company-sub">Crea recorridos usando paraderos existentes</p>
-        <div class="company-actions">
-          <button class="btn-mini" id="goRoutes">crear</button>
-        </div>
-      </article>
-
-      <article class="company-card">
-        <div class="company-top">
-          <div class="company-avatar"><div class="img" id="imgTrips"></div></div>
-        </div>
-        <p class="company-title">Viajes</p>
-        <p class="company-sub">Asigna ruta, bus y conductor a cada salida</p>
-        <div class="company-actions">
-          <button class="btn-mini secondary" id="goTrips">gestionar</button>
-        </div>
-      </article>
-
-      <article class="company-card">
-        <div class="company-top">
-          <div class="company-avatar"><div class="img" id="imgStats"></div></div>
-        </div>
-        <p class="company-title">Estadisticas</p>
-        <p class="company-sub">Resumen operativo de viajes, uso, GPS e incidencias</p>
-        <div class="company-actions">
-          <button class="btn-mini" id="goStats">abrir</button>
-        </div>
-      </article>
-    </section>
-
-    <div class="section-title">vista de flotas</div>
-
-    <section class="fleet-hero">
-      <div class="hero-img" id="imgHero"></div>
-      <div class="hero-body">
-        <div class="hero-kpi" id="fleetKpi">
-          <b>-</b>
-        </div>
-        <div class="help" id="companyInfo"></div>
-      </div>
-    </section>
-  </main>
+  </div>
 
   <script type="module">
     import { requireAuthAndRole } from "../js/guard.js";
     import { signOut } from "../js/auth.js";
-    import { countCompanyBusesByStatus } from "../js/buses.js";
-
-    const IMG_FLEET = "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=900&q=70";
-    const IMG_DRIVERS = "https://images.unsplash.com/photo-1529070538774-1843cb3265df?auto=format&fit=crop&w=900&q=70";
-    const IMG_ROUTES = "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=900&q=70";
-    const IMG_TRIPS = "https://images.unsplash.com/photo-1519003722824-194d4455a60c?auto=format&fit=crop&w=900&q=70";
-    const IMG_STATS = "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=900&q=70";
-    const IMG_HERO = "https://bogota.gov.co/sites/default/files/styles/1050px/public/2024-06/busesbogota-1-2.png";
-
-    $("imgFleet").style.backgroundImage = `url('${IMG_FLEET}')`;
-    $("imgDrivers").style.backgroundImage = `url('${IMG_DRIVERS}')`;
-    $("imgRoutes").style.backgroundImage = `url('${IMG_ROUTES}')`;
-    $("imgTrips").style.backgroundImage = `url('${IMG_TRIPS}')`;
-    $("imgStats").style.backgroundImage = `url('${IMG_STATS}')`;
-    $("imgHero").style.backgroundImage = `url('${IMG_HERO}')`;
+    import { fetchCompanyById } from "../js/company_settings.js";
+    import { loadCompanyStats } from "../js/company_stats.js";
 
     const profile = await requireAuthAndRole(2);
     if (profile) {
       $("who").textContent = `@${profile.username}`;
       $("welcomeTitle").textContent = `Bienvenido, ${profile.username}`;
 
-      const cid = profile.company_id || "SIN EMPRESA";
-      $("companyInfo").textContent = `company_id: ${cid}`;
+      $("companyInfo").textContent = "";
 
-      if (profile.company_id) {
-        const kpi = await countCompanyBusesByStatus(profile.company_id);
-        $("fleetKpi").innerHTML =
-          `<b>${kpi.active}</b> activos · <b>${kpi.maintenance}</b> mantenimiento · <b>${kpi.inactive}</b> inactivos · <b>${kpi.total}</b> total`;
-      } else {
-        $("fleetKpi").textContent = "Tu usuario empresa no tiene company_id asignado.";
+    }
+
+    async function loadDashboardSummary(profile) {
+      if (!profile?.company_id) {
+        setText("companyName", "Sin empresa asignada");
+        setText("companyStatus", "Sin empresa");
+        setText("companyMeta", "No se puede cargar operacion sin empresa asociada");
+        return;
+      }
+
+      try {
+        const [company, stats] = await Promise.all([
+          fetchCompanyById(profile.company_id),
+          loadCompanyStats(profile.company_id, "all")
+        ]);
+
+        const openIncidents = stats.incidents.new + stats.incidents.inReview;
+        const needsAttention = stats.fleet.buses.maintenance + openIncidents;
+
+        setText("companyName", company?.name || "Empresa");
+        setText("companyStatus", company?.status === "ACTIVE" ? "Activa" : "Inactiva");
+        setText("companyMeta", company?.status === "ACTIVE" ? "Empresa activa en el sistema" : "Empresa inactiva en el sistema");
+        setText("kpiActiveBuses", stats.fleet.buses.active);
+        setText("kpiMaintenanceBuses", stats.fleet.buses.maintenance);
+        setText("kpiActiveDrivers", stats.fleet.drivers.active);
+        setText("kpiLiveTrips", stats.overview.tripsInProgress);
+        setText("attentionMaintenance", stats.fleet.buses.maintenance);
+        setText("attentionIncidents", openIncidents);
+        setText("routesActive", stats.operations.routesActive);
+        setText("fleetKpi", stats.fleet.buses.total);
+        setText("gpsRecent", `${stats.operations.busesReportingRecently}/${stats.operations.busesTotal}`);
+        setText("attentionStatus", needsAttention ? `${needsAttention} pendientes` : "Sin pendientes");
+        setText(
+          "dashboardNote",
+          stats.overview.tripsInProgress
+            ? `${stats.overview.tripsInProgress} viaje(s) en curso. Revisa seguimiento si necesitas monitoreo en vivo.`
+            : "No hay viajes en curso en este momento."
+        );
+      } catch (error) {
+        console.error(error);
+        setText("dashboardNote", error?.message || "No fue posible cargar el resumen operativo.");
       }
     }
 
@@ -172,6 +279,12 @@
       const element = $(id);
       if (!element) return;
       element.addEventListener("click", handler);
+    }
+
+    function setText(id, value) {
+      const element = $(id);
+      if (!element) return;
+      element.textContent = value ?? "";
     }
 
     on("logout", async () => {
@@ -186,6 +299,8 @@
     on("goStats", () => window.location.href = "company_stats.html");
     on("menuBtn", () => alert("Menu pendiente"));
     on("settingsBtn", () => window.location.href = "company_settings.html");
+
+    await loadDashboardSummary(profile);
   </script>
 
 </body>

@@ -8,6 +8,14 @@
   <link rel="stylesheet" href="../css/auth.css" />
 </head>
 <body class="auth-signup">
+  <script>
+    (() => {
+      const state = "signup";
+      const prev = sessionStorage.getItem("mr_auth_visual_state");
+      if (prev && prev !== state) document.body.classList.add(`auth-prev-${prev}`);
+      sessionStorage.setItem("mr_auth_visual_state", state);
+    })();
+  </script>
   <div class="auth-wrap">
     <div class="auth-bg"></div>
 
