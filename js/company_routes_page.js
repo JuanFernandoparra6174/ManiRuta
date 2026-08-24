@@ -51,6 +51,12 @@ function getStopRoleLabel(index, total) {
     return "Intermedio";
 }
 
+function getStatusLabel(status) {
+    if (status === "ACTIVE") return "Activo";
+    if (status === "INACTIVE") return "Inactivo";
+    return status || "Sin estado";
+}
+
 function clearPreviewLine() {
     if (state.previewLine) {
         state.map.removeLayer(state.previewLine);
@@ -150,30 +156,88 @@ function renderSelectedSequence() {
 }
 
 function renderRoutesTable() {
-    const tbody = $("routesTable");
+    const list = $("routesTable");
     if (!state.routes.length) {
-        tbody.innerHTML = `
-            <tr>
-                <td colspan="6" class="route-empty">No hay rutas registradas para esta empresa.</td>
-            </tr>
-        `;
+        list.innerHTML = `<div class="route-empty">No hay rutas registradas para esta empresa.</div>`;
+        updateRoutesListScrollAnimation();
         return;
     }
 
-    tbody.innerHTML = state.routes.map((route) => `
-        <tr>
-            <td><b>${escapeHtml(route.name)}</b></td>
-            <td>${escapeHtml(route.origin_stop?.name || "Sin origen")}</td>
-            <td>${escapeHtml(route.end_stop?.name || "Sin destino")}</td>
-            <td>${escapeHtml(route.direction || "IDA")}</td>
-            <td><span class="chip ${route.status === "ACTIVE" ? "ok" : "bad"}">${escapeHtml(route.status)}</span></td>
-            <td class="stop-row-actions">
+    list.innerHTML = state.routes.map((route) => `
+        <article class="route-list-item js-scroll-list-item">
+            <div class="route-list-main">
+                <div class="route-list-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none"><path d="M9 18l-6 3V6l6-3 6 3 6-3v15l-6 3-6-3ZM9 3v15M15 6v15" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </div>
+                <div class="route-list-copy">
+                    <b>${escapeHtml(route.name)}</b>
+                    <span>${escapeHtml(route.origin_stop?.name || "Sin origen")} a ${escapeHtml(route.end_stop?.name || "Sin destino")}</span>
+                </div>
+            </div>
+            <div class="route-list-meta">
+                <span class="chip">${escapeHtml(route.direction || "IDA")}</span>
+                <span class="chip ${route.status === "ACTIVE" ? "ok" : "bad"}">${escapeHtml(getStatusLabel(route.status))}</span>
                 <span class="chip">${route.stop_count} paraderos</span>
+            </div>
+            <div class="stop-row-actions">
                 <button class="btn-mini secondary" data-route-action="view" data-route-id="${route.id}">Ver</button>
                 <button class="btn-mini route-remove-btn" data-route-action="delete" data-route-id="${route.id}">Eliminar</button>
-            </td>
-        </tr>
+            </div>
+        </article>
     `).join("");
+
+    list.scrollTop = 0;
+    updateRoutesListScrollAnimation();
+}
+
+let routesScrollAnimationFrame = null;
+
+function updateRoutesListScrollAnimation() {
+    routesScrollAnimationFrame = null;
+    const list = $("routesTable");
+    if (!list) return;
+
+    const items = Array.from(list.querySelectorAll(".js-scroll-list-item"));
+    if (!items.length) return;
+
+    const viewportTop = list.scrollTop;
+    const viewportHeight = list.clientHeight || 1;
+    const viewportBottom = viewportTop + viewportHeight;
+    const focusLine = viewportTop - 1;
+    const viewportCenter = viewportTop + viewportHeight * 0.5;
+    const maxDistance = viewportHeight * 0.62;
+
+    let focusIndex = items.findIndex((item) => item.offsetTop >= focusLine);
+    if (focusIndex < 0) focusIndex = items.length - 1;
+
+    items.forEach((item, index) => {
+        const itemTop = item.offsetTop;
+        const itemHeight = item.offsetHeight || 1;
+        const itemBottom = itemTop + itemHeight;
+        const visibleTop = Math.max(itemTop, viewportTop);
+        const visibleBottom = Math.min(itemBottom, viewportBottom);
+        const visibleRatio = Math.max(0, Math.min(1, (visibleBottom - visibleTop) / itemHeight));
+        const itemCenter = itemTop + itemHeight * 0.5;
+        const distance = Math.abs(viewportCenter - itemCenter);
+        const centerProgress = Math.max(0, Math.min(1, 1 - distance / maxDistance));
+        const isLeavingAbove = itemTop < viewportTop;
+        const progress = isLeavingAbove ? visibleRatio : Math.max(centerProgress, visibleRatio);
+        const opacity = 0.18 + progress * 0.82;
+        const scale = 0.76 + progress * 0.24;
+        const y = (1 - progress) * 18;
+
+        item.classList.toggle("item-hide", visibleRatio < 0.04 || (index < focusIndex && visibleRatio < 0.28));
+        item.classList.toggle("item-focus", index === focusIndex);
+        item.classList.toggle("item-next", index === focusIndex + 1);
+        item.style.setProperty("--route-scroll-opacity", opacity.toFixed(3));
+        item.style.setProperty("--route-scroll-scale", scale.toFixed(3));
+        item.style.setProperty("--route-scroll-y", `${y.toFixed(1)}px`);
+    });
+}
+
+function queueRoutesListScrollAnimation() {
+    if (routesScrollAnimationFrame) return;
+    routesScrollAnimationFrame = requestAnimationFrame(updateRoutesListScrollAnimation);
 }
 
 function addStopToSequence(stopId) {
@@ -361,6 +425,8 @@ async function init() {
     $("routeForm").addEventListener("submit", handleSaveRoute);
     $("selectedStopsList").addEventListener("click", handleSelectedListClick);
     $("routesTable").addEventListener("click", handleRoutesTableClick);
+    $("routesTable").addEventListener("scroll", queueRoutesListScrollAnimation, { passive: true });
+    window.addEventListener("resize", queueRoutesListScrollAnimation);
     $("clearSelectionBtn").addEventListener("click", resetForm);
     $("logout").addEventListener("click", async () => {
         await signOut();

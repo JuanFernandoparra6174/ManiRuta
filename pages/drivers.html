@@ -3,169 +3,123 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Conductores | ManiRuta</title>
+  <title>Conductores | MOVANZA</title>
   <link rel="stylesheet" href="../css/base.css"/>
+  <link rel="stylesheet" href="../css/company_design_system.css"/>
   <link rel="stylesheet" href="../css/home.css"/>
   <link rel="stylesheet" href="../css/drivers.css"/>
 </head>
-<body>
+<body class="company-theme company-dashboard company-drivers">
 
-<header class="nav">
-  <div class="container nav-inner">
-    <div class="brand"><span class="dot"></span> Conductores</div>
-
-    <div class="nav-right">
-      <span class="pill" id="who">...</span>
-      <a class="btn btn-ghost" href="home_company.html">Volver</a>
-      <button class="btn btn-ghost" id="logout">Salir</button>
+<div class="company-shell">
+  <aside class="company-sidebar" aria-label="Navegacion Empresa">
+    <div class="company-sidebar-brand">
+      <a class="company-logo-link" href="home_company.html" aria-label="MOVANZA inicio">
+        <img class="company-logo-img" src="https://ruunbwmuizhaetgubzjt.supabase.co/storage/v1/object/public/MOVANZA/Logo%20MOVANZA.png" alt="MOVANZA"/>
+      </a>
     </div>
-  </div>
-</header>
 
-<main class="container drivers-page">
-  <section class="drivers-hero card">
-    <div class="decor"></div>
-    <div class="bg" id="heroBg"></div>
+    <nav class="company-nav-list">
+      <p class="label-caps company-nav-label">Empresa</p>
+      <a class="company-nav-item" href="home_company.html"><span class="company-nav-icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></span>Inicio</a>
+      <a class="company-nav-item" href="buses.html"><span class="company-nav-icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 19v2M18 19v2M5 11h14M6 4h12a2 2 0 0 1 2 2v10a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3V6a2 2 0 0 1 2-2Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Mi Flota</a>
+      <a class="company-nav-item is-active" href="drivers.html" aria-current="page"><span class="company-nav-icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Conductores</a>
+      <a class="company-nav-item" href="company_routes.html"><span class="company-nav-icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 18l-6 3V6l6-3 6 3 6-3v15l-6 3-6-3ZM9 3v15M15 6v15" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Rutas</a>
+      <a class="company-nav-item" href="company_trips.html"><span class="company-nav-icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 19a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM18 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM6 13V9a4 4 0 0 1 4-4h5M18 11v4a4 4 0 0 1-4 4H9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Viajes</a>
+      <a class="company-nav-item" href="company_stats.html"><span class="company-nav-icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 3v18h18M7 15l4-4 3 3 5-7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Estadisticas</a>
+    </nav>
 
-    <div class="content">
-      <div class="hero-top">
-        <div>
-          <h1 class="hero-title">Modulo Conductores</h1>
-          <p class="hero-sub">La empresa registra al conductor y crea tambien su acceso al sistema.</p>
-        </div>
-
-        <div class="hero-tags">
-          <span class="chip" id="companyChip">company_id: ...</span>
-          <span class="chip">EMPRESA_BUSES</span>
-        </div>
-      </div>
-
-      <div class="kpi-strip" id="kpis">
-        <div class="kpi"><div class="n">-</div><div class="l">TOTAL</div></div>
-        <div class="kpi"><div class="n">-</div><div class="l">ACTIVOS</div></div>
-        <div class="kpi"><div class="n">-</div><div class="l">INACTIVOS</div></div>
-      </div>
+    <div class="company-sidebar-footer">
+      <a class="company-nav-item" href="company_settings.html"><span class="company-nav-icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z" stroke="currentColor" stroke-width="1.8"/><path d="M19.4 15a7.9 7.9 0 0 0 .1-2l2-1.2-2-3.4-2.3.7a7.4 7.4 0 0 0-1.7-1l-.3-2.4H10.8l-.3 2.4a7.4 7.4 0 0 0-1.7 1l-2.3-.7-2 3.4 2 1.2a7.9 7.9 0 0 0 .1 2l-2 1.2 2 3.4 2.3-.7c.5.4 1.1.7 1.7 1l.3 2.4h4.4l.3-2.4c.6-.3 1.2-.6 1.7-1l2.3.7 2-3.4-2-1.2Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></span>Ajustes</a>
     </div>
-  </section>
+  </aside>
 
-  <section class="drivers-grid">
-    <section class="card panel">
-      <div class="panel-title">
-        <h3 id="formTitle">Registrar conductor</h3>
-        <span class="mini-muted" id="formHint">Crea el perfil operativo y su acceso de inicio de sesion.</span>
-      </div>
-
-      <form id="driverForm" class="grid1">
-        <input type="hidden" id="driverId"/>
-
-        <div>
-          <label class="mini-muted">Nombre completo *</label>
-          <input class="input" id="fullName" placeholder="Ej: Juan Perez" required maxlength="80"/>
+  <div class="company-content">
+    <header class="nav company-topbar">
+      <div class="nav-inner company-topbar-inner">
+        <div class="nav-left company-header-identity">
+          <button class="icon-btn" id="menuBtn" title="Menu" aria-label="Menu"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+          <a class="company-header-logo" href="home_company.html" aria-label="MOVANZA inicio"><img src="https://ruunbwmuizhaetgubzjt.supabase.co/storage/v1/object/public/MOVANZA/Logo%20MOVANZA.png" alt="MOVANZA"/></a>
         </div>
+        <div class="company-header-pattern" aria-hidden="true"></div>
+        <div class="nav-right company-user-actions">
+          <span class="company-user-chip" id="who">...</span>
+          <button class="company-logout-btn" id="logout">Salir</button>
+        </div>
+      </div>
+    </header>
 
-        <div class="grid2">
+    <main class="container drivers-page company-main">
+      <section class="drivers-hero card">
+        <div class="decor"></div>
+        <div class="bg drivers-slider" id="heroBg" aria-hidden="true">
+          <figure>
+            <img src="https://ruunbwmuizhaetgubzjt.supabase.co/storage/v1/object/public/MOVANZA/Empresa/Imagenes_conductores/Conductor1.jpg" alt=""/>
+            <img src="https://ruunbwmuizhaetgubzjt.supabase.co/storage/v1/object/public/MOVANZA/Empresa/Imagenes_conductores/Conductor2.jpg" alt=""/>
+            <img src="https://ruunbwmuizhaetgubzjt.supabase.co/storage/v1/object/public/MOVANZA/Empresa/Imagenes_conductores/Conductor3.jpg" alt=""/>
+            <img src="https://ruunbwmuizhaetgubzjt.supabase.co/storage/v1/object/public/MOVANZA/Empresa/Imagenes_conductores/Conductor4.jpg" alt=""/>
+            <img src="https://ruunbwmuizhaetgubzjt.supabase.co/storage/v1/object/public/MOVANZA/Empresa/Imagenes_conductores/Conductor5.jpg" alt=""/>
+          </figure>
+        </div>
+        <span class="drivers-hidden-hook" id="companyChip">Empresa...</span>
+
+        <div class="content">
+          <div class="hero-top">
+            <div>
+              <h1 class="hero-title">Conductores</h1>
+              <p class="hero-sub">Consulta, filtra y gestiona el equipo operativo de tu empresa.</p>
+            </div>
+            <button class="btn btn-primary register-driver-btn" id="registerDriverBtn" type="button">
+              <img src="https://ruunbwmuizhaetgubzjt.supabase.co/storage/v1/object/public/MOVANZA/Empresa/Iconos_buses/Icono_Editar.png" alt=""/>
+              Registrar conductor
+            </button>
+          </div>
+
+          <div class="kpi-strip" id="kpis">
+            <div class="kpi"><div class="n">-</div><div class="l">TOTAL</div></div>
+            <div class="kpi"><div class="n">-</div><div class="l">ACTIVOS</div></div>
+            <div class="kpi"><div class="n">-</div><div class="l">INACTIVOS</div></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card panel drivers-list-card">
+        <div class="panel-title">
           <div>
-            <label class="mini-muted">Tipo documento *</label>
-            <select class="input" id="docType" required>
-              <option value="CC">CC</option>
-              <option value="CE">CE</option>
-              <option value="PASSPORT">PASSPORT</option>
+            <p class="label-caps">Listado operativo</p>
+            <h3>Conductores registrados</h3>
+          </div>
+          <button class="btn-soft btn-important" id="refreshBtn">Refrescar</button>
+        </div>
+
+        <div class="grid2 drivers-tools">
+          <label class="drivers-search-control" aria-label="Buscar conductores">
+            <span class="search-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="m21 21-4.3-4.3M10.8 18a7.2 7.2 0 1 1 0-14.4 7.2 7.2 0 0 1 0 14.4Z" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg></span>
+            <input class="input" id="search" placeholder="Buscar por nombre, documento o licencia"/>
+            <span class="search-line" aria-hidden="true"></span>
+          </label>
+
+          <label class="drivers-filter-control" aria-label="Filtrar conductores por estado">
+            <span class="filter-dot" aria-hidden="true"></span>
+            <select class="input" id="filterStatus">
+              <option value="">Todos los estados</option>
+              <option value="ACTIVE">Activo</option>
+              <option value="INACTIVE">Inactivo</option>
             </select>
-          </div>
-
-          <div>
-            <label class="mini-muted">Numero documento *</label>
-            <input class="input" id="docNumber" placeholder="Ej: 123456789" required maxlength="30"/>
-          </div>
+            <span class="filter-chevron" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          </label>
         </div>
 
-        <div class="grid2">
-          <div>
-            <label class="mini-muted">Telefono</label>
-            <input class="input" id="phone" placeholder="+57 3xx xxx xxxx" maxlength="30"/>
-          </div>
+        <div class="drivers-list js-scroll-content js-scroll-list" id="rows"></div>
 
-          <div>
-            <label class="mini-muted">Licencia *</label>
-            <input class="input" id="licenseNo" placeholder="Ej: LIC-998877" required maxlength="40"/>
-          </div>
+        <div id="empty" class="empty" style="display:none; margin-top:10px;">
+          <p class="t">No hay conductores aun</p>
+          <p class="p">Registra el primer conductor para comenzar a gestionar tu equipo.</p>
         </div>
-
-        <div class="grid2">
-          <div>
-            <label class="mini-muted">Usuario de acceso *</label>
-            <input class="input" id="username" placeholder="Ej: juan.conductor" maxlength="50"/>
-          </div>
-
-          <div>
-            <label class="mini-muted">Correo de acceso *</label>
-            <input class="input" id="email" type="email" placeholder="conductor@empresa.com"/>
-          </div>
-        </div>
-
-        <div>
-          <label class="mini-muted">Contrasena temporal *</label>
-          <input class="input" id="password" type="password" minlength="8" placeholder="Minimo 8 caracteres"/>
-        </div>
-
-        <div>
-          <label class="mini-muted">Estado *</label>
-          <select class="input" id="status" required>
-            <option value="ACTIVE">ACTIVE</option>
-            <option value="INACTIVE">INACTIVE</option>
-          </select>
-        </div>
-
-        <div class="actions-row">
-          <button class="btn btn-primary" type="submit">Guardar</button>
-          <button class="btn-soft" type="button" id="cancelEditBtn" style="display:none;">Cancelar edicion</button>
-          <button class="btn-soft btn-danger" type="button" id="clearBtn">Limpiar</button>
-        </div>
-
-        <div class="toast-ok" id="ok"></div>
-        <div class="toast-err" id="err"></div>
-      </form>
-    </section>
-
-    <section class="card panel">
-      <div class="panel-title">
-        <h3>Lista de conductores</h3>
-        <button class="btn-soft" id="refreshBtn">Refrescar</button>
-      </div>
-
-      <div class="grid2" style="margin-bottom:10px;">
-        <input class="input" id="search" placeholder="Buscar por nombre / documento / licencia"/>
-        <select class="input" id="filterStatus">
-          <option value="">Todos los estados</option>
-          <option value="ACTIVE">ACTIVE</option>
-          <option value="INACTIVE">INACTIVE</option>
-        </select>
-      </div>
-
-      <div style="overflow:auto;">
-        <table class="table">
-          <thead>
-            <tr>
-              <th>Conductor</th>
-              <th>Documento</th>
-              <th>Telefono</th>
-              <th>Licencia</th>
-              <th>Acceso</th>
-              <th>Estado</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody id="rows"></tbody>
-        </table>
-      </div>
-
-      <div id="empty" class="empty" style="display:none; margin-top:10px;">
-        <p class="t">No hay conductores aun</p>
-        <p class="p">Crea el primero arriba y aparecera aqui automaticamente.</p>
-      </div>
-    </section>
-  </section>
-</main>
+      </section>
+    </main>
+  </div>
+</div>
 
 <script type="module">
   import { requireAuthAndRole } from "../js/guard.js";
@@ -173,7 +127,6 @@
   import { setText, setError, setOk } from "../js/ui.js";
   import {
     fetchCompanyDrivers,
-    createDriverWithAccount,
     updateDriver,
     deleteDriver,
     countCompanyDriversByStatus
@@ -188,25 +141,7 @@
   setText("who", `@${profile.username}`);
 
   const companyId = profile.company_id;
-  document.getElementById("companyChip").textContent =
-    companyId ? `company_id: ${companyId}` : "Sin company_id asignado";
-
-  const form = document.getElementById("driverForm");
-  const driverIdEl = document.getElementById("driverId");
-  const fullNameEl = document.getElementById("fullName");
-  const docTypeEl = document.getElementById("docType");
-  const docNumberEl = document.getElementById("docNumber");
-  const phoneEl = document.getElementById("phone");
-  const licenseEl = document.getElementById("licenseNo");
-  const usernameEl = document.getElementById("username");
-  const emailEl = document.getElementById("email");
-  const passwordEl = document.getElementById("password");
-  const statusEl = document.getElementById("status");
-
-  const formTitle = document.getElementById("formTitle");
-  const formHint = document.getElementById("formHint");
-  const cancelEditBtn = document.getElementById("cancelEditBtn");
-  const clearBtn = document.getElementById("clearBtn");
+  document.getElementById("companyChip").textContent = companyId ? "" : "Sin empresa asignada";
 
   const rowsEl = document.getElementById("rows");
   const emptyEl = document.getElementById("empty");
@@ -214,8 +149,19 @@
   const filterStatusEl = document.getElementById("filterStatus");
   const refreshBtn = document.getElementById("refreshBtn");
   const kpisEl = document.getElementById("kpis");
+  const floatingTooltip = document.createElement("div");
+  floatingTooltip.className = "company-action-tooltip";
+  floatingTooltip.setAttribute("role", "tooltip");
+  document.body.append(floatingTooltip);
+
+  const actionIcons = {
+    edit: "https://ruunbwmuizhaetgubzjt.supabase.co/storage/v1/object/public/MOVANZA/Empresa/Iconos_buses/Icono_Editar.png",
+    active: "https://ruunbwmuizhaetgubzjt.supabase.co/storage/v1/object/public/MOVANZA/Empresa/Iconos_buses/Icono_Correcto.png",
+    inactive: "https://ruunbwmuizhaetgubzjt.supabase.co/storage/v1/object/public/MOVANZA/Empresa/Iconos_buses/Icono_Incorrecto.png"
+  };
 
   let all = [];
+  let scrollAnimationFrame = null;
 
   function esc(s){
     return String(s ?? "")
@@ -227,59 +173,13 @@
   }
 
   function statusChip(status){
-    if (status === "ACTIVE") return `<span class="chip ok">ACTIVE</span>`;
-    return `<span class="chip bad">INACTIVE</span>`;
+    if (status === "ACTIVE") return `<span class="chip ok">Activo</span>`;
+    return `<span class="chip bad">Inactivo</span>`;
   }
 
   function accessChip(driver){
     if (driver.user_id) return `<span class="chip ok">Con acceso</span>`;
     return `<span class="chip warn">Sin acceso</span>`;
-  }
-
-  function toggleCredentialFields(disabled) {
-    usernameEl.disabled = disabled;
-    emailEl.disabled = disabled;
-    passwordEl.disabled = disabled;
-  }
-
-  function clearForm(){
-    driverIdEl.value = "";
-    fullNameEl.value = "";
-    docTypeEl.value = "CC";
-    docNumberEl.value = "";
-    phoneEl.value = "";
-    licenseEl.value = "";
-    usernameEl.value = "";
-    emailEl.value = "";
-    passwordEl.value = "";
-    statusEl.value = "ACTIVE";
-
-    toggleCredentialFields(false);
-    formTitle.textContent = "Registrar conductor";
-    formHint.textContent = "Crea el perfil operativo y su acceso de inicio de sesion.";
-    cancelEditBtn.style.display = "none";
-  }
-
-  function setEditMode(driver){
-    driverIdEl.value = driver.id;
-    fullNameEl.value = driver.full_name || "";
-    docTypeEl.value = driver.doc_type || "CC";
-    docNumberEl.value = driver.doc_number || "";
-    phoneEl.value = driver.phone || "";
-    licenseEl.value = driver.license_no || "";
-    usernameEl.value = "";
-    emailEl.value = "";
-    passwordEl.value = "";
-    statusEl.value = driver.status || "ACTIVE";
-
-    toggleCredentialFields(true);
-    formTitle.textContent = "Editar conductor";
-    formHint.textContent = "Los datos de acceso se crean al registrar y no se editan desde esta pantalla.";
-    cancelEditBtn.style.display = "inline-flex";
-
-    setOk("ok", "Modo edicion activado.");
-    setError("err", "");
-    window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   async function renderKpis(){
@@ -290,6 +190,74 @@
       <div class="kpi"><div class="n">${k.active}</div><div class="l">ACTIVOS</div></div>
       <div class="kpi"><div class="n">${k.inactive}</div><div class="l">INACTIVOS</div></div>
     `;
+  }
+
+  function updateListScrollAnimation(){
+    scrollAnimationFrame = null;
+    const items = Array.from(rowsEl.querySelectorAll(".js-scroll-list-item"));
+    if (!items.length) return;
+
+    const viewportTop = rowsEl.scrollTop;
+    const viewportHeight = rowsEl.clientHeight || 1;
+    const viewportBottom = viewportTop + viewportHeight;
+    const focusLine = viewportTop - 1;
+    const viewportCenter = viewportTop + viewportHeight * .5;
+    const maxDistance = viewportHeight * .62;
+
+    let focusIndex = items.findIndex((item) => item.offsetTop >= focusLine);
+    if (focusIndex < 0) focusIndex = items.length - 1;
+
+    items.forEach((item, index) => {
+      const itemTop = item.offsetTop;
+      const itemHeight = item.offsetHeight || 1;
+      const itemBottom = itemTop + itemHeight;
+      const visibleTop = Math.max(itemTop, viewportTop);
+      const visibleBottom = Math.min(itemBottom, viewportBottom);
+      const visibleRatio = Math.max(0, Math.min(1, (visibleBottom - visibleTop) / itemHeight));
+      const itemCenter = item.offsetTop + item.offsetHeight * .5;
+      const distance = Math.abs(viewportCenter - itemCenter);
+      const centerProgress = Math.max(0, Math.min(1, 1 - distance / maxDistance));
+      const isLeavingAbove = itemTop < viewportTop;
+      const progress = isLeavingAbove ? visibleRatio : Math.max(centerProgress, visibleRatio);
+      const opacity = .18 + progress * .82;
+      const scale = .76 + progress * .24;
+      const y = (1 - progress) * 18;
+
+      item.classList.toggle("item-hide", visibleRatio < .04 || (index < focusIndex && visibleRatio < .28));
+      item.classList.toggle("item-focus", index === focusIndex);
+      item.classList.toggle("item-next", index === focusIndex + 1);
+      item.style.setProperty("--driver-scroll-opacity", opacity.toFixed(3));
+      item.style.setProperty("--driver-scroll-scale", scale.toFixed(3));
+      item.style.setProperty("--driver-scroll-y", `${y.toFixed(1)}px`);
+    });
+  }
+
+  function queueListScrollAnimation(){
+    if (scrollAnimationFrame) return;
+    scrollAnimationFrame = requestAnimationFrame(updateListScrollAnimation);
+  }
+
+  function positionTooltip(target){
+    const text = target.dataset.tooltip;
+    if (!text) return;
+
+    floatingTooltip.textContent = text;
+    floatingTooltip.classList.add("is-visible");
+
+    const rect = target.getBoundingClientRect();
+    const tooltipRect = floatingTooltip.getBoundingClientRect();
+    const left = Math.min(
+      window.innerWidth - tooltipRect.width - 12,
+      Math.max(12, rect.left + rect.width / 2 - tooltipRect.width / 2)
+    );
+    const top = Math.max(12, rect.top - tooltipRect.height - 10);
+
+    floatingTooltip.style.left = `${left}px`;
+    floatingTooltip.style.top = `${top}px`;
+  }
+
+  function hideTooltip(){
+    floatingTooltip.classList.remove("is-visible");
   }
 
   function renderTable(){
@@ -305,47 +273,57 @@
 
     emptyEl.style.display = filtered.length ? "none" : "block";
 
-    rowsEl.innerHTML = filtered.map((driver) => `
-      <tr>
-        <td><b>${esc(driver.full_name)}</b></td>
-        <td><span class="chip">${esc(driver.doc_type)} · ${esc(driver.doc_number)}</span></td>
-        <td>${esc(driver.phone || "—")}</td>
-        <td>${esc(driver.license_no)}</td>
-        <td>${accessChip(driver)}</td>
-        <td>${statusChip(driver.status)}</td>
-        <td>
-          <div class="row-actions">
-            <button class="pill-btn on icon" data-act="status" data-id="${driver.id}" data-status="ACTIVE" title="Poner ACTIVE">A</button>
-            <button class="pill-btn off icon" data-act="status" data-id="${driver.id}" data-status="INACTIVE" title="Poner INACTIVE">I</button>
-            <button class="pill-btn icon" data-act="edit" data-id="${driver.id}" title="Editar">E</button>
-            <button class="pill-btn off icon" data-act="delete" data-id="${driver.id}" title="Eliminar">X</button>
+    rowsEl.innerHTML = filtered.map((driver) => {
+      const isActive = driver.status === "ACTIVE";
+      const statusAction = isActive
+        ? `<button class="pill-btn icon off" data-act="status" data-id="${driver.id}" data-status="INACTIVE" data-tooltip="Inactivar conductor" aria-label="Inactivar conductor"><img src="${actionIcons.inactive}" alt=""/></button>`
+        : `<button class="pill-btn icon on" data-act="status" data-id="${driver.id}" data-status="ACTIVE" data-tooltip="Activar conductor" aria-label="Activar conductor"><img src="${actionIcons.active}" alt=""/></button>`;
+
+      return `
+      <article class="driver-list-item js-scroll-list-item">
+        <div class="driver-card-main">
+          <div class="driver-avatar">${esc((driver.full_name || "?").trim().charAt(0).toUpperCase())}</div>
+          <div class="driver-main-cell">
+            <b>${esc(driver.full_name)}</b>
+            <span>${esc(driver.phone || "Sin telefono")}</span>
           </div>
-        </td>
-      </tr>
-    `).join("");
+        </div>
+        <div class="driver-meta-cell">
+          <span class="chip">${esc(driver.doc_type)} - ${esc(driver.doc_number)}</span>
+          <small>Licencia ${esc(driver.license_no)}</small>
+        </div>
+        <div class="driver-state-cell">
+          ${statusChip(driver.status)}
+          ${accessChip(driver)}
+        </div>
+        <div class="row-actions">
+          <button class="pill-btn icon primary-action" data-act="edit" data-id="${driver.id}" data-tooltip="Editar conductor" aria-label="Editar conductor"><img src="${actionIcons.edit}" alt=""/></button>
+          ${statusAction}
+          <button class="pill-btn icon off" data-act="delete" data-id="${driver.id}" data-tooltip="Eliminar conductor" aria-label="Eliminar conductor"><span class="delete-icon" aria-hidden="true"></span></button>
+        </div>
+      </article>
+    `;
+    }).join("");
+
+    rowsEl.scrollTop = 0;
+    updateListScrollAnimation();
   }
 
   async function refresh(){
     try{
-      setError("err", "");
-      setOk("ok", "");
       if (!companyId) return;
-
       all = await fetchCompanyDrivers(companyId);
       renderTable();
       await renderKpis();
     }catch(error){
       console.error(error);
-      setError("err", error?.message || String(error));
     }
   }
 
   if (!companyId) {
-    for (const element of [fullNameEl, docTypeEl, docNumberEl, phoneEl, licenseEl, usernameEl, emailEl, passwordEl, statusEl]) {
-      element.disabled = true;
-    }
-    form.querySelector("button[type='submit']").disabled = true;
-    setError("err", "Tu usuario EMPRESA no tiene company_id. Asi no se pueden guardar conductores.");
+    emptyEl.style.display = "block";
+    emptyEl.querySelector(".t").textContent = "Sin empresa asignada";
+    emptyEl.querySelector(".p").textContent = "No es posible cargar conductores sin una empresa asociada.";
   }
 
   document.getElementById("logout").addEventListener("click", async () => {
@@ -353,88 +331,32 @@
     window.location.href = "login.html";
   });
 
+  document.getElementById("registerDriverBtn").addEventListener("click", () => {
+    window.location.href = "driver_register.html";
+  });
+
   searchEl.addEventListener("input", renderTable);
   filterStatusEl.addEventListener("change", renderTable);
   refreshBtn.addEventListener("click", refresh);
-
-  cancelEditBtn.addEventListener("click", () => {
-    clearForm();
-    setOk("ok", "Edicion cancelada.");
-    setError("err", "");
+  rowsEl.addEventListener("scroll", queueListScrollAnimation, { passive: true });
+  rowsEl.addEventListener("scroll", hideTooltip, { passive: true });
+  window.addEventListener("resize", queueListScrollAnimation);
+  rowsEl.addEventListener("pointerover", (event) => {
+    const target = event.target.closest("[data-tooltip]");
+    if (target && rowsEl.contains(target)) positionTooltip(target);
   });
-
-  clearBtn.addEventListener("click", () => {
-    clearForm();
-    setOk("ok", "Formulario limpio.");
-    setError("err", "");
+  rowsEl.addEventListener("pointermove", (event) => {
+    const target = event.target.closest("[data-tooltip]");
+    if (target && rowsEl.contains(target)) positionTooltip(target);
   });
-
-  form.addEventListener("submit", async (event) => {
-    event.preventDefault();
-
-    try {
-      setError("err", "");
-      setOk("ok", "");
-      if (!companyId) return;
-
-      const id = driverIdEl.value;
-      const full_name = fullNameEl.value.trim();
-      const doc_type = docTypeEl.value.trim();
-      const doc_number = docNumberEl.value.trim();
-      const phone = phoneEl.value.trim();
-      const license_no = licenseEl.value.trim();
-      const username = usernameEl.value.trim();
-      const email = emailEl.value.trim().toLowerCase();
-      const password = passwordEl.value;
-      const status = statusEl.value;
-
-      if (!full_name) return setError("err", "Nombre obligatorio.");
-      if (!doc_number) return setError("err", "Numero de documento obligatorio.");
-      if (!license_no) return setError("err", "Licencia obligatoria.");
-
-      if (!id) {
-        if (!username) return setError("err", "Usuario de acceso obligatorio.");
-        if (!email) return setError("err", "Correo de acceso obligatorio.");
-        if (password.length < 8) return setError("err", "La contrasena temporal debe tener minimo 8 caracteres.");
-
-        const created = await createDriverWithAccount({
-          company_id: companyId,
-          username,
-          email,
-          password,
-          full_name,
-          doc_type,
-          doc_number,
-          phone,
-          license_no,
-          status
-        });
-        setOk("ok", `Conductor creado. Acceso listo para ${created.email}.`);
-        alert(`Conductor creado correctamente.\n\nUsuario: ${created.username}\nCorreo: ${created.email}\n\nComparte la contrasena temporal registrada en el formulario con el conductor.`);
-      } else {
-        await updateDriver(id, companyId, {
-          full_name,
-          doc_type,
-          doc_number,
-          phone: phone || null,
-          license_no,
-          status
-        });
-        setOk("ok", "Conductor actualizado.");
-      }
-
-      clearForm();
-      await refresh();
-    } catch (error) {
-      console.error(error);
-      const msg = (error?.message || String(error)).toLowerCase();
-      if (msg.includes("duplicate") || msg.includes("unique")) {
-        setError("err", "Ya existe un conductor o acceso con esos datos.");
-      } else {
-        setError("err", error?.message || String(error));
-      }
-    }
+  rowsEl.addEventListener("pointerout", (event) => {
+    if (!event.relatedTarget || !event.target.closest("[data-tooltip]")?.contains(event.relatedTarget)) hideTooltip();
   });
+  rowsEl.addEventListener("focusin", (event) => {
+    const target = event.target.closest("[data-tooltip]");
+    if (target) positionTooltip(target);
+  });
+  rowsEl.addEventListener("focusout", hideTooltip);
 
   rowsEl.addEventListener("click", async (event) => {
     const button = event.target.closest("button");
@@ -445,32 +367,25 @@
     if (!action || !id) return;
 
     try {
-      setError("err", "");
-      setOk("ok", "");
-
       if (action === "edit") {
-        const driver = all.find((item) => item.id === id);
-        if (driver) setEditMode(driver);
+        window.location.href = `driver_register.html?edit=${encodeURIComponent(id)}`;
         return;
       }
 
       if (action === "delete") {
-        if (!confirm("¿Eliminar este conductor?")) return;
+        if (!confirm("Eliminar este conductor?")) return;
         await deleteDriver(id, companyId);
-        setOk("ok", "Conductor eliminado.");
-        if (driverIdEl.value === id) clearForm();
         await refresh();
         return;
       }
 
       if (action === "status") {
         await updateDriver(id, companyId, { status: button.dataset.status });
-        setOk("ok", `Estado actualizado a ${button.dataset.status}.`);
         await refresh();
       }
     } catch (error) {
       console.error(error);
-      setError("err", error?.message || String(error));
+      alert(error?.message || String(error));
     }
   });
 

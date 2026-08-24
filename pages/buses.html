@@ -113,26 +113,29 @@
 
       <section class="fleet-hero card">
         <div class="decor"></div>
-        <div class="bg" id="heroBg"></div>
+        <div class="bg fleet-slider" id="heroBg" aria-hidden="true">
+          <figure>
+            <img src="https://ruunbwmuizhaetgubzjt.supabase.co/storage/v1/object/public/MOVANZA/Empresa/Imagenes_buses/Foto_Bus1.jpg" alt=""/>
+            <img src="https://ruunbwmuizhaetgubzjt.supabase.co/storage/v1/object/public/MOVANZA/Empresa/Imagenes_buses/Foto_Bus2.jpg" alt=""/>
+            <img src="https://ruunbwmuizhaetgubzjt.supabase.co/storage/v1/object/public/MOVANZA/Empresa/Imagenes_buses/Foto_Bus3.jpg" alt=""/>
+            <img src="https://ruunbwmuizhaetgubzjt.supabase.co/storage/v1/object/public/MOVANZA/Empresa/Imagenes_buses/Foto_Bus4.jpg" alt=""/>
+            <img src="https://ruunbwmuizhaetgubzjt.supabase.co/storage/v1/object/public/MOVANZA/Empresa/Imagenes_buses/Foto_Bus5.jpg" alt=""/>
+          </figure>
+        </div>
+        <span class="fleet-hidden-hook" id="companyChip">Empresa...</span>
 
         <div class="content">
           <div class="hero-top">
             <div>
-              <p class="label-caps">Operacion de flota</p>
               <h1 class="hero-title">Mi Flota</h1>
-              <p class="hero-sub">Gestiona buses, codigos internos y estados operativos desde una vista clara y rapida.</p>
-            </div>
-
-            <div class="hero-tags">
-              <span class="chip" id="companyChip">Empresa...</span>
-              <span class="chip">EMPRESA_BUSES</span>
+              <p class="hero-sub">Consulta el estado de tus buses, registra nuevas unidades y mantén la operación organizada.</p>
             </div>
           </div>
 
           <div class="kpi-strip" id="kpis">
             <div class="kpi"><div class="n">-</div><div class="l">TOTAL</div></div>
             <div class="kpi"><div class="n">-</div><div class="l">ACTIVOS</div></div>
-            <div class="kpi"><div class="n">-</div><div class="l">MANTEN.</div></div>
+            <div class="kpi"><div class="n">-</div><div class="l">MANTENIMIENTO</div></div>
             <div class="kpi"><div class="n">-</div><div class="l">INACTIVOS</div></div>
           </div>
         </div>
@@ -143,10 +146,9 @@
         <section class="card panel">
           <div class="panel-title">
             <div>
-              <p class="label-caps">Formulario</p>
               <h3 id="formTitle">Registrar bus</h3>
             </div>
-            <span class="mini-muted" id="formHint">Crea rapido tu flota</span>
+            <span class="fleet-hidden-hook" id="formHint">Crea rapido tu flota</span>
           </div>
 
           <form id="busForm" class="grid1">
@@ -167,9 +169,9 @@
             <div>
               <label class="mini-muted">Estado *</label>
               <select class="input" id="status" required>
-                <option value="ACTIVE">ACTIVE</option>
-                <option value="MAINTENANCE">MAINTENANCE</option>
-                <option value="INACTIVE">INACTIVE</option>
+                <option value="ACTIVE">Activo</option>
+                <option value="MAINTENANCE">Mantenimiento</option>
+                <option value="INACTIVE">Inactivo</option>
               </select>
             </div>
 
@@ -190,17 +192,34 @@
               <p class="label-caps">Inventario</p>
               <h3>Lista de buses</h3>
             </div>
-            <button class="btn-soft" id="refreshBtn">Refrescar</button>
+            <button class="btn-soft btn-important" id="refreshBtn">Refrescar</button>
           </div>
 
           <div class="grid2 fleet-tools">
-            <input class="input" id="search" placeholder="Buscar por placa o codigo"/>
-            <select class="input" id="filterStatus">
-              <option value="">Todos los estados</option>
-              <option value="ACTIVE">ACTIVE</option>
-              <option value="MAINTENANCE">MAINTENANCE</option>
-              <option value="INACTIVE">INACTIVE</option>
-            </select>
+            <label class="fleet-search-control" aria-label="Buscar buses">
+              <span class="search-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="m21 21-4.3-4.3M10.8 18a7.2 7.2 0 1 1 0-14.4 7.2 7.2 0 0 1 0 14.4Z" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/>
+                </svg>
+              </span>
+              <input class="input" id="search" placeholder="Buscar por placa o codigo"/>
+              <span class="search-line" aria-hidden="true"></span>
+            </label>
+
+            <label class="fleet-filter-control" aria-label="Filtrar buses por estado">
+              <span class="filter-dot" aria-hidden="true"></span>
+              <select class="input" id="filterStatus">
+                <option value="">Todos los estados</option>
+                <option value="ACTIVE">Activo</option>
+                <option value="MAINTENANCE">Mantenimiento</option>
+                <option value="INACTIVE">Inactivo</option>
+              </select>
+              <span class="filter-chevron" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
+            </label>
           </div>
 
           <div class="table-wrap">
@@ -241,9 +260,6 @@
     countCompanyBusesByStatus
   } from "../js/buses.js";
 
-  const HERO_IMG = "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=1400&q=70";
-  document.getElementById("heroBg").style.backgroundImage = `url('${HERO_IMG}')`;
-
   const profile = await requireAuthAndRole(2);
   if (!profile) throw new Error("No auth (guard redirige).");
 
@@ -251,7 +267,7 @@
 
   const companyId = profile.company_id;
   document.getElementById("companyChip").textContent =
-    companyId ? `company_id: ${companyId}` : "Sin company_id asignado";
+    companyId ? "" : "Sin empresa asignada";
 
   const form = document.getElementById("busForm");
   const busIdEl = document.getElementById("busId");
@@ -281,7 +297,7 @@
     internalEl.disabled = true;
     statusEl.disabled = true;
     form.querySelector("button[type='submit']").disabled = true;
-    setError("err", "Tu usuario EMPRESA no tiene company_id. Asi no se puede guardar buses porque buses.company_id es NOT NULL.");
+    setError("err", "Tu usuario empresa no tiene una empresa asignada. No es posible guardar buses.");
   }
 
   let all = [];
@@ -296,9 +312,9 @@
   }
 
   function statusChip(status){
-    if (status === "ACTIVE") return `<span class="chip ok">ACTIVE</span>`;
-    if (status === "MAINTENANCE") return `<span class="chip warn">MAINTENANCE</span>`;
-    return `<span class="chip bad">INACTIVE</span>`;
+    if (status === "ACTIVE") return `<span class="chip ok">Activo</span>`;
+    if (status === "MAINTENANCE") return `<span class="chip warn">Mantenimiento</span>`;
+    return `<span class="chip bad">Inactivo</span>`;
   }
 
   function setEditMode(bus){
@@ -308,9 +324,9 @@
     statusEl.value = bus.status || "ACTIVE";
 
     formTitle.textContent = "Editar bus";
-    formHint.textContent = "Edita y guarda cambios";
+    formHint.textContent = "";
     cancelEditBtn.style.display = "inline-flex";
-    setOk("ok", "Modo edicion activado");
+    setOk("ok", "Modo de edición activado");
     setError("err", "");
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
@@ -322,7 +338,7 @@
     statusEl.value = "ACTIVE";
 
     formTitle.textContent = "Registrar bus";
-    formHint.textContent = "Crea rapido tu flota";
+    formHint.textContent = "";
     cancelEditBtn.style.display = "none";
   }
 
@@ -332,7 +348,7 @@
     kpisEl.innerHTML = `
       <div class="kpi"><div class="n">${k.total}</div><div class="l">TOTAL</div></div>
       <div class="kpi"><div class="n">${k.active}</div><div class="l">ACTIVOS</div></div>
-      <div class="kpi"><div class="n">${k.maintenance}</div><div class="l">MANTEN.</div></div>
+      <div class="kpi"><div class="n">${k.maintenance}</div><div class="l">MANTENIMIENTO</div></div>
       <div class="kpi"><div class="n">${k.inactive}</div><div class="l">INACTIVOS</div></div>
     `;
   }
@@ -357,12 +373,18 @@
         <td>${statusChip(b.status)}</td>
         <td>
           <div class="row-actions">
-            <button class="pill-btn active icon" data-act="status" data-id="${b.id}" data-status="ACTIVE" title="Poner ACTIVE">A</button>
-            <button class="pill-btn maint icon" data-act="status" data-id="${b.id}" data-status="MAINTENANCE" title="Poner MAINTENANCE">M</button>
-            <button class="pill-btn inact icon" data-act="status" data-id="${b.id}" data-status="INACTIVE" title="Poner INACTIVE">I</button>
+            <button class="pill-btn active icon" data-act="status" data-id="${b.id}" data-status="ACTIVE" data-tooltip="Marcar como activo" aria-label="Marcar como activo">
+              <img src="https://ruunbwmuizhaetgubzjt.supabase.co/storage/v1/object/public/MOVANZA/Empresa/Iconos_buses/Icono_Correcto.png" alt=""/>
+            </button>
+            <button class="pill-btn maint icon" data-act="status" data-id="${b.id}" data-status="MAINTENANCE" data-tooltip="Marcar en mantenimiento" aria-label="Marcar en mantenimiento">
+              <img src="https://ruunbwmuizhaetgubzjt.supabase.co/storage/v1/object/public/MOVANZA/Empresa/Iconos_buses/Icono_mantenimiento.png" alt=""/>
+            </button>
+            <button class="pill-btn inact icon" data-act="status" data-id="${b.id}" data-status="INACTIVE" data-tooltip="Marcar como inactivo" aria-label="Marcar como inactivo">
+              <img src="https://ruunbwmuizhaetgubzjt.supabase.co/storage/v1/object/public/MOVANZA/Empresa/Iconos_buses/Icono_Incorrecto.png" alt=""/>
+            </button>
 
-            <button class="pill-btn icon" data-act="edit" data-id="${b.id}" title="Editar">Editar</button>
-            <button class="pill-btn inact icon" data-act="delete" data-id="${b.id}" title="Eliminar">Eliminar</button>
+            <button class="pill-btn icon text-action" data-act="edit" data-id="${b.id}" data-tooltip="Editar bus" aria-label="Editar bus">Editar</button>
+            <button class="pill-btn inact icon text-action" data-act="delete" data-id="${b.id}" data-tooltip="Eliminar bus" aria-label="Eliminar bus">Eliminar</button>
           </div>
         </td>
       </tr>
@@ -390,13 +412,13 @@
 
   cancelEditBtn.addEventListener("click", () => {
     clearForm();
-    setOk("ok", "Edicion cancelada");
+    setOk("ok", "Edición cancelada");
     setError("err", "");
   });
 
   clearBtn.addEventListener("click", () => {
     clearForm();
-    setOk("ok", "Formulario limpio");
+    setOk("ok", "Campos limpios");
     setError("err", "");
   });
 
@@ -468,7 +490,8 @@
       if (act === "status"){
         const newStatus = btn.dataset.status;
         await updateBus(id, companyId, { status: newStatus });
-        setOk("ok", `Estado actualizado a ${newStatus}`);
+        const statusLabel = newStatus === "ACTIVE" ? "Activo" : newStatus === "MAINTENANCE" ? "Mantenimiento" : "Inactivo";
+        setOk("ok", `Estado actualizado a ${statusLabel}`);
         await refresh();
         return;
       }
