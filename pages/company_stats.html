@@ -3,263 +3,440 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Estadisticas | ManiRuta</title>
+  <title>Estadisticas | MOVANZA</title>
   <link rel="stylesheet" href="../css/base.css"/>
+  <link rel="stylesheet" href="../css/company_design_system.css"/>
   <link rel="stylesheet" href="../css/home.css"/>
   <link rel="stylesheet" href="../css/company_stats.css"/>
 </head>
-<body>
+<body class="company-theme company-dashboard company-stats">
 
-<header class="nav">
-  <div class="container nav-inner">
-    <div class="brand"><span class="dot"></span> Estadisticas</div>
-    <div class="nav-right">
-      <span class="pill" id="who">...</span>
-      <a class="btn btn-ghost" href="home_company.html">Volver</a>
-      <button class="btn btn-ghost" id="logout">Salir</button>
+<div class="company-shell">
+  <aside class="company-sidebar" aria-label="Navegacion Empresa">
+    <div class="company-sidebar-brand">
+      <a class="company-logo-link" href="home_company.html" aria-label="MOVANZA inicio">
+        <img class="company-logo-img" src="https://ruunbwmuizhaetgubzjt.supabase.co/storage/v1/object/public/MOVANZA/Logo%20MOVANZA.png" alt="MOVANZA"/>
+      </a>
     </div>
-  </div>
-</header>
 
-<main class="container stats-page">
-  <section class="stats-hero card">
-    <div class="shape s1"></div>
-    <div class="shape s2"></div>
-    <div class="hero-bg" id="heroBg"></div>
+    <nav class="company-nav-list">
+      <p class="label-caps company-nav-label">Empresa</p>
+      <a class="company-nav-item" href="home_company.html"><span class="company-nav-icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></span>Inicio</a>
+      <a class="company-nav-item" href="buses.html"><span class="company-nav-icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 19v2M18 19v2M5 11h14M6 4h12a2 2 0 0 1 2 2v10a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3V6a2 2 0 0 1 2-2Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Mi Flota</a>
+      <a class="company-nav-item" href="drivers.html"><span class="company-nav-icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Conductores</a>
+      <a class="company-nav-item" href="company_routes.html"><span class="company-nav-icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 18l-6 3V6l6-3 6 3 6-3v15l-6 3-6-3ZM9 3v15M15 6v15" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Rutas</a>
+      <a class="company-nav-item" href="company_trips.html"><span class="company-nav-icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 19a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM18 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM6 13V9a4 4 0 0 1 4-4h5M18 11v4a4 4 0 0 1-4 4H9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Viajes</a>
+      <a class="company-nav-item is-active" href="company_stats.html" aria-current="page"><span class="company-nav-icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 3v18h18M7 15l4-4 3 3 5-7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Estadisticas</a>
+    </nav>
 
-    <div class="hero-content">
-      <div class="hero-head">
-        <div>
-          <h1 class="hero-title">Panel operativo de la empresa</h1>
-          <p class="hero-sub">Viajes, uso de rutas, buses, conductores, GPS e incidencias con la informacion disponible hoy en Supabase.</p>
+    <div class="company-sidebar-footer">
+      <a class="company-nav-item" href="company_settings.html"><span class="company-nav-icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z" stroke="currentColor" stroke-width="1.8"/><path d="M19.4 15a7.9 7.9 0 0 0 .1-2l2-1.2-2-3.4-2.3.7a7.4 7.4 0 0 0-1.7-1l-.3-2.4H10.8l-.3 2.4a7.4 7.4 0 0 0-1.7 1l-2.3-.7-2 3.4 2 1.2a7.9 7.9 0 0 0 .1 2l-2 1.2 2 3.4 2.3-.7c.5.4 1.1.7 1.7 1l.3 2.4h4.4l.3-2.4c.6-.3 1.2-.6 1.7-1l2.3.7 2-3.4-2-1.2Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></span>Ajustes</a>
+    </div>
+  </aside>
+
+  <div class="company-content">
+    <header class="nav company-topbar">
+      <div class="nav-inner company-topbar-inner">
+        <div class="nav-left company-header-identity">
+          <button class="icon-btn" id="menuBtn" title="Menu" aria-label="Menu"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+          <a class="company-header-logo" href="home_company.html" aria-label="MOVANZA inicio"><img src="https://ruunbwmuizhaetgubzjt.supabase.co/storage/v1/object/public/MOVANZA/Logo%20MOVANZA.png" alt="MOVANZA"/></a>
+        </div>
+        <div class="company-header-pattern" aria-hidden="true"></div>
+        <div class="nav-right company-user-actions">
+          <span class="stats-hidden-hook" id="companyChip">Empresa...</span>
+          <span class="company-user-chip" id="who">...</span>
+          <button class="company-logout-btn" id="logout">Salir</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="container company-main stats-page">
+      <section class="stats-hero card">
+        <div class="stats-hero-pattern" aria-hidden="true"></div>
+        <div class="stats-hero-copy">
+          <p class="label-caps">Analitica empresarial</p>
+          <h1 class="hero-title">Estadisticas</h1>
+          <p class="hero-sub">Lectura visual de viajes, actividad operativa, flota, GPS e incidencias con los datos disponibles.</p>
         </div>
 
-        <div class="hero-tags">
-          <span class="chip" id="companyChip">company_id: ...</span>
-          <div class="stats-toolbar">
-            <select id="rangeSelect" class="stats-select">
+        <div class="stats-control-panel">
+          <label class="stats-filter-control" for="rangeSelect">
+            <span class="mini-muted">Periodo</span>
+            <span class="filter-dot" aria-hidden="true"></span>
+            <select id="rangeSelect" class="input">
               <option value="today">Hoy</option>
               <option value="7d">Ultimos 7 dias</option>
               <option value="30d" selected>Ultimos 30 dias</option>
               <option value="all">Todo</option>
             </select>
-            <button class="btn-soft" id="refreshBtn" type="button">Actualizar</button>
-          </div>
+            <span class="filter-chevron" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          </label>
+          <button class="stats-primary-btn" id="refreshBtn" type="button">Actualizar</button>
         </div>
-      </div>
+      </section>
 
-      <div class="kpi-row">
-        <div class="kpi">
-          <div class="kpi-ico">Hoy</div>
+      <section class="stats-kpi-grid" aria-label="Indicadores principales">
+        <article class="stats-kpi-card">
+          <span class="stats-kpi-icon">01</span>
           <div>
-            <div class="kpi-n" id="kpiTripsToday">-</div>
-            <div class="kpi-l">Viajes iniciados hoy</div>
+            <p>Viajes hoy</p>
+            <strong id="kpiTripsToday">-</strong>
+            <small id="miniTripsWeek">-</small>
           </div>
-        </div>
-        <div class="kpi">
-          <div class="kpi-ico">Live</div>
+        </article>
+        <article class="stats-kpi-card is-live">
+          <span class="stats-kpi-icon">Live</span>
           <div>
-            <div class="kpi-n" id="kpiTripsLive">-</div>
-            <div class="kpi-l">Viajes en progreso</div>
+            <p>En curso</p>
+            <strong id="kpiTripsLive">-</strong>
+            <small>Seguimiento activo</small>
           </div>
-        </div>
-        <div class="kpi">
-          <div class="kpi-ico">OK</div>
+        </article>
+        <article class="stats-kpi-card">
+          <span class="stats-kpi-icon">OK</span>
           <div>
-            <div class="kpi-n" id="kpiTripsFinished">-</div>
-            <div class="kpi-l">Finalizados en el periodo</div>
+            <p>Finalizados</p>
+            <strong id="kpiTripsFinished">-</strong>
+            <small id="kpiCompletionRate">-</small>
           </div>
-        </div>
-        <div class="kpi">
-          <div class="kpi-ico">X</div>
+        </article>
+        <article class="stats-kpi-card is-risk">
+          <span class="stats-kpi-icon">!</span>
           <div>
-            <div class="kpi-n" id="kpiTripsCanceled">-</div>
-            <div class="kpi-l">Cancelados en el periodo</div>
+            <p>Cancelados</p>
+            <strong id="kpiTripsCanceled">-</strong>
+            <small id="kpiCancelRate">-</small>
           </div>
-        </div>
-      </div>
-    </div>
-  </section>
+        </article>
+      </section>
 
-  <section class="stats-grid">
-    <section class="card panel">
-      <div class="panel-head">
-        <h3>Resumen del periodo</h3>
-        <span class="mini-muted" id="rangeLabel">Ultimos 30 dias</span>
-      </div>
+      <section class="stats-dashboard-grid">
+        <section class="card stats-panel stats-panel-wide">
+          <div class="stats-panel-head">
+            <div>
+              <p class="label-caps">Tendencia</p>
+              <h2>Viajes por dia</h2>
+            </div>
+            <span class="stats-range-pill" id="rangeLabel">Ultimos 30 dias</span>
+          </div>
+          <div class="stats-chart-shell is-large">
+            <canvas id="tripsTrendChart"></canvas>
+          </div>
+        </section>
 
-      <div class="mini-kpis">
-        <div class="mini-card">
-          <span class="mini-label">Viajes hoy</span>
-          <strong id="miniTripsToday">-</strong>
-        </div>
-        <div class="mini-card">
-          <span class="mini-label">Esta semana</span>
-          <strong id="miniTripsWeek">-</strong>
-        </div>
-        <div class="mini-card">
-          <span class="mini-label">Este mes</span>
-          <strong id="miniTripsMonth">-</strong>
-        </div>
-        <div class="mini-card">
-          <span class="mini-label">Duracion promedio</span>
-          <strong id="miniAvgDuration">-</strong>
-        </div>
-      </div>
+        <section class="card stats-panel">
+          <div class="stats-panel-head">
+            <div>
+              <p class="label-caps">Distribucion</p>
+              <h2>Estado de viajes</h2>
+            </div>
+            <span class="stats-range-pill" id="tripStatusInfo">-</span>
+          </div>
+          <div class="stats-donut-layout">
+            <div class="stats-chart-shell is-donut">
+              <canvas id="tripStatusChart"></canvas>
+            </div>
+            <div class="stats-chart-total">
+              <strong id="tripStatusTotal">-</strong>
+              <span>Total del periodo</span>
+            </div>
+          </div>
+          <div class="stats-legend" id="tripStatusLegend"></div>
+        </section>
 
-      <div class="bar-card">
-        <div class="bar-head">
-          <b>Estado de viajes</b>
-          <span class="mini-muted" id="tripStatusInfo">-</span>
-        </div>
-        <div class="bar" id="tripStatusBar"></div>
-        <div class="legend compact" id="tripStatusLegend"></div>
-      </div>
+        <section class="card stats-panel stats-panel-wide">
+          <div class="stats-panel-head">
+            <div>
+              <p class="label-caps">Comparacion</p>
+              <h2>Actividad principal</h2>
+            </div>
+            <span class="stats-range-pill">Rankings</span>
+          </div>
+          <div class="stats-rank-tabs">
+            <article>
+              <h3>Rutas mas usadas</h3>
+              <div id="topRoutes"></div>
+            </article>
+            <article>
+              <h3>Buses mas activos</h3>
+              <div id="topBuses"></div>
+            </article>
+            <article>
+              <h3>Conductores con mas viajes</h3>
+              <div id="topDrivers"></div>
+            </article>
+          </div>
+        </section>
 
-      <div class="mini-kpis secondary">
-        <div class="mini-card">
-          <span class="mini-label">Rutas configuradas</span>
-          <strong id="opsRoutesConfigured">-</strong>
-        </div>
-        <div class="mini-card">
-          <span class="mini-label">Rutas activas</span>
-          <strong id="opsRoutesActive">-</strong>
-        </div>
-        <div class="mini-card">
-          <span class="mini-label">Rutas con viajes</span>
-          <strong id="opsRoutesUsed">-</strong>
-        </div>
-        <div class="mini-card">
-          <span class="mini-label">Buses con GPS reciente</span>
-          <strong id="opsGpsBuses">-</strong>
-        </div>
-      </div>
+        <section class="card stats-panel">
+          <div class="stats-panel-head">
+            <div>
+              <p class="label-caps">Flota</p>
+              <h2>Disponibilidad</h2>
+            </div>
+            <span class="stats-range-pill" id="fleetInfo">-</span>
+          </div>
+          <div class="stats-donut-layout">
+            <div class="stats-chart-shell is-donut">
+              <canvas id="fleetStatusChart"></canvas>
+            </div>
+            <div class="stats-chart-total">
+              <strong id="fleetTotal">-</strong>
+              <span>Buses</span>
+            </div>
+          </div>
+          <div class="stats-legend" id="fleetStatusLegend"></div>
+        </section>
+
+        <section class="card stats-panel">
+          <div class="stats-panel-head">
+            <div>
+              <p class="label-caps">GPS</p>
+              <h2>Señal reciente</h2>
+            </div>
+            <span class="stats-range-pill" id="opsGpsBuses">-</span>
+          </div>
+          <div class="stats-progress-block">
+            <div class="stats-progress-ring">
+              <strong id="gpsPercent">-</strong>
+              <span>reportando</span>
+            </div>
+            <div class="stats-progress-track"><span id="gpsProgress"></span></div>
+          </div>
+          <div class="chips" id="recentGpsList"></div>
+        </section>
+
+        <section class="card stats-panel">
+          <div class="stats-panel-head">
+            <div>
+              <p class="label-caps">Incidencias</p>
+              <h2>Estado del periodo</h2>
+            </div>
+            <span class="stats-range-pill" id="incTotal">-</span>
+          </div>
+          <div class="stats-chart-shell is-small">
+            <canvas id="incidentsChart"></canvas>
+          </div>
+          <div class="stats-mini-metrics">
+            <span>Nuevas <strong id="incNew">-</strong></span>
+            <span>En revision <strong id="incReview">-</strong></span>
+            <span>Resueltas <strong id="incResolved">-</strong></span>
+          </div>
+        </section>
+
+        <section class="card stats-panel">
+          <div class="stats-panel-head">
+            <div>
+              <p class="label-caps">Cobertura</p>
+              <h2>Operacion configurada</h2>
+            </div>
+            <span class="stats-range-pill" id="miniAvgDuration">-</span>
+          </div>
+          <div class="stats-ops-grid">
+            <div><span>Rutas configuradas</span><strong id="opsRoutesConfigured">-</strong></div>
+            <div><span>Rutas activas</span><strong id="opsRoutesActive">-</strong></div>
+            <div><span>Rutas con viajes</span><strong id="opsRoutesUsed">-</strong></div>
+            <div><span>Viajes del mes</span><strong id="miniTripsMonth">-</strong></div>
+          </div>
+        </section>
+
+        <section class="card stats-panel stats-panel-wide">
+          <div class="stats-panel-head">
+            <div>
+              <p class="label-caps">Riesgo operativo</p>
+              <h2>Rutas con mas incidencias</h2>
+            </div>
+            <span class="stats-range-pill">Incidencias</span>
+          </div>
+          <div id="incidentRoutes"></div>
+        </section>
+
+      </section>
 
       <div class="toast-err" id="err"></div>
       <div class="toast-ok" id="ok"></div>
-    </section>
+    </main>
+  </div>
+</div>
 
-    <aside class="card panel">
-      <div class="panel-head">
-        <h3>Estado operativo</h3>
-        <span class="mini-muted">Flota y personal</span>
-      </div>
-
-      <div class="bar-card">
-        <div class="bar-head">
-          <b>Disponibilidad de flota</b>
-          <span class="mini-muted" id="fleetInfo">-</span>
-        </div>
-        <div class="bar" id="fleetStatusBar"></div>
-        <div class="legend compact" id="fleetStatusLegend"></div>
-      </div>
-
-      <div class="list-block">
-        <div class="list-title">Buses reportando ubicacion recientemente</div>
-        <div class="chips" id="recentGpsList"></div>
-      </div>
-
-      <div class="list-block">
-        <div class="list-title">Notas de datos</div>
-        <div class="notes-list" id="notesList"></div>
-      </div>
-    </aside>
-
-    <section class="card panel">
-      <div class="panel-head">
-        <h3>Rankings del periodo</h3>
-        <span class="mini-muted">Uso real del sistema</span>
-      </div>
-
-      <div class="rank-grid">
-        <div class="rank-card">
-          <div class="list-title">Rutas mas usadas</div>
-          <div id="topRoutes"></div>
-        </div>
-        <div class="rank-card">
-          <div class="list-title">Buses mas activos</div>
-          <div id="topBuses"></div>
-        </div>
-        <div class="rank-card">
-          <div class="list-title">Conductores con mas viajes</div>
-          <div id="topDrivers"></div>
-        </div>
-      </div>
-    </section>
-
-    <section class="card panel">
-      <div class="panel-head">
-        <h3>Incidencias</h3>
-        <span class="mini-muted">Solo si existen datos registrados</span>
-      </div>
-
-      <div class="mini-kpis secondary">
-        <div class="mini-card">
-          <span class="mini-label">Total en el periodo</span>
-          <strong id="incTotal">-</strong>
-        </div>
-        <div class="mini-card">
-          <span class="mini-label">Nuevas</span>
-          <strong id="incNew">-</strong>
-        </div>
-        <div class="mini-card">
-          <span class="mini-label">En revision</span>
-          <strong id="incReview">-</strong>
-        </div>
-        <div class="mini-card">
-          <span class="mini-label">Resueltas</span>
-          <strong id="incResolved">-</strong>
-        </div>
-      </div>
-
-      <div class="list-block">
-        <div class="list-title">Rutas con mas incidencias</div>
-        <div id="incidentRoutes"></div>
-      </div>
-    </section>
-  </section>
-</main>
-
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js"></script>
 <script type="module">
   import { requireAuthAndRole } from "../js/guard.js";
   import { signOut } from "../js/auth.js";
   import { setText, setError, setOk } from "../js/ui.js";
   import { loadCompanyStats } from "../js/company_stats.js";
 
-  const HERO_IMG = "https://images.unsplash.com/photo-1553531384-cc64ac80f931?auto=format&fit=crop&w=1600&q=70";
-  document.getElementById("heroBg").style.backgroundImage = `url('${HERO_IMG}')`;
-
   const profile = await requireAuthAndRole(2);
   if (!profile) throw new Error("No auth");
 
   const companyId = profile.company_id;
+  const charts = {};
+  const palette = {
+    primary: "#00ff66",
+    cyan: "#38bdf8",
+    teal: "#54bcbd",
+    warning: "#f4c430",
+    danger: "#ef4444",
+    muted: "#a1a1aa",
+    surface: "#111111",
+    border: "#27272a"
+  };
+
+  Chart.defaults.color = palette.muted;
+  Chart.defaults.font.family = "Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif";
+
   setText("who", `@${profile.username}`);
-  setText("companyChip", companyId ? `company_id: ${companyId}` : "Sin company_id");
+  setText("companyChip", companyId ? "Empresa" : "Sin empresa");
 
-  function renderStackBar(barId, legendId, segments, infoId = null) {
-    const bar = document.getElementById(barId);
-    const legend = document.getElementById(legendId);
+  function percent(value, total) {
+    if (!total) return "0%";
+    return `${Math.round((value / total) * 100)}%`;
+  }
 
-    bar.innerHTML = segments
-      .filter((segment) => segment.value > 0)
-      .map((segment) => `<div class="seg" style="width:${segment.width}%; background:${segment.color};"></div>`)
-      .join("");
-
-    if (!bar.innerHTML) {
-      bar.innerHTML = `<div class="seg seg-empty" style="width:100%;"></div>`;
+  function destroyChart(id) {
+    if (charts[id]) {
+      charts[id].destroy();
+      charts[id] = null;
     }
+  }
 
-    legend.innerHTML = segments.map((segment) => `
-      <div class="leg compact-item">
-        <span><span class="dot" style="background:${segment.color}"></span>${segment.label}</span>
-        <span>${segment.value}</span>
+  function chartTooltip() {
+    return {
+      backgroundColor: "rgba(5, 5, 5, .94)",
+      borderColor: "rgba(0, 255, 102, .35)",
+      borderWidth: 1,
+      titleColor: "#ffffff",
+      bodyColor: "#d4d4d8",
+      displayColors: true,
+      padding: 12,
+      cornerRadius: 10
+    };
+  }
+
+  function renderTrend(data) {
+    destroyChart("tripsTrendChart");
+    const canvas = document.getElementById("tripsTrendChart");
+    const gradient = canvas.getContext("2d").createLinearGradient(0, 0, 0, 260);
+    gradient.addColorStop(0, "rgba(0, 255, 102, .34)");
+    gradient.addColorStop(1, "rgba(0, 255, 102, 0)");
+
+    charts.tripsTrendChart = new Chart(canvas, {
+      type: "line",
+      data: {
+        labels: data.map((item) => item.label),
+        datasets: [{
+          label: "Viajes",
+          data: data.map((item) => item.count),
+          borderColor: palette.primary,
+          backgroundColor: gradient,
+          borderWidth: 2,
+          fill: true,
+          tension: .38,
+          pointRadius: 3,
+          pointHoverRadius: 5,
+          pointBackgroundColor: palette.primary
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        animation: { duration: 520, easing: "easeOutQuart" },
+        plugins: {
+          legend: { display: false },
+          tooltip: chartTooltip()
+        },
+        scales: {
+          x: {
+            grid: { display: false },
+            ticks: { maxRotation: 0, autoSkip: true, maxTicksLimit: 8 }
+          },
+          y: {
+            beginAtZero: true,
+            precision: 0,
+            grid: { color: "rgba(255,255,255,.08)" },
+            ticks: { precision: 0 }
+          }
+        }
+      }
+    });
+  }
+
+  function renderDonut(chartId, segments) {
+    destroyChart(chartId);
+    const total = segments.reduce((sum, item) => sum + item.value, 0);
+    const visibleSegments = total
+      ? segments
+      : [{ label: "Sin datos", value: 1, color: palette.border }];
+
+    charts[chartId] = new Chart(document.getElementById(chartId), {
+      type: "doughnut",
+      data: {
+        labels: visibleSegments.map((item) => item.label),
+        datasets: [{
+          data: visibleSegments.map((item) => item.value),
+          backgroundColor: visibleSegments.map((item) => item.color),
+          borderColor: "#111111",
+          borderWidth: 4,
+          hoverOffset: 8
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        cutout: "68%",
+        animation: { duration: 520, easing: "easeOutQuart" },
+        plugins: {
+          legend: { display: false },
+          tooltip: chartTooltip()
+        }
+      }
+    });
+  }
+
+  function renderBarChart(chartId, labels, values, colors) {
+    destroyChart(chartId);
+    charts[chartId] = new Chart(document.getElementById(chartId), {
+      type: "bar",
+      data: {
+        labels,
+        datasets: [{
+          data: values,
+          backgroundColor: colors,
+          borderRadius: 8,
+          borderSkipped: false
+        }]
+      },
+      options: {
+        indexAxis: "y",
+        responsive: true,
+        maintainAspectRatio: false,
+        animation: { duration: 520, easing: "easeOutQuart" },
+        plugins: {
+          legend: { display: false },
+          tooltip: chartTooltip()
+        },
+        scales: {
+          x: {
+            beginAtZero: true,
+            grid: { color: "rgba(255,255,255,.08)" },
+            ticks: { precision: 0 }
+          },
+          y: {
+            grid: { display: false }
+          }
+        }
+      }
+    });
+  }
+
+  function renderLegend(containerId, segments) {
+    const total = segments.reduce((sum, item) => sum + item.value, 0);
+    document.getElementById(containerId).innerHTML = segments.map((segment) => `
+      <div class="stats-legend-item">
+        <span><i style="background:${segment.color}"></i>${segment.label}</span>
+        <strong>${segment.value} · ${percent(segment.value, total)}</strong>
       </div>
     `).join("");
-
-    if (infoId) {
-      const total = segments.reduce((sum, item) => sum + item.value, 0);
-      setText(infoId, `${total} total`);
-    }
   }
 
   function renderRanking(containerId, items, emptyText) {
@@ -271,11 +448,12 @@
     }
 
     const max = Math.max(...items.map((item) => item.count), 1);
-    container.innerHTML = items.map((item) => `
+    container.innerHTML = items.map((item, index) => `
       <div class="ranking-item">
         <div class="ranking-head">
+          <span>${index + 1}</span>
           <strong>${item.label}</strong>
-          <span>${item.count}</span>
+          <b>${item.count}</b>
         </div>
         <div class="ranking-bar-shell">
           <div class="ranking-bar-fill" style="width:${(item.count / max) * 100}%;"></div>
@@ -293,57 +471,78 @@
     el.innerHTML = items.map((item) => `<span class="chip">${item}</span>`).join("");
   }
 
-  function renderNotes(notes) {
-    document.getElementById("notesList").innerHTML = notes
-      .map((note) => `<div class="note-item">${note}</div>`)
-      .join("");
-  }
-
   async function run() {
     try {
       setError("err", "");
       setOk("ok", "");
 
       if (!companyId) {
-        setError("err", "Tu usuario empresa no tiene company_id. No se pueden calcular estadisticas.");
+        setError("err", "Tu usuario empresa no tiene empresa asociada. No se pueden calcular estadisticas.");
         return;
       }
 
       const range = document.getElementById("rangeSelect").value;
       const stats = await loadCompanyStats(companyId, range);
+      const totalTrips = stats.operations.totalTripsInRange;
+      const gpsPercent = percent(stats.operations.busesReportingRecently, stats.operations.busesTotal);
+      const tripSegments = stats.segments.tripStatus;
+      const fleetSegments = [
+        { label: "Activos", value: stats.fleet.buses.active, color: palette.primary },
+        { label: "Mantenimiento", value: stats.fleet.buses.maintenance, color: palette.warning },
+        { label: "Inactivos", value: stats.fleet.buses.inactive, color: palette.danger }
+      ];
 
       setText("rangeLabel", stats.travelWindows.selectedRangeLabel);
       setText("kpiTripsToday", stats.overview.tripsToday);
       setText("kpiTripsLive", stats.overview.tripsInProgress);
       setText("kpiTripsFinished", stats.overview.finishedInRange);
       setText("kpiTripsCanceled", stats.overview.canceledInRange);
+      setText("kpiCompletionRate", `${percent(stats.overview.finishedInRange, totalTrips)} del periodo`);
+      setText("kpiCancelRate", `${percent(stats.overview.canceledInRange, totalTrips)} del periodo`);
 
-      setText("miniTripsToday", stats.travelWindows.today);
-      setText("miniTripsWeek", stats.travelWindows.week);
+      setText("miniTripsWeek", `${stats.travelWindows.week} esta semana`);
       setText("miniTripsMonth", stats.travelWindows.month);
-      setText("miniAvgDuration", stats.operations.averageDurationMinutes == null ? "Sin dato" : `${stats.operations.averageDurationMinutes} min`);
+      setText("miniAvgDuration", stats.operations.averageDurationMinutes == null ? "Sin duracion" : `${stats.operations.averageDurationMinutes} min promedio`);
 
       setText("opsRoutesConfigured", stats.operations.routesConfigured);
       setText("opsRoutesActive", stats.operations.routesActive);
       setText("opsRoutesUsed", stats.operations.routesWithTripsInRange);
       setText("opsGpsBuses", `${stats.operations.busesReportingRecently}/${stats.operations.busesTotal}`);
+      setText("gpsPercent", gpsPercent);
 
       setText("fleetInfo", `${stats.fleet.buses.total} buses · ${stats.fleet.drivers.total} conductores`);
-      renderStackBar("tripStatusBar", "tripStatusLegend", stats.segments.tripStatus, "tripStatusInfo");
-      renderStackBar("fleetStatusBar", "fleetStatusLegend", stats.segments.fleetStatus);
+      setText("fleetTotal", stats.fleet.buses.total);
+      setText("tripStatusInfo", `${totalTrips} total`);
+      setText("tripStatusTotal", totalTrips);
 
+      setText("incTotal", `${stats.incidents.totalInRange} total`);
+      setText("incNew", stats.incidents.new);
+      setText("incReview", stats.incidents.inReview);
+      setText("incResolved", stats.incidents.resolved);
+
+      document.getElementById("gpsProgress").style.width = gpsPercent;
+      document.querySelector(".stats-progress-ring").style.setProperty(
+        "--gps-angle",
+        `${stats.operations.busesTotal ? (stats.operations.busesReportingRecently / stats.operations.busesTotal) * 360 : 0}deg`
+      );
+
+      renderTrend(stats.charts.dailyTrips);
+      renderDonut("tripStatusChart", tripSegments);
+      renderDonut("fleetStatusChart", fleetSegments);
+      renderBarChart(
+        "incidentsChart",
+        ["Nuevas", "En revision", "Resueltas", "Rechazadas"],
+        [stats.incidents.new, stats.incidents.inReview, stats.incidents.resolved, stats.incidents.rejected],
+        [palette.warning, palette.cyan, palette.primary, palette.danger]
+      );
+
+      renderLegend("tripStatusLegend", tripSegments);
+      renderLegend("fleetStatusLegend", fleetSegments);
       renderRanking("topRoutes", stats.rankings.routes, "No hay viajes suficientes para construir el ranking de rutas.");
       renderRanking("topBuses", stats.rankings.buses, "No hay viajes suficientes para construir el ranking de buses.");
       renderRanking("topDrivers", stats.rankings.drivers, "No hay viajes suficientes para construir el ranking de conductores.");
       renderRanking("incidentRoutes", stats.incidents.topRoutes, "No hay incidencias registradas para mostrar.");
-
       renderChips("recentGpsList", stats.fleet.recentGpsBuses, "Sin buses con GPS reciente");
-      renderNotes(stats.notes);
-
-      setText("incTotal", stats.incidents.totalInRange);
-      setText("incNew", stats.incidents.new);
-      setText("incReview", stats.incidents.inReview);
-      setText("incResolved", stats.incidents.resolved);
 
       setOk("ok", "Estadisticas actualizadas.");
     } catch (error) {
@@ -354,6 +553,7 @@
 
   document.getElementById("refreshBtn").addEventListener("click", run);
   document.getElementById("rangeSelect").addEventListener("change", run);
+  document.getElementById("menuBtn")?.addEventListener("click", () => {});
   document.getElementById("logout").addEventListener("click", async () => {
     await signOut();
     window.location.href = "login.html";

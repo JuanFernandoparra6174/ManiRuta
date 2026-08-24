@@ -19,6 +19,15 @@ const state = {
     lastEventKey: null
 };
 
+const visualIcons = {
+    inProgress: "https://ruunbwmuizhaetgubzjt.supabase.co/storage/v1/object/public/MOVANZA/Empresa/Iconos_buses/Icono_Correcto.png",
+    finished: "https://ruunbwmuizhaetgubzjt.supabase.co/storage/v1/object/public/MOVANZA/Empresa/Iconos_buses/Icono_Correcto.png",
+    canceled: "https://ruunbwmuizhaetgubzjt.supabase.co/storage/v1/object/public/MOVANZA/Empresa/Iconos_buses/Icono_Incorrecto.png",
+    route: "https://ruunbwmuizhaetgubzjt.supabase.co/storage/v1/object/public/MOVANZA/Empresa/Iconos_buses/Ruta.png",
+    bus: "https://ruunbwmuizhaetgubzjt.supabase.co/storage/v1/object/public/MOVANZA/Empresa/Iconos_buses/Bus.png",
+    driver: "https://ruunbwmuizhaetgubzjt.supabase.co/storage/v1/object/public/MOVANZA/Empresa/Iconos_buses/conductor.png"
+};
+
 const busIcon = L.divIcon({
     className: "bus-marker-icon",
     html: `<div class="bus-marker-shell company-bus-shell" aria-label="Vehiculo"><span>BUS</span></div>`,
@@ -50,6 +59,38 @@ function getTripIdFromUrl() {
     return params.get("trip_id");
 }
 
+function formatDateTime(value) {
+    if (!value) return "Sin finalizar";
+    return new Date(value).toLocaleString("es-CO");
+}
+
+function statusLabel(status) {
+    const labels = {
+        IN_PROGRESS: "En curso",
+        FINISHED: "Finalizado",
+        CANCELED: "Cancelado"
+    };
+
+    return labels[status] || "Sin estado";
+}
+
+function statusTone(status) {
+    if (status === "IN_PROGRESS") return "ok";
+    if (status === "FINISHED") return "warn";
+    return "bad";
+}
+
+function statusIcon(status) {
+    if (status === "IN_PROGRESS") return visualIcons.inProgress;
+    if (status === "FINISHED") return visualIcons.finished;
+    return visualIcons.canceled;
+}
+
+function renderMetaIcon(src) {
+    if (!src) return "";
+    return `<span class="trip-meta-icon"><img src="${src}" alt="" aria-hidden="true"/></span>`;
+}
+
 function stopPolling() {
     if (state.pollId) {
         clearInterval(state.pollId);
@@ -67,10 +108,38 @@ function initMap() {
 function renderTripMeta(trip) {
     $("tripTitle").textContent = trip.route?.name || "Seguimiento de viaje";
     $("tripMeta").innerHTML = `
-        <span class="badge">Bus: ${escapeHtml(trip.bus?.plate || "Bus")}</span>
-        <span class="badge">Conductor: ${escapeHtml(trip.driver?.full_name || "Sin conductor")}</span>
-        <span class="badge">Inicio: ${new Date(trip.start_at).toLocaleString("es-CO")}</span>
-        <span class="badge">Estado: ${escapeHtml(trip.status)}</span>
+        <article class="trip-meta-item">
+            <div class="trip-meta-item-head">
+                <span class="badge ${statusTone(trip.status)}">${escapeHtml(statusLabel(trip.status))}</span>
+                ${renderMetaIcon(statusIcon(trip.status))}
+            </div>
+            <strong>Estado del viaje</strong>
+            <small>Seguimiento operativo actual</small>
+        </article>
+        <article class="trip-meta-item">
+            <div class="trip-meta-item-head">
+                <span class="badge">Ruta</span>
+                ${renderMetaIcon(visualIcons.route)}
+            </div>
+            <strong>${escapeHtml(trip.route?.name || "Ruta no disponible")}</strong>
+            <small>${escapeHtml(trip.route_stops?.length ? `${trip.route_stops.length} paraderos asociados` : "Sin paraderos asociados")}</small>
+        </article>
+        <article class="trip-meta-item">
+            <div class="trip-meta-item-head">
+                <span class="badge">Vehiculo</span>
+                ${renderMetaIcon(visualIcons.bus)}
+            </div>
+            <strong>${escapeHtml(trip.bus?.plate || "Bus no disponible")}</strong>
+            <small>Unidad asignada al recorrido</small>
+        </article>
+        <article class="trip-meta-item">
+            <div class="trip-meta-item-head">
+                <span class="badge">Conductor</span>
+                ${renderMetaIcon(visualIcons.driver)}
+            </div>
+            <strong>${escapeHtml(trip.driver?.full_name || "Sin conductor")}</strong>
+            <small>Inicio: ${escapeHtml(formatDateTime(trip.start_at))}</small>
+        </article>
     `;
 }
 
@@ -124,18 +193,18 @@ function renderGeofenceIdle() {
 
 function renderGeofenceEvent(event) {
     $("geofenceCard").innerHTML = `
-        <div class="trip-summary-grid company-monitor-grid">
-            <div class="trip-summary-item">
+        <div class="trip-geofence-grid">
+            <div class="trip-geofence-item">
                 <span class="chip ok">Paradero actual</span>
                 <strong>${escapeHtml(event.stop.name)}</strong>
                 <small class="help">${escapeHtml(event.stop.address || "Sin direccion")}</small>
             </div>
-            <div class="trip-summary-item">
+            <div class="trip-geofence-item">
                 <span class="chip ok">Distancia</span>
                 <strong>${Math.round(event.distanceMeters)} m</strong>
                 <small class="help">Dentro del radio configurado de ${GEOFENCE_RADIUS_METERS} m</small>
             </div>
-            <div class="trip-summary-item">
+            <div class="trip-geofence-item">
                 <span class="chip ok">Paraderos restantes</span>
                 <strong>${event.remainingStops}</strong>
                 <small class="help">Faltan para llegar al paradero destino</small>
@@ -206,9 +275,7 @@ async function init() {
 
     state.companyId = profile.company_id;
     $("who").textContent = `@${profile.username}`;
-    $("companyChip").textContent = state.companyId
-        ? `company_id: ${state.companyId}`
-        : "Sin company_id";
+    $("companyChip").textContent = state.companyId ? "Empresa" : "Sin empresa";
 
     const tripId = getTripIdFromUrl();
     if (!tripId) {
