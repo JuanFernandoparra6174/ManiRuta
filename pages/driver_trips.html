@@ -3,50 +3,66 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Mis Viajes | ManiRuta</title>
+  <title>Mis Viajes | Movanza</title>
   <link rel="stylesheet" href="../css/base.css"/>
+  <link rel="stylesheet" href="../css/company_design_system.css"/>
   <link rel="stylesheet" href="../css/home.css"/>
 </head>
-<body>
+<body class="company-theme company-dashboard">
 
-<header class="nav">
-  <div class="container nav-inner">
-    <div class="brand"><span class="dot"></span> Mis Viajes</div>
-    <div class="nav-right">
-      <span class="pill" id="who">...</span>
-      <a class="btn btn-ghost" href="home_driver.html">Volver</a>
-      <button class="btn btn-ghost" id="logout">Salir</button>
-    </div>
-  </div>
-</header>
+  <div class="company-content" style="width: 100%; min-height: 100vh;">
+    <header class="nav company-topbar">
+      <div class="nav-inner company-topbar-inner">
+        <div class="nav-left company-header-identity">
+          <a class="company-header-logo" href="home_driver.html" aria-label="MOVANZA inicio">
+            <img src="https://ruunbwmuizhaetgubzjt.supabase.co/storage/v1/object/public/MOVANZA/Logo%20MOVANZA.png" alt="MOVANZA"/>
+          </a>
+        </div>
 
-<main class="container page stack">
-  <section class="card tile">
-    <div class="page-title">
-      <div>
-        <h1 class="h1">Viajes activos</h1>
-        <p class="sub">Abre el seguimiento del viaje y comparte la posicion actual.</p>
+        <div class="company-header-pattern" aria-hidden="true"></div>
+
+        <div class="nav-right company-user-actions">
+          <span class="company-user-chip" id="who">...</span>
+          <button class="company-logout-btn" id="logout">Salir</button>
+        </div>
       </div>
-    </div>
+    </header>
 
-    <div class="stop-table-wrap">
-      <table class="table">
-        <thead>
-          <tr>
-            <th>Ruta</th>
-            <th>Bus</th>
-            <th>Inicio</th>
-            <th>Estado</th>
-            <th>Accion</th>
-          </tr>
-        </thead>
-        <tbody id="rows"></tbody>
-      </table>
-    </div>
-  </section>
-</main>
+    <main class="container home-wrap company-main" style="max-width: 900px;">
+      <section class="card welcome company-overview" style="margin-bottom: 16px;">
+        <div class="welcome-top">
+          <div>
+            <p class="label-caps">Gestión de Trayectos</p>
+            <h1>Viajes Activos Asignados</h1>
+            <p>Selecciona un viaje para iniciar el monitoreo y reporte GPS en vivo.</p>
+          </div>
+          <a href="home_driver.html" class="btn-mini secondary" style="display:inline-flex; align-items:center;">← Volver al inicio</a>
+        </div>
+      </section>
 
-<script type="module" src="../js/driver_trips_page.js"></script>
+      <section class="card" style="padding: 20px;">
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Ruta</th>
+                <th>Bus</th>
+                <th>Inicio</th>
+                <th>Estado</th>
+                <th>Acción</th>
+              </tr>
+            </thead>
+            <tbody id="rows">
+              <tr>
+                <td colspan="5" class="route-empty">Cargando viajes activos...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
 
+  <script type="module" src="../js/driver_trips_page.js"></script>
 </body>
 </html>
