@@ -51,6 +51,20 @@ async function fetchStopsMapByIds(stopIds) {
     return new Map((data || []).map((stop) => [stop.id, stop]));
 }
 
+export async function fetchActiveGeometriesByRouteIds(routeIds) {
+    const uniqueRouteIds = unique(routeIds).filter(Boolean);
+    if (!uniqueRouteIds.length) return new Map();
+
+    const { data, error } = await supabase
+        .from("route_geometries")
+        .select("id, route_id, version, status, provider, profile, geometry, distance_meters, duration_seconds, stop_sequence_hash")
+        .in("route_id", uniqueRouteIds)
+        .eq("status", "ACTIVE");
+
+    if (error) throw error;
+    return new Map((data || []).map((geometry) => [geometry.route_id, geometry]));
+}
+
 export async function fetchAllRoutes() {
     const { data, error } = await supabase
         .from("routes")
@@ -85,7 +99,10 @@ export async function fetchCompanyRoutes(companyId) {
 
     if (routeStopsError) throw routeStopsError;
 
-    const stopMap = await fetchStopsMapByIds((routeStops || []).map((item) => item.stop_id));
+    const [stopMap, geometryMap] = await Promise.all([
+        fetchStopsMapByIds((routeStops || []).map((item) => item.stop_id)),
+        fetchActiveGeometriesByRouteIds(routeIds)
+    ]);
     const stopsByRoute = new Map();
 
     for (const item of routeStops || []) {
@@ -103,6 +120,7 @@ export async function fetchCompanyRoutes(companyId) {
         const orderedStops = stopsByRoute.get(route.id) || [];
         return {
             ...route,
+            activeGeometry: geometryMap.get(route.id) || null,
             stops: orderedStops,
             stop_count: orderedStops.length,
             origin_stop: orderedStops[0]?.stop || null,
@@ -140,7 +158,10 @@ export async function fetchAdminRoutes() {
     if (routeStopsError) throw routeStopsError;
 
     const companyMap = new Map((companies || []).map((company) => [company.id, company]));
-    const stopMap = await fetchStopsMapByIds((routeStops || []).map((item) => item.stop_id));
+    const [stopMap, geometryMap] = await Promise.all([
+        fetchStopsMapByIds((routeStops || []).map((item) => item.stop_id)),
+        fetchActiveGeometriesByRouteIds(routeIds)
+    ]);
     const stopsByRoute = new Map();
 
     for (const item of routeStops || []) {
@@ -159,6 +180,7 @@ export async function fetchAdminRoutes() {
         const company = companyMap.get(route.company_id) || null;
         return {
             ...route,
+            activeGeometry: geometryMap.get(route.id) || null,
             company: company || null,
             company_name: company?.name || null,
             stops: orderedStops,
@@ -233,6 +255,33 @@ export async function createRouteWithStops({ company_id, name, direction = "IDA"
     }
 
     return route;
+}
+
+export async function createRouteWithStopsAndGeometry({ company_id, name, direction = "IDA", status = "ACTIVE", stop_ids }, calculation) {
+    validateRoutePayload({ name, company_id, stop_ids });
+
+    if (!calculation?.ok || calculation.geometry?.type !== "LineString" || !calculation.stopSequenceHash) {
+        throw new Error("Debes calcular un recorrido válido antes de guardar la ruta.");
+    }
+
+    const { data, error } = await supabase.rpc("create_route_with_geometry", {
+        p_company_id: company_id,
+        p_name: String(name || "").trim(),
+        p_direction: direction,
+        p_status: status,
+        p_stop_ids: stop_ids,
+        p_provider: calculation.provider,
+        p_profile: calculation.profile,
+        p_geometry: calculation.geometry,
+        p_distance_meters: calculation.distanceMeters,
+        p_duration_seconds: calculation.durationSeconds,
+        p_legs: calculation.legs,
+        p_snapped_waypoints: calculation.snappedWaypoints,
+        p_stop_sequence_hash: calculation.stopSequenceHash
+    });
+
+    if (error) throw error;
+    return data?.[0] || null;
 }
 
 export async function deleteRoute(id, companyId = null) {

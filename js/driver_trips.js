@@ -1,5 +1,5 @@
 import { supabase } from "./supabaseClient.js";
-import { fetchRouteStops } from "./routes.js";
+import { fetchActiveGeometriesByRouteIds, fetchRouteStops } from "./routes.js";
 
 async function fetchTripsByDriver(driverId) {
   const { data, error } = await supabase
@@ -61,15 +61,17 @@ export async function fetchDriverTripById(tripId, driverId) {
 
   if (error) throw error;
 
-  const [routeMap, busMap, routeStops] = await Promise.all([
+  const [routeMap, busMap, routeStops, geometryMap] = await Promise.all([
     fetchMap("routes", [data.route_id], "id, company_id, name, origin_stop_id, end_stop_id, direction, status"),
     fetchMap("buses", [data.bus_id], "id, company_id, plate, internal_code, status"),
-    fetchRouteStops(data.route_id)
+    fetchRouteStops(data.route_id),
+    fetchActiveGeometriesByRouteIds([data.route_id])
   ]);
 
   return {
     ...data,
     route: routeMap.get(data.route_id) || null,
+    activeGeometry: geometryMap.get(data.route_id) || null,
     bus: busMap.get(data.bus_id) || null,
     route_stops: routeStops
   };

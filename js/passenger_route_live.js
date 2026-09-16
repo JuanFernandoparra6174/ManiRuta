@@ -10,6 +10,7 @@ import {
     findNearestRouteStopToCoords,
     GEOFENCE_RADIUS_METERS
 } from "./trip_tracking_shared.js";
+import { routeLatLngsWithFallback } from "./route_geometry.js";
 
 const state = {
     routeId: null,
@@ -79,10 +80,8 @@ function initMap() {
     }).addTo(state.map);
 }
 
-function drawRoute(stops) {
-    const routeCoordinates = stops
-        .filter((item) => item.stop)
-        .map((item) => [item.stop.lat, item.stop.lng]);
+function drawRoute(stops, activeGeometry) {
+    const routeCoordinates = routeLatLngsWithFallback(activeGeometry, stops);
 
     if (state.routeLine) {
         state.map.removeLayer(state.routeLine);
@@ -352,7 +351,7 @@ async function loadRouteContext(routeId) {
 
     renderRouteSummary(detail);
     renderRouteTimeline(detail);
-    drawRoute(detail.stops);
+    drawRoute(detail.stops, detail.activeGeometry);
     drawStops(detail.stops);
     renderTripsList(trips);
     updateNearestStop();

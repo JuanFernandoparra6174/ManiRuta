@@ -2,6 +2,7 @@ import { signOut } from "./auth.js";
 import { requireDriverSession } from "./driver_session.js";
 import { fetchDriverTripById } from "./driver_trips.js";
 import { fetchCurrentVehiclePosition, startTripTracking, stopTripTracking } from "./vehicle_positions.js";
+import { routeLatLngsWithFallback } from "./route_geometry.js";
 
 function $(id) {
   return document.getElementById(id);
@@ -47,9 +48,7 @@ async function init() {
     attribution: "&copy; OpenStreetMap"
   }).addTo(map);
 
-  const routeLatLngs = trip.route_stops
-    .filter((item) => item.stop)
-    .map((item) => [item.stop.lat, item.stop.lng]);
+  const routeLatLngs = routeLatLngsWithFallback(trip.activeGeometry, trip.route_stops);
 
   if (routeLatLngs.length >= 2) {
     L.polyline(routeLatLngs, {

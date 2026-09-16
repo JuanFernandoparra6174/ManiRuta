@@ -1,5 +1,7 @@
 import { fetchStops } from "./stops.js";
-import { createRouteWithStops, deleteRoute, fetchCompanyRoutes } from "./routes.js";
+import { createRouteWithStopsAndGeometry, deleteRoute, fetchCompanyRoutes } from "./routes.js";
+import { RoutingService, RoutingServiceError } from "./routing_service.js";
+import { routeLatLngsWithFallback } from "./route_geometry.js";
 import { requireAuthAndRole } from "./guard.js";
 import { signOut } from "./auth.js";
 
@@ -13,7 +15,10 @@ const state = {
     markersLayer: null,
     previewLine: null,
     selectedMarkers: [],
-    selectedStopIdSet: new Set()
+    selectedStopIdSet: new Set(),
+    calculation: null,
+    calculationSequenceKey: null,
+    isCalculating: false
 };
 
 function $(id) {
@@ -64,6 +69,40 @@ function clearPreviewLine() {
     }
 }
 
+function selectedSequenceKey() {
+    return JSON.stringify(getSelectedStops().map((stop, index) => ({
+        id: stop.id,
+        lat: Number(stop.lat),
+        lng: Number(stop.lng),
+        order: index + 1
+    })));
+}
+
+function renderPreviewInfo() {
+    const preview = $("routePreviewInfo");
+    const calculation = state.calculation;
+    if (!calculation) {
+        preview.style.display = "none";
+        preview.textContent = "";
+        return;
+    }
+
+    const distanceKm = (Number(calculation.distanceMeters) / 1000).toFixed(1);
+    const durationMinutes = Math.max(1, Math.round(Number(calculation.durationSeconds) / 60));
+    const warnings = calculation.warnings?.length
+        ? ` ${calculation.warnings.length} paradero(s) fueron ajustados a la vía.`
+        : "";
+    preview.textContent = `Recorrido calculado: ${distanceKm} km · ${durationMinutes} min · ${getSelectedStops().length} paraderos.${warnings}`;
+    preview.style.display = "block";
+}
+
+function invalidateCalculatedPreview() {
+    if (!state.calculation && !state.calculationSequenceKey) return;
+    state.calculation = null;
+    state.calculationSequenceKey = null;
+    renderPreviewInfo();
+}
+
 function clearSelectedMarkers() {
     for (const marker of state.selectedMarkers) {
         state.map.removeLayer(marker);
@@ -103,13 +142,19 @@ function drawCurrentRoutePreview() {
     const selectedStops = getSelectedStops();
     if (!selectedStops.length) return;
 
-    const latLngs = selectedStops.map((stop) => [stop.lat, stop.lng]);
+    const calculatedCoordinates = state.calculation?.geometry?.coordinates;
+    const latLngs = Array.isArray(calculatedCoordinates)
+        ? calculatedCoordinates.map(([lng, lat]) => [lat, lng])
+        : selectedStops.map((stop) => [stop.lat, stop.lng]);
     if (latLngs.length >= 2) {
         state.previewLine = L.polyline(latLngs, {
-            color: "#ea580c",
+            color: state.calculation ? "#2563eb" : "#ea580c",
             weight: 5,
             opacity: 0.85
         }).addTo(state.map);
+        if (state.calculation) {
+            state.map.fitBounds(state.previewLine.getBounds(), { padding: [24, 24] });
+        }
     }
 
     state.selectedMarkers = selectedStops.map((stop, index) => {
@@ -248,12 +293,14 @@ function addStopToSequence(stopId) {
         return;
     }
 
+    invalidateCalculatedPreview();
     state.selectedStopIds.push(stopId);
     state.selectedStopIdSet = new Set(state.selectedStopIds);
     renderSelectedSequence();
 }
 
 function removeStopFromSequence(index) {
+    invalidateCalculatedPreview();
     state.selectedStopIds.splice(index, 1);
     state.selectedStopIdSet = new Set(state.selectedStopIds);
     renderSelectedSequence();
@@ -263,6 +310,7 @@ function moveStop(index, direction) {
     const targetIndex = index + direction;
     if (targetIndex < 0 || targetIndex >= state.selectedStopIds.length) return;
 
+    invalidateCalculatedPreview();
     const next = [...state.selectedStopIds];
     [next[index], next[targetIndex]] = [next[targetIndex], next[index]];
     state.selectedStopIds = next;
@@ -274,18 +322,19 @@ function resetForm() {
     $("routeForm").reset();
     $("routeDirection").value = "IDA";
     $("routeStatus").value = "ACTIVE";
+    invalidateCalculatedPreview();
     state.selectedStopIds = [];
     state.selectedStopIdSet = new Set();
     clearMessages();
     renderSelectedSequence();
 }
 
-function validateRouteForm() {
+function validateRouteForm({ requireName = true } = {}) {
     const name = $("routeName").value.trim();
     const direction = $("routeDirection").value;
     const status = $("routeStatus").value;
 
-    if (!name) {
+    if (requireName && !name) {
         throw new Error("El nombre de la ruta es obligatorio.");
     }
 
@@ -306,6 +355,52 @@ function validateRouteForm() {
     };
 }
 
+function routingErrorMessage(error) {
+    const code = error instanceof RoutingServiceError ? error.code : error?.code;
+    const messages = {
+        INVALID_INPUT: "Revisa los paraderos seleccionados antes de calcular.",
+        MAPBOX_NO_SEGMENT: "No se encontró una vía transitable cerca de uno de los paraderos.",
+        MAPBOX_RATE_LIMIT: "El servicio de rutas está ocupado. Intenta de nuevo en unos momentos.",
+        MAPBOX_SERVER_ERROR: "El servicio de rutas no está disponible temporalmente.",
+        ROUTE_DISCONTINUITY: "El recorrido calculado no es continuo. Revisa el orden de los paraderos.",
+        INVALID_MAPBOX_RESPONSE: "No fue posible validar el recorrido calculado. Intenta nuevamente."
+    };
+    return messages[code] || error?.message || "No fue posible calcular el recorrido.";
+}
+
+function updateCalculationControls() {
+    $("calculateRouteBtn").disabled = state.isCalculating;
+    $("calculateRouteBtn").textContent = state.isCalculating ? "Calculando recorrido..." : "Calcular recorrido";
+}
+
+async function handleCalculateRoute() {
+    if (state.isCalculating) return;
+
+    try {
+        clearMessages();
+        const payload = validateRouteForm({ requireName: false });
+        const stops = getSelectedStops().map((stop, index) => ({
+            id: stop.id,
+            lat: Number(stop.lat),
+            lng: Number(stop.lng),
+            order: index + 1
+        }));
+        state.isCalculating = true;
+        updateCalculationControls();
+        const calculation = await RoutingService.calculateRoute({ stops, profile: "driving" });
+        state.calculation = calculation;
+        state.calculationSequenceKey = selectedSequenceKey();
+        renderPreviewInfo();
+        drawCurrentRoutePreview();
+        setMessage($("routeOk"), "Recorrido calculado. Revisa el mapa antes de aprobarlo.");
+    } catch (error) {
+        setMessage($("routeErr"), routingErrorMessage(error));
+    } finally {
+        state.isCalculating = false;
+        updateCalculationControls();
+    }
+}
+
 async function loadRoutes() {
     state.routes = await fetchCompanyRoutes(state.companyId);
     renderRoutesTable();
@@ -322,9 +417,7 @@ function focusRoute(routeId) {
     const route = state.routes.find((item) => item.id === routeId);
     if (!route || !route.stops.length) return;
 
-    const coordinates = route.stops
-        .filter((item) => item.stop)
-        .map((item) => [item.stop.lat, item.stop.lng]);
+    const coordinates = routeLatLngsWithFallback(route.activeGeometry, route.stops);
 
     if (!coordinates.length) return;
 
@@ -348,7 +441,10 @@ async function handleSaveRoute(event) {
     try {
         clearMessages();
         const payload = validateRouteForm();
-        await createRouteWithStops(payload);
+        if (!state.calculation || state.calculationSequenceKey !== selectedSequenceKey()) {
+            throw new Error("El recorrido cambió. Calcula nuevamente antes de guardar.");
+        }
+        await createRouteWithStopsAndGeometry(payload, state.calculation);
         await loadRoutes();
         resetForm();
         setMessage($("routeOk"), "Ruta guardada correctamente.");
@@ -423,6 +519,7 @@ async function init() {
     }).addTo(state.map);
 
     $("routeForm").addEventListener("submit", handleSaveRoute);
+    $("calculateRouteBtn").addEventListener("click", handleCalculateRoute);
     $("selectedStopsList").addEventListener("click", handleSelectedListClick);
     $("routesTable").addEventListener("click", handleRoutesTableClick);
     $("routesTable").addEventListener("scroll", queueRoutesListScrollAnimation, { passive: true });

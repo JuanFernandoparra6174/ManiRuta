@@ -56,15 +56,29 @@ export async function fetchPassengerRouteStops(routeId) {
 }
 
 export async function fetchPassengerRouteDetail(routeId) {
-    const [route, routeStops] = await Promise.all([
+    const [route, routeStops, activeGeometry] = await Promise.all([
         fetchPassengerRouteById(routeId),
-        fetchPassengerRouteStops(routeId)
+        fetchPassengerRouteStops(routeId),
+        fetchPassengerActiveGeometry(routeId)
     ]);
 
     return {
         route,
-        stops: routeStops
+        stops: routeStops,
+        activeGeometry
     };
+}
+
+async function fetchPassengerActiveGeometry(routeId) {
+    const { data, error } = await supabase
+        .from("route_geometries")
+        .select("id, route_id, version, status, provider, profile, geometry, distance_meters, duration_seconds, stop_sequence_hash")
+        .eq("route_id", routeId)
+        .eq("status", "ACTIVE")
+        .maybeSingle();
+
+    if (error) throw error;
+    return data || null;
 }
 
 export async function fetchActiveTripsByRoute(routeId) {

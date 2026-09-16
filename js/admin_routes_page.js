@@ -1,5 +1,6 @@
 import { fetchAdminRoutes } from "./routes.js";
 import { requireAuthAndRole } from "./guard.js";
+import { routeLatLngsWithFallback } from "./route_geometry.js";
 
 const state = {
     routes: [],
@@ -59,9 +60,7 @@ function renderRoutesOverview() {
     const palette = ["#1d4ed8", "#0f766e", "#ea580c", "#7c3aed", "#dc2626"];
     const polylines = state.routes
         .map((route, index) => {
-            const coordinates = route.stops
-                .filter((item) => item.stop)
-                .map((item) => [item.stop.lat, item.stop.lng]);
+            const coordinates = routeLatLngsWithFallback(route.activeGeometry, route.stops);
 
             if (coordinates.length < 2) return null;
 
@@ -176,7 +175,7 @@ function drawSelectedRoute() {
     if (!route) return;
 
     const stops = route.stops.filter((item) => item.stop);
-    const coordinates = stops.map((item) => [item.stop.lat, item.stop.lng]);
+    const coordinates = routeLatLngsWithFallback(route.activeGeometry, route.stops);
 
     if (coordinates.length >= 2) {
         state.selectedLine = L.polyline(coordinates, {

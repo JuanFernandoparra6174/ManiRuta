@@ -7,6 +7,7 @@ import {
     detectCurrentGeofenceStop,
     GEOFENCE_RADIUS_METERS
 } from "./trip_tracking_shared.js";
+import { routeLatLngsWithFallback } from "./route_geometry.js";
 
 const state = {
     companyId: null,
@@ -143,10 +144,8 @@ function renderTripMeta(trip) {
     `;
 }
 
-function drawRoute(routeStops) {
-    const coordinates = routeStops
-        .filter((item) => item.stop)
-        .map((item) => [Number(item.stop.lat), Number(item.stop.lng)]);
+function drawRoute(routeStops, activeGeometry) {
+    const coordinates = routeLatLngsWithFallback(activeGeometry, routeStops);
 
     if (state.routeLine) {
         state.map.removeLayer(state.routeLine);
@@ -286,7 +285,7 @@ async function init() {
     state.trip = await fetchCompanyTripById(tripId, state.companyId);
     renderTripMeta(state.trip);
     initMap();
-    drawRoute(state.trip.route_stops);
+    drawRoute(state.trip.route_stops, state.trip.route?.activeGeometry);
     renderGeofenceIdle();
     await refreshTracking();
     state.pollId = setInterval(refreshTracking, 5000);
