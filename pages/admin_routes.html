@@ -25,7 +25,6 @@
       background-color: #161618 !important;
       color: #ffffff !important;
     }
-    /* Estilo para los bloques internos que generaba el JS de detalles */
     #routeDetail > div, #selectedStopsList > div {
       background-color: #1f1f23 !important;
       border: 1px solid rgba(255, 255, 255, 0.1) !important;
@@ -55,11 +54,27 @@
 
       <nav class="company-nav-list">
         <p class="label-caps company-nav-label">Administración</p>
-        <a class="company-nav-item" href="home_admin.html">Inicio Admin</a>
-        <a class="company-nav-item is-active" href="admin_routes.html">Auditoría de Rutas</a>
-        <a class="company-nav-item" href="admin_alerts.html">Alertas Operativas</a>
-        <a class="company-nav-item" href="admin_companies.html">Empresas</a>
-        <a class="company-nav-item" href="admin_stops.html">Paraderos</a>
+        
+        <a class="company-nav-item" href="home_admin.html">
+          <span class="company-nav-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></span>
+          Inicio Admin
+        </a>
+        <a class="company-nav-item is-active" href="admin_routes.html">
+          <span class="company-nav-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M9 18l-6 3V6l6-3 6 3 6-3v15l-6 3-6-3ZM9 3v15M15 6v15" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          Auditoría de Rutas
+        </a>
+        <a class="company-nav-item" href="admin_alerts.html">
+          <span class="company-nav-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          Alertas Operativas
+        </a>
+        <a class="company-nav-item" href="admin_companies.html">
+          <span class="company-nav-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M3 21h18M3 7v14M21 7v14M6 11h4M6 15h4M14 11h4M14 15h4M9 3h6v4H9z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          Gestión de Empresas
+        </a>
+        <a class="company-nav-item" href="admin_stops.html">
+          <span class="company-nav-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8Zm0 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          Catálogo de Paraderos
+        </a>
       </nav>
     </aside>
 
@@ -105,11 +120,11 @@
 
           <div style="display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 16px;">
             
-<!-- Tabla de Rutas con altura expandida y adaptable -->
-            <section class="card" style="padding: 18px; background: #161618; border-color: rgba(255,255,255,0.08); display: flex; flex-direction: column; height: 100%;">
+            <!-- Tabla con flex y height: 100% -->
+            <section class="card" style="padding: 18px; display: flex; flex-direction: column; height: 100%;">
               <div class="panel-heading" style="align-items: center; margin-bottom: 14px; flex-shrink: 0;">
-                <h2 style="color: #ffffff;">Rutas Registradas</h2>
-                <input type="text" id="routeSearch" class="input" placeholder="Buscar ruta o empresa..." style="max-width: 240px; min-height: 38px; background: #111113; border-color: rgba(255,255,255,0.1); color: #fff;"/>
+                <h2>Rutas Registradas</h2>
+                <input type="text" id="routeSearch" class="input" placeholder="Buscar ruta o empresa..." style="max-width: 240px; min-height: 38px;"/>
               </div>
               <div class="table-wrap" style="flex-grow: 1; overflow-y: auto; max-height: none;">
                 <table class="table">
