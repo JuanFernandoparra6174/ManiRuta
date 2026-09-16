@@ -1,5 +1,5 @@
 import { supabase } from "./supabaseClient.js";
-import { fetchActiveGeometriesByRouteIds, fetchRouteStops } from "./routes.js";
+import { fetchActiveGeometriesByRouteIds, fetchRouteStops } from "./routes.js?v=route-geometry-v1";
 
 async function fetchTripsByDriver(driverId) {
   const { data, error } = await supabase

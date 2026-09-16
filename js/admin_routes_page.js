@@ -7,7 +7,6 @@ const state = {
     filteredRoutes: [],
     selectedRouteId: null,
     map: null,
-    routesLayer: null,
     selectedLine: null,
     selectedMarkers: []
 };
@@ -50,32 +49,6 @@ function clearSelectedRouteLayers() {
         state.map.removeLayer(marker);
     }
     state.selectedMarkers = [];
-}
-
-function renderRoutesOverview() {
-    if (state.routesLayer) {
-        state.map.removeLayer(state.routesLayer);
-    }
-
-    const palette = ["#1d4ed8", "#0f766e", "#ea580c", "#7c3aed", "#dc2626"];
-    const polylines = state.routes
-        .map((route, index) => {
-            const coordinates = routeLatLngsWithFallback(route.activeGeometry, route.stops);
-
-            if (coordinates.length < 2) return null;
-
-            return L.polyline(coordinates, {
-                color: palette[index % palette.length],
-                weight: 4,
-                opacity: 0.35
-            }).bindPopup(`
-                <strong>${escapeHtml(route.name)}</strong><br>
-                ${escapeHtml(route.company_name || "Sin empresa")}
-            `);
-        })
-        .filter(Boolean);
-
-    state.routesLayer = L.layerGroup(polylines).addTo(state.map);
 }
 
 function renderRoutesTable() {
@@ -204,8 +177,8 @@ function applySearch() {
         return !term || haystack.includes(term);
     });
 
-    if (!state.filteredRoutes.some((route) => route.id === state.selectedRouteId)) {
-        state.selectedRouteId = state.filteredRoutes[0]?.id || null;
+    if (state.selectedRouteId && !state.filteredRoutes.some((route) => route.id === state.selectedRouteId)) {
+        state.selectedRouteId = null;
     }
 
     renderRoutesTable();
@@ -225,8 +198,7 @@ function selectRoute(routeId) {
 async function loadRoutes() {
     state.routes = await fetchAdminRoutes();
     state.filteredRoutes = [...state.routes];
-    state.selectedRouteId = state.routes[0]?.id || null;
-    renderRoutesOverview();
+    state.selectedRouteId = null;
     applySearch();
 }
 
