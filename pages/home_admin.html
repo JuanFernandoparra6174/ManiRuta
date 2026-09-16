@@ -7,14 +7,36 @@
   <link rel="stylesheet" href="../css/base.css"/>
   <link rel="stylesheet" href="../css/company_design_system.css"/>
   <link rel="stylesheet" href="../css/home.css"/>
+  <style>
+    /* Forzar modo oscuro unificado */
+    body.company-theme, .company-content, .company-shell { background-color: #0d0d0f !important; color: #ffffff !important; }
+    .card, .welcome { background-color: #161618 !important; border-color: rgba(255,255,255,0.08) !important; }
+    
+    /* Estilos para las tarjetas de métricas (KPIs) */
+    .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-top: 20px; }
+    .metric-card { 
+      background-color: #161618 !important; 
+      border: 1px solid rgba(255,255,255,0.08) !important; 
+      border-radius: 14px; 
+      padding: 20px; 
+      display: flex; 
+      flex-direction: column; 
+      justify-content: space-between;
+      transition: border-color 0.2s ease;
+    }
+    .metric-card:hover { border-color: rgba(0,255,102,0.4) !important; }
+    .metric-card strong { color: #ffffff !important; font-size: 3rem; font-weight: 800; line-height: 1; margin: 12px 0; display: block; }
+    .metric-card span { color: #a1a1aa !important; font-size: 13px; display: block; margin-bottom: 16px; }
+    .metric-card .label-caps { color: #71717a; font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+  </style>
 </head>
 <body class="company-theme company-dashboard">
 
   <div class="company-shell">
-    <!-- Menú lateral completo del Administrador -->
+    <!-- Menú lateral con TODOS los íconos fijos -->
     <aside class="company-sidebar" aria-label="Navegacion Administrador">
       <div class="company-sidebar-brand">
-        <a class="company-logo-link" href="home_admin.html" aria-label="MOVANZA inicio">
+        <a class="company-logo-link" href="home_admin.html">
           <img class="company-logo-img" src="https://ruunbwmuizhaetgubzjt.supabase.co/storage/v1/object/public/MOVANZA/Logo%20MOVANZA.png" alt="MOVANZA"/>
         </a>
       </div>
@@ -22,48 +44,24 @@
       <nav class="company-nav-list">
         <p class="label-caps company-nav-label">Administración</p>
         
-        <a class="company-nav-item is-active" href="home_admin.html" aria-current="page">
-          <span class="company-nav-icon">
-            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
-            </svg>
-          </span>
+        <a class="company-nav-item is-active" href="home_admin.html">
+          <span class="company-nav-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></span>
           Inicio Admin
         </a>
-
         <a class="company-nav-item" href="admin_routes.html">
-          <span class="company-nav-icon">
-            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="M9 18l-6 3V6l6-3 6 3 6-3v15l-6 3-6-3ZM9 3v15M15 6v15" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </span>
+          <span class="company-nav-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M9 18l-6 3V6l6-3 6 3 6-3v15l-6 3-6-3ZM9 3v15M15 6v15" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
           Auditoría de Rutas
         </a>
-
         <a class="company-nav-item" href="admin_alerts.html">
-          <span class="company-nav-icon">
-            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </span>
+          <span class="company-nav-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
           Alertas Operativas
         </a>
-
         <a class="company-nav-item" href="admin_companies.html">
-          <span class="company-nav-icon">
-            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="M3 21h18M3 7v14M21 7v14M6 11h4M6 15h4M14 11h4M14 15h4M9 3h6v4H9z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </span>
+          <span class="company-nav-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M3 21h18M3 7v14M21 7v14M6 11h4M6 15h4M14 11h4M14 15h4M9 3h6v4H9z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
           Gestión de Empresas
         </a>
-
         <a class="company-nav-item" href="admin_stops.html">
-          <span class="company-nav-icon">
-            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8Zm0 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </span>
+          <span class="company-nav-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8Zm0 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
           Catálogo de Paraderos
         </a>
       </nav>
@@ -74,13 +72,11 @@
       <header class="nav company-topbar">
         <div class="nav-inner company-topbar-inner">
           <div class="nav-left company-header-identity">
-            <a class="company-header-logo" href="home_admin.html" aria-label="MOVANZA inicio">
+            <a class="company-logo-link" href="home_admin.html">
               <img src="https://ruunbwmuizhaetgubzjt.supabase.co/storage/v1/object/public/MOVANZA/Logo%20MOVANZA.png" alt="MOVANZA"/>
             </a>
           </div>
-
           <div class="company-header-pattern" aria-hidden="true"></div>
-
           <div class="nav-right company-user-actions">
             <span class="company-user-chip" id="who">...</span>
             <button class="company-logout-btn" id="logout">Salir</button>
@@ -88,81 +84,68 @@
         </div>
       </header>
 
-      <main class="container home-wrap company-main">
+      <main class="container home-wrap company-main" style="max-width: 1200px;">
         
-        <!-- Tarjeta de Bienvenida Admin -->
+        <!-- Tarjeta de Bienvenida -->
         <section class="card welcome company-overview">
           <div class="welcome-top">
             <div>
               <p class="label-caps">Control Global del Sistema</p>
-              <h1 id="welcomeTitle">Panel Administrador</h1>
-              <p>Supervisa rutas de todas las empresas, gestiona compañías aliadas, administra paraderos y emite alertas operativas globales.</p>
+              <h1 id="welcomeTitle" style="color: #ffffff;">Panel Administrador</h1>
+              <p style="color: #a1a1aa;">Supervisa el estado general de la red de transporte en tiempo real.</p>
             </div>
-            <span class="pill" style="border-color: rgba(0,255,102,0.3); background: rgba(0,255,102,0.1); color: #00ff66;">CONTROL TOTAL</span>
+            <span class="pill" style="border-color: rgba(0,255,102,0.3); background: rgba(0,255,102,0.1); color: #00ff66;">SISTEMA ACTIVO</span>
           </div>
         </section>
 
-        <!-- Grilla con TODAS las opciones y módulos del Administrador -->
-        <section class="company-grid">
+        <!-- Nueva Grilla de Estadísticas (KPIs) -->
+        <section class="kpi-grid">
           
-          <!-- Tarjeta 1: Auditoría de Rutas -->
-          <div class="company-card">
-            <div class="company-avatar" style="display: grid; place-items: center; background: rgba(0,255,102,0.1); border-color: rgba(0,255,102,0.3); color: #00ff66;">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M9 18l-6 3V6l6-3 6 3 6-3v15l-6 3-6-3ZM9 3v15M15 6v15" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <article class="metric-card">
+            <div>
+              <p class="label-caps">Rutas Totales</p>
+              <strong id="kpiRoutes">-</strong>
+              <span>Rutas mapeadas en el sistema</span>
             </div>
-            <div class="company-card-body">
-              <h2 class="company-title">Auditoría de Rutas</h2>
-              <p class="company-sub">Inspecciona todas las rutas configuradas por las diferentes empresas del sistema en un mapa global.</p>
+            <div>
+              <button class="btn-mini" onclick="window.location.href='admin_routes.html'">Auditar Rutas</button>
             </div>
-            <div class="company-actions">
-              <button class="btn-mini" onclick="window.location.href='admin_routes.html'">Gestionar</button>
-            </div>
-          </div>
+          </article>
 
-          <!-- Tarjeta 2: Alertas Operativas -->
-          <div class="company-card">
-            <div class="company-avatar" style="display: grid; place-items: center; background: rgba(244,196,48,0.1); border-color: rgba(244,196,48,0.3); color: #f4c430;">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <article class="metric-card">
+            <div>
+              <p class="label-caps">Alertas Activas</p>
+              <strong id="kpiAlerts">-</strong>
+              <span>Comunicados operativos emitidos</span>
             </div>
-            <div class="company-card-body">
-              <h2 class="company-title">Alertas Operativas</h2>
-              <p class="company-sub">Crea y difunde notificaciones globales sobre el estado del sistema, cierres viales o anuncios.</p>
+            <div>
+              <button class="btn-mini secondary" onclick="window.location.href='admin_alerts.html'">Ver Alertas</button>
             </div>
-            <div class="company-actions">
-              <button class="btn-mini secondary" onclick="window.location.href='admin_alerts.html'">Ver alertas</button>
-            </div>
-          </div>
+          </article>
 
-          <!-- Tarjeta 3: Gestión de Empresas -->
-          <div class="company-card">
-            <div class="company-avatar" style="display: grid; place-items: center; background: rgba(56,189,248,0.1); border-color: rgba(56,189,248,0.3); color: #38bdf8;">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M3 21h18M3 7v14M21 7v14M6 11h4M6 15h4M14 11h4M14 15h4M9 3h6v4H9z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <article class="metric-card">
+            <div>
+              <p class="label-caps">Empresas Aliadas</p>
+              <strong id="kpiCompanies">-</strong>
+              <span>Compañías registradas en la red</span>
             </div>
-            <div class="company-card-body">
-              <h2 class="company-title">Empresas Aliadas</h2>
-              <p class="company-sub">Consulta el directorio y estado de todas las compañías transportadoras registradas en la plataforma.</p>
+            <div>
+              <button class="btn-mini secondary" onclick="window.location.href='admin_companies.html'">Gestionar Empresas</button>
             </div>
-            <div class="company-actions">
-              <button class="btn-mini secondary" onclick="window.location.href='admin_companies.html'">Ver empresas</button>
-            </div>
-          </div>
+          </article>
 
-          <!-- Tarjeta 4: Catálogo de Paraderos -->
-          <div class="company-card">
-            <div class="company-avatar" style="display: grid; place-items: center; background: rgba(168,85,247,0.1); border-color: rgba(168,85,247,0.3); color: #a855f7;">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8Zm0 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <article class="metric-card">
+            <div>
+              <p class="label-caps">Infraestructura</p>
+              <strong id="kpiStops">-</strong>
+              <span>Paraderos georreferenciados</span>
             </div>
-            <div class="company-card-body">
-              <h2 class="company-title">Paraderos Globales</h2>
-              <p class="company-sub">Inspecciona los puntos de parada georreferenciados disponibles a lo largo de toda la red urbana.</p>
+            <div>
+              <button class="btn-mini secondary" onclick="window.location.href='admin_stops.html'">Ver Paraderos</button>
             </div>
-            <div class="company-actions">
-              <button class="btn-mini secondary" onclick="window.location.href='admin_stops.html'">Ver paraderos</button>
-            </div>
-          </div>
+          </article>
 
         </section>
-
       </main>
     </div>
   </div>
@@ -170,18 +153,43 @@
   <script type="module">
     import { requireAuthAndRole } from "../js/guard.js";
     import { signOut } from "../js/auth.js";
+    import { supabase } from "../js/supabaseClient.js"; // Importamos Supabase para consultar las estadísticas
 
+    // 1. Manejo de Sesión
     const profile = await requireAuthAndRole(3);
     if (profile) {
       document.getElementById("who").textContent = `@${profile.username}`;
-      document.getElementById("welcomeTitle").textContent = `Panel Administrador, ${profile.username}`;
+      document.getElementById("welcomeTitle").textContent = `Hola, ${profile.username}`;
+    }
+    document.getElementById("logout").addEventListener("click", async () => { 
+      await signOut(); 
+      window.location.href = "login.html"; 
+    });
+
+    // 2. Carga dinámica de Estadísticas (KPIs)
+    async function loadAdminStats() {
+      try {
+        // Hacemos consultas de solo "conteo" (count: 'exact') para que sea ultra rápido y no descargue datos pesados
+        const [routesRes, alertsRes, companiesRes, stopsRes] = await Promise.all([
+          supabase.from('routes').select('*', { count: 'exact', head: true }),
+          supabase.from('alerts').select('*', { count: 'exact', head: true }),
+          supabase.from('companies').select('*', { count: 'exact', head: true }),
+          supabase.from('stops').select('*', { count: 'exact', head: true })
+        ]);
+
+        // Insertamos los números en las tarjetas. Si hay error en alguna tabla, mostramos 0.
+        document.getElementById("kpiRoutes").textContent = routesRes.count || 0;
+        document.getElementById("kpiAlerts").textContent = alertsRes.count || 0;
+        document.getElementById("kpiCompanies").textContent = companiesRes.count || 0;
+        document.getElementById("kpiStops").textContent = stopsRes.count || 0;
+
+      } catch (error) {
+        console.error("Error cargando estadísticas del administrador:", error);
+      }
     }
 
-    document.getElementById("logout").addEventListener("click", async () => {
-      await signOut();
-      window.location.href = "login.html";
-    });
+    // Ejecutamos la función al cargar la página
+    loadAdminStats();
   </script>
-
 </body>
 </html>
