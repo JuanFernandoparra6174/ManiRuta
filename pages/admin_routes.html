@@ -1,96 +1,157 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <title>Admin - Consultar Rutas | ManiRuta</title>
-    <link rel="stylesheet" href="../css/base.css"/>
-    <link rel="stylesheet" href="../css/home.css"/>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Auditoría de Rutas | Movanza Admin</title>
+  <link rel="stylesheet" href="../css/base.css"/>
+  <link rel="stylesheet" href="../css/company_design_system.css"/>
+  <link rel="stylesheet" href="../css/home.css"/>
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+  
+  <style>
+    /* FORZAR ESTILO OSCURO UNIFORME Y ELIMINAR CUALQUIER CUADRO CLARO */
+    body.company-theme, .company-content, .company-shell {
+      background-color: #0d0d0f !important;
+      color: #ffffff !important;
+    }
+    .card, .company-card, #routeDetail, #selectedStopsList, .table-wrap, table {
+      background-color: #161618 !important;
+      color: #ffffff !important;
+      border-color: rgba(255, 255, 255, 0.08) !important;
+    }
+    #routeDetail div, #selectedStopsList div, .route-empty, table td, table th {
+      background-color: #161618 !important;
+      color: #ffffff !important;
+    }
+    /* Estilo para los bloques internos que generaba el JS de detalles */
+    #routeDetail > div, #selectedStopsList > div {
+      background-color: #1f1f23 !important;
+      border: 1px solid rgba(255, 255, 255, 0.1) !important;
+      border-radius: 8px !important;
+      padding: 10px !important;
+      color: #ffffff !important;
+    }
+    #routeDetail strong, #routeDetail span, #selectedStopsList strong, #selectedStopsList span {
+      color: #ffffff !important;
+    }
+    input.input, select.input {
+      background-color: #111113 !important;
+      color: #ffffff !important;
+      border-color: rgba(255, 255, 255, 0.15) !important;
+    }
+  </style>
 </head>
-<body>
-    <header class="nav">
-        <div class="container nav-inner">
-            <div class="brand"><span class="dot"></span> Consulta de Rutas</div>
-            <a href="home_admin.html" class="btn btn-ghost">Volver</a>
+<body class="company-theme company-dashboard">
+
+  <div class="company-shell">
+    <aside class="company-sidebar" aria-label="Navegacion Administrador">
+      <div class="company-sidebar-brand">
+        <a class="company-logo-link" href="home_admin.html">
+          <img class="company-logo-img" src="https://ruunbwmuizhaetgubzjt.supabase.co/storage/v1/object/public/MOVANZA/Logo%20MOVANZA.png" alt="MOVANZA"/>
+        </a>
+      </div>
+
+      <nav class="company-nav-list">
+        <p class="label-caps company-nav-label">Administración</p>
+        <a class="company-nav-item" href="home_admin.html">Inicio Admin</a>
+        <a class="company-nav-item is-active" href="admin_routes.html">Auditoría de Rutas</a>
+        <a class="company-nav-item" href="admin_alerts.html">Alertas Operativas</a>
+        <a class="company-nav-item" href="admin_companies.html">Empresas</a>
+        <a class="company-nav-item" href="admin_stops.html">Paraderos</a>
+      </nav>
+    </aside>
+
+    <div class="company-content">
+      <header class="nav company-topbar">
+        <div class="nav-inner company-topbar-inner">
+          <div class="nav-left company-header-identity">
+            <a class="company-logo-link" href="home_admin.html">
+              <img src="https://ruunbwmuizhaetgubzjt.supabase.co/storage/v1/object/public/MOVANZA/Logo%20MOVANZA.png" alt="MOVANZA"/>
+            </a>
+          </div>
+          <div class="company-header-pattern" aria-hidden="true"></div>
+          <div class="nav-right company-user-actions">
+            <span class="company-user-chip" id="who">...</span>
+            <button class="company-logout-btn" id="logout">Salir</button>
+          </div>
         </div>
-    </header>
+      </header>
 
-    <main class="container page stack">
-        <section class="card tile route-panel">
-            <div class="page-title">
-                <div>
-                    <h1 class="h1">Consultar rutas oficiales</h1>
-                    <p class="sub">Visualiza empresa responsable, recorrido y paraderos asociados sin editar informacion.</p>
-                </div>
-                <span class="chip ok">ADMIN</span>
+      <main class="container home-wrap company-main" style="max-width: 1400px;">
+        
+        <section class="card welcome company-overview" style="margin-bottom: 16px;">
+          <div class="welcome-top">
+            <div>
+              <p class="label-caps">Monitoreo Global</p>
+              <h1>Auditoría de Rutas del Sistema</h1>
+              <p style="color: #a1a1aa;">Inspecciona las rutas creadas por todas las empresas operativas integradas en Movanza.</p>
             </div>
-
-            <div class="routes-layout admin-routes-layout">
-                <section class="route-form-panel">
-                    <section class="card tile route-detail-card">
-                        <div class="page-title stop-list-head">
-                            <div>
-                                <h2 class="h1">Rutas registradas</h2>
-                                <p class="sub">Selecciona una ruta para consultar su detalle y trazado.</p>
-                            </div>
-                            <input
-                                type="search"
-                                id="routeSearch"
-                                class="input route-search"
-                                placeholder="Buscar por ruta o empresa"
-                            >
-                        </div>
-
-                        <div id="routeErr" class="error" style="display:none;"></div>
-
-                        <div class="stop-table-wrap">
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th>Ruta</th>
-                                        <th>Empresa</th>
-                                        <th>Estado</th>
-                                        <th>Accion</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="routesTable"></tbody>
-                            </table>
-                        </div>
-                    </section>
-
-                    <section class="card tile route-detail-card">
-                        <div class="page-title">
-                            <div>
-                                <h2 class="h1">Informacion de la ruta</h2>
-                                <p class="sub" id="routeDetailHint">Selecciona una ruta del listado para ver sus datos.</p>
-                            </div>
-                        </div>
-
-                        <div id="routeDetail" class="route-detail-grid">
-                            <div class="route-empty">Aun no has seleccionado una ruta.</div>
-                        </div>
-                    </section>
-
-                    <section class="card tile route-sequence-card">
-                        <div class="page-title">
-                            <div>
-                                <h2 class="h1">Recorrido</h2>
-                                <p class="sub" id="selectedStopsCount">0 paraderos</p>
-                            </div>
-                        </div>
-                        <div id="selectedStopsList" class="route-sequence-list"></div>
-                    </section>
-                </section>
-
-                <section class="route-map-panel">
-                    <div id="routesMap"></div>
-                </section>
-            </div>
+          </div>
         </section>
-    </main>
 
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script type="module" src="../js/admin_routes_page.js"></script>
+        <div id="routeErr" class="error" style="display: none; margin-bottom: 16px;"></div>
+
+        <div style="display: grid; grid-template-columns: 1fr; gap: 16px;">
+          
+          <section class="card" style="padding: 18px;">
+            <div class="panel-heading">
+              <h2>Mapa de Cobertura Global</h2>
+              <p class="help" id="routeDetailHint" style="color: #a1a1aa;">Selecciona una ruta del listado para detallar su geometría.</p>
+            </div>
+            <div id="routesMap" style="height: 480px; width: 100%; border-radius: 14px; border: 1px solid rgba(255,255,255,0.08);"></div>
+          </section>
+
+          <div style="display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 16px;">
+            
+<!-- Tabla de Rutas con altura expandida y adaptable -->
+            <section class="card" style="padding: 18px; background: #161618; border-color: rgba(255,255,255,0.08); display: flex; flex-direction: column; height: 100%;">
+              <div class="panel-heading" style="align-items: center; margin-bottom: 14px; flex-shrink: 0;">
+                <h2 style="color: #ffffff;">Rutas Registradas</h2>
+                <input type="text" id="routeSearch" class="input" placeholder="Buscar ruta o empresa..." style="max-width: 240px; min-height: 38px; background: #111113; border-color: rgba(255,255,255,0.1); color: #fff;"/>
+              </div>
+              <div class="table-wrap" style="flex-grow: 1; overflow-y: auto; max-height: none;">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Nombre / Sentido</th>
+                      <th>Empresa</th>
+                      <th>Estado</th>
+                      <th>Acción</th>
+                    </tr>
+                  </thead>
+                  <tbody id="routesTable">
+                    <tr><td colspan="4" class="route-empty" style="color: #a1a1aa;">Cargando rutas...</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </section>
+
+            <section class="card" style="padding: 18px;">
+              <div class="panel-heading">
+                <h2>Detalle de Ruta</h2>
+              </div>
+              
+              <div id="routeDetail" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px;">
+                <div class="route-empty">Aún no has seleccionado una ruta.</div>
+              </div>
+
+              <div class="panel-heading" style="margin-top: 10px; margin-bottom: 8px;">
+                <h2>Paraderos (<span id="selectedStopsCount" style="color: #00ff66;">0 paraderos</span>)</h2>
+              </div>
+              <div id="selectedStopsList" style="max-height: 220px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px;">
+                <div class="route-empty">Selecciona una ruta para consultar su recorrido.</div>
+              </div>
+            </section>
+
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script type="module" src="../js/admin_routes_page.js"></script>
 </body>
 </html>

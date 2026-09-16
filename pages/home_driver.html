@@ -3,60 +3,96 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Inicio Conductor | ManiRuta</title>
+  <title>Panel Conductor | Movanza</title>
   <link rel="stylesheet" href="../css/base.css"/>
+  <link rel="stylesheet" href="../css/company_design_system.css"/>
   <link rel="stylesheet" href="../css/home.css"/>
 </head>
-<body>
+<body class="company-theme company-dashboard">
 
-<header class="nav">
-  <div class="container nav-inner">
-    <div class="brand"><span class="dot"></span> Conductor</div>
-    <div class="nav-right">
-      <span class="pill" id="who">...</span>
-      <button class="btn btn-ghost" id="logout">Salir</button>
-    </div>
-  </div>
-</header>
+  <div class="company-content" style="width: 100%; min-height: 100vh;">
+    <!-- Barra superior con la franja de animación neón -->
+    <header class="nav company-topbar">
+      <div class="nav-inner company-topbar-inner">
+        <div class="nav-left company-header-identity">
+          <a class="company-header-logo" href="home_driver.html" aria-label="MOVANZA inicio">
+            <img src="https://ruunbwmuizhaetgubzjt.supabase.co/storage/v1/object/public/MOVANZA/Logo%20MOVANZA.png" alt="MOVANZA"/>
+          </a>
+        </div>
 
-<main class="container home-wrap">
-  <section class="card welcome">
-    <div class="welcome-top">
-      <div>
-        <h1 id="welcomeTitle">Hola, conductor</h1>
-        <p>Revisa tus viajes asignados, historial y el estado del seguimiento.</p>
+        <div class="company-header-pattern" aria-hidden="true"></div>
+
+        <div class="nav-right company-user-actions">
+          <span class="company-user-chip" id="who">...</span>
+          <button class="company-logout-btn" id="logout">Salir</button>
+        </div>
       </div>
-      <span class="pill">CONDUCTOR</span>
-    </div>
-  </section>
+    </header>
 
-  <section class="company-grid">
-    <article class="company-card">
-      <p class="company-title">Mis viajes</p>
-      <p class="company-sub">Ver viajes activos y abrir el seguimiento</p>
-      <div class="company-actions"><button class="btn-mini" id="goTrips">ver</button></div>
-    </article>
+    <!-- Contenido Principal del Conductor -->
+    <main class="container home-wrap company-main" style="max-width: 900px;">
+      
+      <!-- Tarjeta de Bienvenida -->
+      <section class="card welcome company-overview">
+        <div class="welcome-top">
+          <div>
+            <p class="label-caps">Portal Operativo</p>
+            <h1 id="welcomeTitle">Hola, Conductor</h1>
+            <p id="driverInfo">Cargando credenciales de licencia...</p>
+          </div>
+          <span class="pill" style="border-color: rgba(0,255,102,0.3); background: rgba(0,255,102,0.1); color: #00ff66;">EN SERVICIO</span>
+        </div>
+      </section>
 
-    <article class="company-card">
-      <p class="company-title">Historial</p>
-      <p class="company-sub">Consultar viajes finalizados o cancelados</p>
-      <div class="company-actions"><button class="btn-mini secondary" id="goHistory">historial</button></div>
-    </article>
+      <!-- Viaje Activo Destacado -->
+      <section class="card company-card company-card-wide" style="margin-bottom: 16px; border-color: rgba(0,255,102,0.4);">
+        <div class="company-avatar" style="background: rgba(0,255,102,0.1); border-color: rgba(0,255,102,0.3); display: grid; place-items: center; color: #00ff66;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="company-card-body">
+          <h2 class="company-title">Viaje en curso actual</h2>
+          <p class="company-sub" id="activeTrip">Buscando trayectos activos asignados...</p>
+        </div>
+        <div class="company-actions">
+          <button class="btn-mini" id="goLive">Abrir en vivo</button>
+        </div>
+      </section>
 
-    <article class="company-card">
-      <p class="company-title">Viaje en curso</p>
-      <p class="company-sub" id="activeTrip">Buscando viaje activo...</p>
-      <div class="company-actions"><button class="btn-mini" id="goLive">abrir</button></div>
-    </article>
+      <!-- Grilla de Módulos (Mis Viajes e Historial) -->
+      <section class="company-grid">
+        
+        <!-- Tarjeta: Mis Viajes -->
+        <div class="company-card">
+          <div class="company-avatar" style="display: grid; place-items: center;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="10" r="3" stroke="currentColor" stroke-width="1.8"/></svg>
+          </div>
+          <div class="company-card-body">
+            <h2 class="company-title">Mis Viajes</h2>
+            <p class="company-sub">Consulta los trayectos habilitados y gestiona tus salidas.</p>
+          </div>
+          <div class="company-actions">
+            <button class="btn-mini secondary" id="goTrips">Ver viajes</button>
+          </div>
+        </div>
 
-    <article class="company-card">
-      <p class="company-title">Perfil</p>
-      <p class="company-sub" id="driverInfo">...</p>
-    </article>
-  </section>
-</main>
+        <!-- Tarjeta: Historial -->
+        <div class="company-card">
+          <div class="company-avatar" style="display: grid; place-items: center;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/><path d="M12 7v5l3 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+          </div>
+          <div class="company-card-body">
+            <h2 class="company-title">Historial</h2>
+            <p class="company-sub">Revisa el registro de tus jornadas finalizadas o canceladas.</p>
+          </div>
+          <div class="company-actions">
+            <button class="btn-mini secondary" id="goHistory">Consultar</button>
+          </div>
+        </div>
 
-<script type="module" src="../js/driver_home_page.js"></script>
+      </section>
+    </main>
+  </div>
 
+  <script type="module" src="../js/driver_home_page.js"></script>
 </body>
 </html>

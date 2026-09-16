@@ -1,332 +1,107 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <title>Admin - Paraderos | ManiRuta</title>
-    <link rel="stylesheet" href="../css/base.css"/>
-    <link rel="stylesheet" href="../css/home.css"/>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Gestión de Paraderos | Movanza Admin</title>
+  <link rel="stylesheet" href="../css/base.css"/>
+  <link rel="stylesheet" href="../css/company_design_system.css"/>
+  <link rel="stylesheet" href="../css/home.css"/>
 </head>
-<body>
-    <header class="nav">
-        <div class="container nav-inner">
-            <div class="brand"><span class="dot"></span> Gestion de Paraderos</div>
-            <a href="home_admin.html" class="btn btn-ghost">Volver</a>
+<body class="company-theme company-dashboard">
+
+  <div class="company-shell">
+    <aside class="company-sidebar" aria-label="Navegacion Administrador">
+      <div class="company-sidebar-brand">
+        <a class="company-logo-link" href="home_admin.html"><img class="company-logo-img" src="https://ruunbwmuizhaetgubzjt.supabase.co/storage/v1/object/public/MOVANZA/Logo%20MOVANZA.png" alt="MOVANZA"/></a>
+      </div>
+      <nav class="company-nav-list">
+        <p class="label-caps company-nav-label">Administración</p>
+        <a class="company-nav-item" href="home_admin.html">Inicio Admin</a>
+        <a class="company-nav-item" href="admin_routes.html">Auditoría de Rutas</a>
+        <a class="company-nav-item" href="alerts_admin.html">Alertas Operativas</a>
+        <a class="company-nav-item" href="admin_companies.html">Empresas</a>
+        <a class="company-nav-item is-active" href="admin_stops.html">Paraderos</a>
+      </nav>
+    </aside>
+
+    <div class="company-content">
+      <header class="nav company-topbar">
+        <div class="nav-inner company-topbar-inner">
+          <div class="nav-left company-header-identity">
+            <a class="company-header-logo" href="home_admin.html"><img src="https://ruunbwmuizhaetgubzjt.supabase.co/storage/v1/object/public/MOVANZA/Logo%20MOVANZA.png" alt="MOVANZA"/></a>
+          </div>
+          <div class="company-header-pattern" aria-hidden="true"></div>
+          <div class="nav-right company-user-actions">
+            <span class="company-user-chip" id="who">...</span>
+            <button class="company-logout-btn" id="logout">Salir</button>
+          </div>
         </div>
-    </header>
+      </header>
 
-    <main class="container page stack">
-        <section class="card tile stop-panel">
-            <div class="page-title">
-                <div>
-                    <h2 class="h1">Crear nuevo paradero</h2>
-                    <p class="sub">Haz clic en el mapa para capturar coordenadas o escríbelas manualmente.</p>
-                </div>
-                <span class="chip ok">ADMIN</span>
+      <main class="container home-wrap company-main" style="max-width: 1100px;">
+        <section class="card welcome company-overview" style="margin-bottom: 16px; background: #161618; border-color: rgba(255,255,255,0.08);">
+          <div class="welcome-top">
+            <div>
+              <p class="label-caps">Infraestructura Vial</p>
+              <h1>Catálogo General de Paraderos</h1>
+              <p>Puntos de parada georreferenciados en la red de transporte.</p>
             </div>
-
-            <div class="stops-layout">
-                <form id="stopForm" class="stop-form">
-                    <div class="stops-grid">
-                        <div>
-                            <label class="help" for="stopName">Nombre del paradero</label>
-                            <input type="text" id="stopName" class="input" placeholder="Ej: Cable Plaza" required>
-                        </div>
-
-                        <div>
-                            <label class="help" for="stopStatus">Estado</label>
-                            <select id="stopStatus" class="input" required>
-                                <option value="ACTIVE">ACTIVE</option>
-                                <option value="INACTIVE">INACTIVE</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div>
-                        <label class="help" for="stopAddress">Direccion</label>
-                        <input type="text" id="stopAddress" class="input" placeholder="Ej: Avenida Santander # 65-10">
-                    </div>
-
-                    <div class="stops-grid">
-                        <div>
-                            <label class="help" for="stopLat">Latitud</label>
-                            <input type="number" step="any" id="stopLat" class="input" placeholder="5.067000" required>
-                        </div>
-
-                        <div>
-                            <label class="help" for="stopLng">Longitud</label>
-                            <input type="number" step="any" id="stopLng" class="input" placeholder="-75.517000" required>
-                        </div>
-                    </div>
-
-                    <div class="stop-hint">
-                        <span class="help" id="mapSelectionHint">Haz clic en el mapa para capturar latitud y longitud.</span>
-                    </div>
-
-                    <div id="stopErr" class="error" style="display:none;"></div>
-                    <div id="stopOk" class="toast" style="display:none;"></div>
-
-                    <div class="stop-actions">
-                        <button type="submit" class="btn btn-primary">Guardar paradero</button>
-                        <button type="button" class="btn btn-ghost" id="resetStopForm">Limpiar</button>
-                    </div>
-                </form>
-
-                <section class="stop-map-card">
-                    <div id="map"></div>
-                </section>
-            </div>
+          </div>
         </section>
 
-        <section class="card tile stop-list-card">
-            <div class="page-title stop-list-head">
-                <div>
-                    <h2 class="h1">Paraderos registrados</h2>
-                    <p class="sub">Los paraderos existentes se reutilizan luego en la definicion de rutas.</p>
-                </div>
-                <input type="search" id="stopSearch" class="input stop-search" placeholder="Buscar por nombre o direccion">
-            </div>
-
-            <div class="stop-table-wrap">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Nombre</th>
-                            <th>Direccion</th>
-                            <th>Coordenadas</th>
-                            <th>Estado</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody id="stopsTable"></tbody>
-                </table>
-            </div>
-        </section>
-    </main>
-
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script type="module">
-        import { fetchStops, createStop, deleteStop } from "../js/stops.js";
-        import { requireAuthAndRole } from "../js/guard.js";
-
-        await requireAuthAndRole(3);
-
-        const table = document.getElementById("stopsTable");
-        const form = document.getElementById("stopForm");
-        const searchInput = document.getElementById("stopSearch");
-        const errBox = document.getElementById("stopErr");
-        const okBox = document.getElementById("stopOk");
-        const mapHint = document.getElementById("mapSelectionHint");
-        const resetButton = document.getElementById("resetStopForm");
-        const latInput = document.getElementById("stopLat");
-        const lngInput = document.getElementById("stopLng");
-        const nameInput = document.getElementById("stopName");
-        const addressInput = document.getElementById("stopAddress");
-        const statusInput = document.getElementById("stopStatus");
-
-        let allStops = [];
-        let stopMarkersLayer = null;
-        let selectedMarker = null;
-
-        const map = L.map("map").setView([5.067, -75.517], 13);
-        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-            attribution: "&copy; OpenStreetMap"
-        }).addTo(map);
-
-        function setMessage(target, message) {
-            target.textContent = message || "";
-            target.style.display = message ? "block" : "none";
-        }
-
-        function clearMessages() {
-            setMessage(errBox, "");
-            setMessage(okBox, "");
-        }
-
-        function escapeHtml(value) {
-            return String(value ?? "")
-                .replaceAll("&", "&amp;")
-                .replaceAll("<", "&lt;")
-                .replaceAll(">", "&gt;")
-                .replaceAll('"', "&quot;")
-                .replaceAll("'", "&#039;");
-        }
-
-        function resetForm() {
-            form.reset();
-            statusInput.value = "ACTIVE";
-            mapHint.textContent = "Haz clic en el mapa para capturar latitud y longitud.";
-            clearMessages();
-
-            if (selectedMarker) {
-                map.removeLayer(selectedMarker);
-                selectedMarker = null;
-            }
-        }
-
-        function setSelectedPoint(lat, lng, label = "Ubicacion seleccionada") {
-            latInput.value = Number(lat).toFixed(6);
-            lngInput.value = Number(lng).toFixed(6);
-            mapHint.textContent = `${label}: ${Number(lat).toFixed(6)}, ${Number(lng).toFixed(6)}`;
-
-            if (selectedMarker) {
-                map.removeLayer(selectedMarker);
-            }
-
-            // Marcador temporal del formulario actual.
-            selectedMarker = L.marker([lat, lng]).addTo(map)
-                .bindPopup(label)
-                .openPopup();
-        }
-
-        function renderStopsOnMap(stops) {
-            if (stopMarkersLayer) {
-                map.removeLayer(stopMarkersLayer);
-            }
-
-            stopMarkersLayer = L.layerGroup(
-                stops.map((stop) =>
-                    L.circleMarker([stop.lat, stop.lng], {
-                        radius: 7,
-                        color: stop.status === "ACTIVE" ? "#1d9d74" : "#dc2626",
-                        fillColor: stop.status === "ACTIVE" ? "#54bcbd" : "#f87171",
-                        fillOpacity: 0.85,
-                        weight: 2
-                    }).bindPopup(`
-                        <strong>${escapeHtml(stop.name)}</strong><br>
-                        ${escapeHtml(stop.address || "Sin direccion")}<br>
-                        ${Number(stop.lat).toFixed(6)}, ${Number(stop.lng).toFixed(6)}
-                    `)
-                )
-            ).addTo(map);
-        }
-
-        function renderStopsTable(stops) {
-            if (!stops.length) {
-                table.innerHTML = `
-                    <tr>
-                        <td colspan="5" class="stop-empty">No hay paraderos para mostrar.</td>
-                    </tr>
-                `;
-                return;
-            }
-
-            table.innerHTML = stops.map((stop) => `
+        <section class="card" style="padding: 20px; background: #161618; border-color: rgba(255,255,255,0.08);">
+          <div class="panel-heading"><h2>Paraderos Registrados</h2></div>
+          <div class="table-wrap">
+            <table class="table">
+              <thead>
                 <tr>
-                    <td><b>${escapeHtml(stop.name)}</b></td>
-                    <td>${escapeHtml(stop.address || "—")}</td>
-                    <td>${Number(stop.lat).toFixed(6)}, ${Number(stop.lng).toFixed(6)}</td>
-                    <td><span class="chip ${stop.status === "ACTIVE" ? "ok" : "bad"}">${escapeHtml(stop.status)}</span></td>
-                    <td class="stop-row-actions">
-                        <button class="btn-mini secondary" data-action="view" data-id="${stop.id}">Ver en mapa</button>
-                        <button class="btn-mini stop-delete-btn" data-action="delete" data-id="${stop.id}">Eliminar</button>
-                    </td>
+                  <th>Nombre del Paradero</th>
+                  <th>Dirección / Zona</th>
+                  <th>Coordenadas</th>
                 </tr>
-            `).join("");
+              </thead>
+              <tbody id="stopsTable">
+                <tr><td colspan="3" class="route-empty">Cargando paraderos globales...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <script type="module">
+    import { requireAuthAndRole } from "../js/guard.js";
+    import { signOut } from "../js/auth.js";
+    import { supabase } from "../js/supabaseClient.js";
+
+    const profile = await requireAuthAndRole(3);
+    if (profile) document.getElementById("who").textContent = `@${profile.username}`;
+    document.getElementById("logout").addEventListener("click", async () => { await signOut(); window.location.href = "login.html"; });
+
+    async function loadStops() {
+      const tbody = document.getElementById("stopsTable");
+      try {
+        const { data, error } = await supabase.from("stops").select("*").order("name").limit(50);
+        if (error) throw error;
+        if (!data || data.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="3" class="route-empty">No hay paraderos registrados.</td></tr>`;
+          return;
         }
-
-        function applySearch() {
-            const term = searchInput.value.trim().toLowerCase();
-            const filtered = allStops.filter((stop) => {
-                const haystack = `${stop.name || ""} ${stop.address || ""}`.toLowerCase();
-                return !term || haystack.includes(term);
-            });
-
-            renderStopsTable(filtered);
-        }
-
-        async function loadStops() {
-            allStops = await fetchStops();
-            applySearch();
-            renderStopsOnMap(allStops);
-        }
-
-        function validateForm() {
-            const name = nameInput.value.trim();
-            const lat = Number.parseFloat(latInput.value);
-            const lng = Number.parseFloat(lngInput.value);
-
-            if (!name) {
-                throw new Error("El nombre del paradero es obligatorio.");
-            }
-
-            if (!Number.isFinite(lat) || !Number.isFinite(lng)) {
-                throw new Error("Debes seleccionar coordenadas validas en el mapa o escribirlas manualmente.");
-            }
-
-            if (lat < -90 || lat > 90 || lng < -180 || lng > 180) {
-                throw new Error("Las coordenadas estan fuera del rango permitido.");
-            }
-
-            return {
-                name,
-                address: addressInput.value.trim(),
-                lat,
-                lng,
-                status: statusInput.value
-            };
-        }
-
-        function focusStopOnMap(id) {
-            const stop = allStops.find((item) => item.id === id);
-            if (!stop) return;
-
-            map.setView([stop.lat, stop.lng], 16);
-            setSelectedPoint(stop.lat, stop.lng, `Paradero: ${stop.name}`);
-        }
-
-        form.addEventListener("submit", async (event) => {
-            event.preventDefault();
-
-            try {
-                clearMessages();
-                const payload = validateForm();
-                await createStop(payload);
-                await loadStops();
-                resetForm();
-                setMessage(okBox, "Paradero guardado correctamente.");
-            } catch (error) {
-                setMessage(errBox, error.message || "No fue posible guardar el paradero.");
-            }
-        });
-
-        resetButton.addEventListener("click", resetForm);
-        searchInput.addEventListener("input", applySearch);
-
-        // El mapa llena coordenadas sin salir del formulario.
-        map.on("click", (event) => {
-            const { lat, lng } = event.latlng;
-            setSelectedPoint(lat, lng);
-        });
-
-        table.addEventListener("click", async (event) => {
-            const button = event.target.closest("button");
-            if (!button) return;
-
-            const { action, id } = button.dataset;
-            if (!action || !id) return;
-
-            if (action === "view") {
-                focusStopOnMap(id);
-                return;
-            }
-
-            if (action === "delete") {
-                if (!confirm("¿Seguro que quieres eliminar este paradero?")) return;
-
-                try {
-                    clearMessages();
-                    await deleteStop(id);
-                    await loadStops();
-                    setMessage(okBox, "Paradero eliminado correctamente.");
-                } catch (error) {
-                    setMessage(errBox, error.message || "No fue posible eliminar el paradero.");
-                }
-            }
-        });
-
-        await loadStops();
-    </script>
+        tbody.innerHTML = data.map(s => `
+          <tr>
+            <td><strong>${s.name}</strong></td>
+            <td>${s.address || 'Sin dirección'}</td>
+            <td style="font-family: monospace; font-size: 12px; color: #a1a1aa;">${s.lat}, ${s.lng}</td>
+          </tr>
+        `).join("");
+      } catch (err) {
+        console.error(err);
+        tbody.innerHTML = `<tr><td colspan="3" class="route-empty">Error al cargar paraderos.</td></tr>`;
+      }
+    }
+    loadStops();
+  </script>
 </body>
 </html>

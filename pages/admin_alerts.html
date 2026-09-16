@@ -1,94 +1,185 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <title>Admin - Alertas | ManiRuta</title>
-    <link rel="stylesheet" href="../css/base.css"/>
-    <link rel="stylesheet" href="../css/home.css"/>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Alertas Operativas | Movanza Admin</title>
+  <link rel="stylesheet" href="../css/base.css"/>
+  <link rel="stylesheet" href="../css/company_design_system.css"/>
+  <link rel="stylesheet" href="../css/home.css"/>
+  <style>
+    body.company-theme, .company-content, .company-shell { background-color: #0d0d0f !important; color: #ffffff !important; }
+    .card, .company-card, .table-wrap, table { background-color: #161618 !important; color: #ffffff !important; border-color: rgba(255,255,255,0.08) !important; }
+    input.input, select.input, textarea.input { background-color: #111113 !important; color: #ffffff !important; border-color: rgba(255,255,255,0.15) !important; }
+  </style>
 </head>
-<body>
-    <header class="nav">
-        <div class="container nav-inner">
-            <div class="brand"><span class="dot"></span> Alertas Operativas</div>
-            <a href="home_admin.html" class="btn btn-ghost">Volver</a>
-        </div>
-    </header>
+<body class="company-theme company-dashboard">
 
-    <main class="container page stack">
-        <section class="card tile">
-            <h2 class="h1">📢 Publicar Aviso a la Ciudad</h2>
-            <form id="alertForm" class="stack" style="margin-top:15px;">
-                <input type="text" id="aTitle" class="input" placeholder="Título (ej: Cierre Av. Kevin Angel)" required>
-                <textarea id="aMsg" class="input" placeholder="Detalles del incidente o desvío..." rows="3" required></textarea>
-                
-                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-                    <select id="aType" class="input">
-                        <option value="TRAFFIC">Tráfico / Desvío</option>
-                        <option value="WEATHER">Clima</option>
-                        <option value="MAINTENANCE">Obras</option>
-                    </select>
-                    <select id="aSeverity" class="input">
-                        <option value="INFO">Informativa</option>
-                        <option value="WARNING">Advertencia</option>
-                        <option value="CRITICAL">Urgente</option>
-                    </select>
-                </div>
-                <button type="submit" class="btn btn-primary">Enviar Alerta</button>
-            </form>
+  <div class="company-shell">
+    <aside class="company-sidebar" aria-label="Navegacion Administrador">
+      <div class="company-sidebar-brand">
+        <a class="company-logo-link" href="home_admin.html">
+          <img class="company-logo-img" src="https://ruunbwmuizhaetgubzjt.supabase.co/storage/v1/object/public/MOVANZA/Logo%20MOVANZA.png" alt="MOVANZA"/>
+        </a>
+      </div>
+      <nav class="company-nav-list">
+        <p class="label-caps company-nav-label">Administración</p>
+        <a class="company-nav-item" href="home_admin.html">Inicio Admin</a>
+        <a class="company-nav-item" href="admin_routes.html">Auditoría de Rutas</a>
+        <a class="company-nav-item is-active" href="admin_alerts.html">Alertas Operativas</a>
+        <a class="company-nav-item" href="admin_companies.html">Empresas</a>
+        <a class="company-nav-item" href="admin_stops.html">Paraderos</a>
+      </nav>
+    </aside>
+
+    <div class="company-content">
+      <header class="nav company-topbar">
+        <div class="nav-inner company-topbar-inner">
+          <div class="nav-left company-header-identity">
+            <a class="company-logo-link" href="home_admin.html">
+              <img src="https://ruunbwmuizhaetgubzjt.supabase.co/storage/v1/object/public/MOVANZA/Logo%20MOVANZA.png" alt="MOVANZA"/>
+            </a>
+          </div>
+          <div class="company-header-pattern" aria-hidden="true"></div>
+          <div class="nav-right company-user-actions">
+            <span class="company-user-chip" id="who">...</span>
+            <button class="company-logout-btn" id="logout">Salir</button>
+          </div>
+        </div>
+      </header>
+
+      <main class="container home-wrap company-main" style="max-width: 1000px;">
+        
+        <section class="card welcome company-overview" style="margin-bottom: 16px;">
+          <div class="welcome-top">
+            <div>
+              <p class="label-caps">Centro de Comunicados</p>
+              <h1>Gestión de Alertas Operativas</h1>
+              <p style="color: #a1a1aa;">Emite anuncios oficiales visibles en tiempo real para pasajeros y conductores de la red.</p>
+            </div>
+          </div>
         </section>
 
-        <section class="card tile">
-            <h2 class="h1">Alertas Activas</h2>
-            <table class="table" style="margin-top:10px;">
+        <div style="display: grid; gap: 16px;">
+          <section class="card" style="padding: 20px;">
+            <div class="panel-heading"><h2>Emitir Nueva Alerta</h2></div>
+            <form id="alertForm" class="form" style="display: flex; flex-direction: column; gap: 12px;">
+              <div>
+                <label class="help">Título del comunicado</label>
+                <input type="text" id="alertTitle" class="input" required placeholder="Ej: Suspensión temporal de ruta norte"/>
+              </div>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                <div>
+                  <label class="help">Tipo</label>
+                  <select id="alertType" class="input">
+                    <option value="INFO">Informativa</option>
+                    <option value="WARNING">Advertencia</option>
+                    <option value="CRITICAL">Crítica / Cierre</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="help">Severidad</label>
+                  <select id="alertSeverity" class="input">
+                    <option value="NORMAL">Normal</option>
+                    <option value="HIGH">Alta</option>
+                  </select>
+                </div>
+              </div>
+              <div>
+                <label class="help">Mensaje detallado</label>
+                <textarea id="alertMessage" class="input" rows="3" required placeholder="Escribe los detalles para los usuarios..."></textarea>
+              </div>
+              
+              <div id="alertErr" class="error" style="display:none; margin-top: 4px;"></div>
+              <div id="alertOk" class="toast-ok" style="display:none; margin-top: 4px;"></div>
+
+              <div>
+                <button type="submit" class="btn" style="background: #00ff66; color: #050505; font-weight: 950;">Publicar Alerta</button>
+              </div>
+            </form>
+          </section>
+
+          <section class="card" style="padding: 20px;">
+            <div class="panel-heading"><h2>Historial de Alertas Emitidas</h2></div>
+            <div class="table-wrap">
+              <table class="table">
                 <thead>
-                    <tr>
-                        <th>Evento</th>
-                        <th>Nivel</th>
-                        <th>Estado</th>
-                    </tr>
+                  <tr>
+                    <th>Fecha</th>
+                    <th>Título</th>
+                    <th>Tipo</th>
+                    <th>Estado</th>
+                  </tr>
                 </thead>
                 <tbody id="alertsTable">
-                    </tbody>
-            </table>
-        </section>
-    </main>
+                  <tr><td colspan="4" class="route-empty" style="color: #a1a1aa;">Cargando alertas del sistema...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+      </main>
+    </div>
+  </div>
 
-    <script type="module">
-        import { fetchAllAlerts, createOperationalAlert } from "../js/alerts_admin.js";
-        import { requireAuthAndRole } from "../js/guard.js";
+  <script type="module">
+    import { requireAuthAndRole } from "../js/guard.js";
+    import { signOut } from "../js/auth.js";
+    import { supabase } from "../js/supabaseClient.js";
 
-        await requireAuthAndRole(3); // Solo Admin
+    const profile = await requireAuthAndRole(3);
+    if (profile) document.getElementById("who").textContent = `@${profile.username}`;
+    document.getElementById("logout").addEventListener("click", async () => { await signOut(); window.location.href = "login.html"; });
 
-        const form = document.getElementById("alertForm");
-        const table = document.getElementById("alertsTable");
-
-        async function load() {
-            const alerts = await fetchAllAlerts();
-            table.innerHTML = alerts.map(a => `
-                <tr>
-                    <td><b>${a.title}</b><br><small>${a.message}</small></td>
-                    <td><span class="chip ${a.severity === 'CRITICAL' ? 'bad' : 'warn'}">${a.severity}</span></td>
-                    <td><span class="chip ok">${a.status}</span></td>
-                </tr>
-            `).join('');
+    async function loadAlerts() {
+      const tbody = document.getElementById("alertsTable");
+      try {
+        const { data, error } = await supabase.from("alerts").select("*").order("created_at", { ascending: false });
+        if (error) throw error;
+        if (!data || data.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="4" class="route-empty">No hay alertas emitidas actualmente.</td></tr>`;
+          return;
         }
+        tbody.innerHTML = data.map(a => `
+          <tr>
+            <td style="font-size: 12px; color: #a1a1aa;">${new Date(a.created_at).toLocaleDateString()}</td>
+            <td><strong style="color:#fff;">${a.title}</strong><br/><span style="font-size: 11px; color: #a1a1aa;">${a.message || ''}</span></td>
+            <td><span class="pill" style="font-size:11px;">${a.type || 'INFO'}</span></td>
+            <td><span style="color: #00ff66; font-weight: bold; font-size: 12px;">Activa</span></td>
+          </tr>
+        `).join("");
+      } catch (err) {
+        console.error(err);
+        tbody.innerHTML = `<tr><td colspan="4" class="route-empty">Error al cargar alertas.</td></tr>`;
+      }
+    }
 
-        form.onsubmit = async (e) => {
-            e.preventDefault();
-            try {
-                await createOperationalAlert({
-                    title: document.getElementById("aTitle").value,
-                    message: document.getElementById("aMsg").value,
-                    type: document.getElementById("aType").value,
-                    severity: document.getElementById("aSeverity").value
-                });
-                form.reset();
-                load();
-            } catch (err) { alert("Error: " + err.message); }
-        };
+    document.getElementById("alertForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const errBox = document.getElementById("alertErr");
+      const okBox = document.getElementById("alertOk");
+      errBox.style.display = "none"; okBox.style.display = "none";
 
-        load();
-    </script>
+      try {
+        const { error } = await supabase.from("alerts").insert([{
+          title: document.getElementById("alertTitle").value.trim(),
+          type: document.getElementById("alertType").value,
+          severity: document.getElementById("alertSeverity").value,
+          message: document.getElementById("alertMessage").value.trim(),
+          created_by: profile.id
+        }]);
+        if (error) throw error;
+        okBox.textContent = "¡Alerta emitida exitosamente!";
+        okBox.style.display = "block";
+        document.getElementById("alertForm").reset();
+        loadAlerts();
+      } catch (err) {
+        errBox.textContent = err.message || "No fue posible publicar la alerta.";
+        errBox.style.display = "block";
+      }
+    });
+
+    loadAlerts();
+  </script>
 </body>
 </html>

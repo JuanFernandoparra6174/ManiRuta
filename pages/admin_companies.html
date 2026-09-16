@@ -1,100 +1,109 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <title>Admin - Empresas | ManiRuta</title>
-    <link rel="stylesheet" href="../css/base.css"/>
-    <link rel="stylesheet" href="../css/home.css"/>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Gestión de Empresas | Movanza Admin</title>
+  <link rel="stylesheet" href="../css/base.css"/>
+  <link rel="stylesheet" href="../css/company_design_system.css"/>
+  <link rel="stylesheet" href="../css/home.css"/>
 </head>
-<body>
-    <header class="nav">
-        <div class="container nav-inner">
-            <div class="brand"><span class="dot"></span> Registro de Empresas</div>
-            <a href="home_admin.html" class="btn btn-ghost">Volver</a>
+<body class="company-theme company-dashboard">
+
+  <div class="company-shell">
+    <aside class="company-sidebar" aria-label="Navegacion Administrador">
+      <div class="company-sidebar-brand">
+        <a class="company-logo-link" href="home_admin.html"><img class="company-logo-img" src="https://ruunbwmuizhaetgubzjt.supabase.co/storage/v1/object/public/MOVANZA/Logo%20MOVANZA.png" alt="MOVANZA"/></a>
+      </div>
+      <nav class="company-nav-list">
+        <p class="label-caps company-nav-label">Administración</p>
+        <a class="company-nav-item" href="home_admin.html">Inicio Admin</a>
+        <a class="company-nav-item" href="admin_routes.html">Auditoría de Rutas</a>
+        <a class="company-nav-item" href="alerts_admin.html">Alertas Operativas</a>
+        <a class="company-nav-item is-active" href="admin_companies.html">Empresas</a>
+        <a class="company-nav-item" href="admin_stops.html">Paraderos</a>
+      </nav>
+    </aside>
+
+    <div class="company-content">
+      <header class="nav company-topbar">
+        <div class="nav-inner company-topbar-inner">
+          <div class="nav-left company-header-identity">
+            <a class="company-header-logo" href="home_admin.html"><img src="https://ruunbwmuizhaetgubzjt.supabase.co/storage/v1/object/public/MOVANZA/Logo%20MOVANZA.png" alt="MOVANZA"/></a>
+          </div>
+          <div class="company-header-pattern" aria-hidden="true"></div>
+          <div class="nav-right company-user-actions">
+            <span class="company-user-chip" id="who">...</span>
+            <button class="company-logout-btn" id="logout">Salir</button>
+          </div>
         </div>
-    </header>
+      </header>
 
-    <main class="container page stack">
-        <section class="card tile">
-            <h2 class="h1">🏢 Registrar Empresa y Usuario</h2>
-            <p class="sub">Al llenar este formulario, se creará la empresa y el acceso para que el dueño inicie sesión.</p>
-            
-            <form id="companyForm" class="stack" style="margin-top:15px;">
-                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-                    <input type="text" id="compName" class="input" placeholder="Nombre Empresa" required>
-                    <input type="text" id="compNit" class="input" placeholder="NIT" required>
-                </div>
-                
-                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-                    <input type="email" id="compEmail" class="input" placeholder="Correo Electrónico (Para Login)" required>
-                    <input type="password" id="compPassword" class="input" placeholder="Contraseña de acceso" required minlength="6">
-                </div>
-                
-                <button type="submit" class="btn btn-primary">Crear Empresa y Cuenta</button>
-            </form>
+      <main class="container home-wrap company-main" style="max-width: 1100px;">
+        <section class="card welcome company-overview" style="margin-bottom: 16px; background: #161618; border-color: rgba(255,255,255,0.08);">
+          <div class="welcome-top">
+            <div>
+              <p class="label-caps">Directorio Corporativo</p>
+              <h1>Gestión de Compañías Transportadoras</h1>
+              <p>Administra las empresas aliadas y su estado operativo en la red.</p>
+            </div>
+          </div>
         </section>
 
-        <section class="card tile" style="overflow-x:auto;">
+        <section class="card" style="padding: 20px; background: #161618; border-color: rgba(255,255,255,0.08);">
+          <div class="panel-heading"><h2>Empresas Aliadas Registradas</h2></div>
+          <div class="table-wrap">
             <table class="table">
-                <thead>
-                    <tr>
-                        <th>Empresa</th>
-                        <th>NIT</th>
-                        <th>Email de Acceso</th>
-                    </tr>
-                </thead>
-                <tbody id="companiesTable"></tbody>
+              <thead>
+                <tr>
+                  <th>Empresa</th>
+                  <th>NIT / Identificador</th>
+                  <th>Estado</th>
+                  <th>Acción</th>
+                </tr>
+              </thead>
+              <tbody id="companiesTable">
+                <tr><td colspan="4" class="route-empty">Cargando empresas asociadas...</td></tr>
+              </tbody>
             </table>
+          </div>
         </section>
-    </main>
+      </main>
+    </div>
+  </div>
 
-    <script type="module">
-        import { fetchCompanies, createCompanyWithAccount } from "../js/companies.js";
-        import { requireAuthAndRole } from "../js/guard.js";
+  <script type="module">
+    import { requireAuthAndRole } from "../js/guard.js";
+    import { signOut } from "../js/auth.js";
+    import { supabase } from "../js/supabaseClient.js";
 
-        await requireAuthAndRole(3); // Solo Admin
+    const profile = await requireAuthAndRole(3);
+    if (profile) document.getElementById("who").textContent = `@${profile.username}`;
+    document.getElementById("logout").addEventListener("click", async () => { await signOut(); window.location.href = "login.html"; });
 
-        const form = document.getElementById("companyForm");
-        const tableBody = document.getElementById("companiesTable");
-
-        async function loadCompanies() {
-            try {
-                const companies = await fetchCompanies();
-                tableBody.innerHTML = companies.map(c => `
-                    <tr>
-                        <td><b>${c.name}</b></td>
-                        <td>${c.nit || '—'}</td>
-                        <td>${c.email || '—'}</td>
-                    </tr>
-                `).join('');
-            } catch (err) {
-                console.error("Error al cargar empresas:", err);
-            }
+    async function loadCompanies() {
+      const tbody = document.getElementById("companiesTable");
+      try {
+        const { data, error } = await supabase.from("companies").select("*").order("name");
+        if (error) throw error;
+        if (!data || data.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="4" class="route-empty">No hay empresas registradas.</td></tr>`;
+          return;
         }
-
-        form.addEventListener("submit", async (e) => {
-            e.preventDefault();
-            
-            const name = document.getElementById("compName").value.trim();
-            const nit = document.getElementById("compNit").value.trim();
-            const email = document.getElementById("compEmail").value.trim();
-            const password = document.getElementById("compPassword").value;
-
-            try {
-                // Llamamos a la nueva función
-                await createCompanyWithAccount({ name, nit, email, password });
-                
-                alert("✅ Empresa y cuenta de usuario creadas con éxito.");
-                form.reset();
-                loadCompanies();
-            } catch (err) {
-                alert("❌ Error: " + err.message);
-                console.error(err);
-            }
-        });
-
-        loadCompanies();
-    </script>
+        tbody.innerHTML = data.map(c => `
+          <tr>
+            <td><strong>${c.name}</strong></td>
+            <td>${c.nit || 'N/A'}</td>
+            <td><span class="pill" style="font-size:11px;">${c.status || 'ACTIVE'}</span></td>
+            <td><button class="btn-mini secondary" onclick="alert('Empresa: ${c.name}')">Detalles</button></td>
+          </tr>
+        `).join("");
+      } catch (err) {
+        console.error(err);
+        tbody.innerHTML = `<tr><td colspan="4" class="route-empty">Error al cargar empresas.</td></tr>`;
+      }
+    }
+    loadCompanies();
+  </script>
 </body>
 </html>
