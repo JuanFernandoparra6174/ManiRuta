@@ -3,130 +3,117 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Inicio Pasajero | ManiRuta</title>
+  <title>Inicio Pasajero | Movanza</title>
   <link rel="stylesheet" href="../css/base.css"/>
+  <link rel="stylesheet" href="../css/company_design_system.css"/>
   <link rel="stylesheet" href="../css/home.css"/>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <style>
-    #map { 
-      height: 300px; 
-      width: 100%; 
-      border-radius: 15px; 
-      margin-bottom: 20px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      z-index: 1; 
-    }
+    body.company-theme, .company-content, .company-shell { background-color: #0d0d0f !important; color: #ffffff !important; }
+    .card, .company-card { background-color: #161618 !important; border-color: rgba(255,255,255,0.08) !important; }
   </style>
 </head>
-<body>
+<body class="company-theme company-dashboard">
 
-  <header class="nav">
-    <div class="container nav-inner">
-      <div class="nav-left">
-        <button class="icon-btn" id="menuBtn">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-        </button>
-        <div class="brand"><span class="dot"></span> ManiRuta</div>
+  <div class="company-shell">
+    <!-- Menú lateral Pasajero -->
+    <aside class="company-sidebar">
+      <div class="company-sidebar-brand">
+        <a class="company-logo-link" href="home_passenger.html">
+          <img class="company-logo-img" src="https://ruunbwmuizhaetgubzjt.supabase.co/storage/v1/object/public/MOVANZA/Logo%20MOVANZA.png" alt="MOVANZA"/>
+        </a>
       </div>
-      <div class="nav-right">
-        <span class="pill" id="who">...</span>
-        <button class="btn btn-ghost" id="logout">Salir</button>
-      </div>
+      <nav class="company-nav-list">
+        <p class="label-caps company-nav-label">Mi Movilidad</p>
+        <a class="company-nav-item is-active" href="home_passenger.html">
+          <span class="company-nav-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></span>
+          Inicio
+        </a>
+        <a class="company-nav-item" href="view_routes.html">
+          <span class="company-nav-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M9 18l-6 3V6l6-3 6 3 6-3v15l-6 3-6-3ZM9 3v15M15 6v15" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          Rutas y Mapas
+        </a>
+        <a class="company-nav-item" href="alerts_passenger.html">
+          <span class="company-nav-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          Alertas de Red
+        </a>
+        <a class="company-nav-item" href="denuncias.html">
+          <span class="company-nav-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></span>
+          PQRS / Denuncias
+        </a>
+      </nav>
+    </aside>
+
+    <div class="company-content">
+      <header class="nav company-topbar">
+        <div class="nav-inner company-topbar-inner">
+          <div class="nav-left company-header-identity">
+            <a class="company-logo-link" href="home_passenger.html">
+              <img src="https://ruunbwmuizhaetgubzjt.supabase.co/storage/v1/object/public/MOVANZA/Logo%20MOVANZA.png" alt="MOVANZA"/>
+            </a>
+          </div>
+          <div class="company-header-pattern" aria-hidden="true"></div>
+          <div class="nav-right company-user-actions">
+            <span class="company-user-chip" id="who">...</span>
+            <button class="company-logout-btn" id="logout">Salir</button>
+          </div>
+        </div>
+      </header>
+
+      <main class="container home-wrap company-main" style="max-width: 1000px;">
+        <section class="card welcome company-overview" style="margin-bottom: 16px;">
+          <div class="welcome-top">
+            <div>
+              <p class="label-caps">Portal de Pasajeros</p>
+              <h1 id="welcomeTitle" style="color: #ffffff;">Bienvenido</h1>
+              <p style="color: #a1a1aa;">Explora las rutas disponibles, mantente informado y viaja seguro con Movanza.</p>
+            </div>
+            <span class="pill" style="border-color: rgba(0,255,102,0.3); background: rgba(0,255,102,0.1); color: #00ff66;">PASAJERO</span>
+          </div>
+        </section>
+
+        <section class="company-grid">
+          <div class="company-card" style="background: #161618; border-color: rgba(255,255,255,0.08);">
+            <div class="company-card-body">
+              <h2 class="company-title" style="color: #fff;">Rutas y Mapas</h2>
+              <p class="company-sub" style="color: #a1a1aa;">Consulta los recorridos, paraderos y encuentra tu mejor opción de viaje.</p>
+            </div>
+            <div class="company-actions">
+              <button class="btn-mini" style="background: #00ff66; color: #000; font-weight: bold;" onclick="window.location.href='view_routes.html'">Explorar Rutas</button>
+            </div>
+          </div>
+          <div class="company-card" style="background: #161618; border-color: rgba(255,255,255,0.08);">
+            <div class="company-card-body">
+              <h2 class="company-title" style="color: #fff;">Alertas de Red</h2>
+              <p class="company-sub" style="color: #a1a1aa;">Revisa notificaciones de cierres viales o cambios operativos en tiempo real.</p>
+            </div>
+            <div class="company-actions">
+              <button class="btn-mini secondary" onclick="window.location.href='alerts_passenger.html'">Ver Alertas</button>
+            </div>
+          </div>
+          <div class="company-card" style="background: #161618; border-color: rgba(255,255,255,0.08);">
+            <div class="company-card-body">
+              <h2 class="company-title" style="color: #fff;">PQRS / Denuncias</h2>
+              <p class="company-sub" style="color: #a1a1aa;">Reporta incidencias, envía quejas o sugerencias sobre el servicio.</p>
+            </div>
+            <div class="company-actions">
+              <button class="btn-mini secondary" onclick="window.location.href='denuncias.html'">Hacer un reporte</button>
+            </div>
+          </div>
+        </section>
+      </main>
     </div>
-  </header>
-
-  <main class="container home-wrap">
-    <section class="card welcome">
-      <div class="welcome-top">
-        <div>
-          <h1 id="welcomeTitle">👋 Hola, pasajero</h1>
-          <p>Consulta rutas en tiempo real y reporta incidentes rápido.</p>
-        </div>
-        <span class="pill">🚌 GPS Activo</span>
-      </div>
-    </section>
-
-    <div id="map"></div>
-
-    <section class="feature-list">
-      <a class="feature" href="#" id="goRoutes">
-        <div class="feature-thumb">
-          <div class="img" id="imgRoutes"></div>
-          <div class="tag">🗺️ Rutas</div>
-        </div>
-        <div>
-          <h2>Rutas</h2>
-          <p>Consulta buses y paraderos en tiempo real.</p>
-          <div class="small-row"><span class="help">Ver rutas</span><span class="chev">›</span></div>
-        </div>
-      </a>
-
-      <a class="feature" href="#" id="goIncidents">
-        <div class="feature-thumb">
-          <div class="img" id="imgIncidents"></div>
-          <div class="tag">🚨 Denuncias</div>
-        </div>
-        <div>
-          <h2>Denuncias</h2>
-          <p>Reporta incidentes de forma rápida y anónima.</p>
-          <div class="small-row"><span class="help">Crear reporte</span><span class="chev">›</span></div>
-        </div>
-      </a>
-
-      <a class="feature" href="#" id="goAlerts">
-        <div class="feature-thumb">
-          <div class="img" id="imgAlerts"></div>
-          <div class="tag">🔔 Alertas</div>
-        </div>
-        <div>
-          <h2>Alertas</h2>
-          <p>Recibe notificaciones sobre desvíos.</p>
-          <div class="small-row"><span class="help">Ver avisos</span><span class="chev">›</span></div>
-        </div>
-      </a>
-    </section>
-  </main>
-
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  </div>
 
   <script type="module">
     import { requireAuthAndRole } from "../js/guard.js";
     import { signOut } from "../js/auth.js";
-    // IMPORTACIÓN ÚNICA
-    import { startGPS, loadStopsOnMap, loadRealRoutes } from "../js/map_engine.js";
-
-    // Restaurar imágenes originales
-// Restaurar imágenes originales
-    const IMG_ROUTES    = "https://advancedfleetmanagementconsulting.com/wp-content/uploads/2016/11/calcula-mejor-ruta-660x400.png";
-    
-    // 👇 URL REEMPLAZADA POR UNA ESTABLE 👇
-    const IMG_INCIDENTS = "https://plus.unsplash.com/premium_photo-1682309567426-5517a398b4dd?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8YWxlcnQlMjBiZWxsfGVufDB8fDB8fHww"; 
-    
-    const IMG_ALERTS    = "https://www.dexiaabogados.com/wp-content/uploads/2021/01/denuncia.jpg";
-
-    document.getElementById("imgRoutes").style.backgroundImage    = `url('${IMG_ROUTES}')`;
-    document.getElementById("imgIncidents").style.backgroundImage = `url('${IMG_INCIDENTS}')`;
-    document.getElementById("imgAlerts").style.backgroundImage    = `url('${IMG_ALERTS}')`;
-
+    // Asumiendo que el pasajero es el rol 1, ajústalo si es necesario
     const profile = await requireAuthAndRole(1); 
-    if (profile){
+    if (profile) {
       document.getElementById("who").textContent = `@${profile.username}`;
-      document.getElementById("welcomeTitle").textContent = `👋 Hola, ${profile.username}`;
+      document.getElementById("welcomeTitle").textContent = `Hola, ${profile.username}`;
     }
-
-    // CARGAR MAPA
-    async function initMap() {
-      startGPS();
-      await loadStopsOnMap();
-      await loadRealRoutes(); // Esto dibujará las rutas sin mezclarlas
-    }
-    initMap();
-
-    // Botones
-    document.getElementById("logout").onclick = async () => { await signOut(); window.location.href = "login.html"; };
-    document.getElementById("goRoutes").onclick = (e) => { e.preventDefault(); window.location.href = "view_routes.html"; };
-    document.getElementById("goIncidents").onclick = (e) => { e.preventDefault(); window.location.href = "denuncias.html"; };
-    document.getElementById("goAlerts").onclick = (e) => { e.preventDefault(); window.location.href = "alerts_passenger.html"; };
+    document.getElementById("logout").addEventListener("click", async () => { await signOut(); window.location.href = "login.html"; });
   </script>
 </body>
 </html>

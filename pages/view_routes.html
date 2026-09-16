@@ -1,82 +1,163 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <title>Rutas Disponibles | ManiRuta</title>
-    <link rel="stylesheet" href="../css/base.css"/>
-    <link rel="stylesheet" href="../css/home.css"/>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Rutas Disponibles | Movanza Pasajeros</title>
+  <link rel="stylesheet" href="../css/base.css"/>
+  <link rel="stylesheet" href="../css/company_design_system.css"/>
+  <link rel="stylesheet" href="../css/home.css"/>
+  <style>
+    /* Forzar modo oscuro unificado */
+    body.company-theme, .company-content, .company-shell { background-color: #0d0d0f !important; color: #ffffff !important; }
+    .card { background-color: #161618 !important; color: #ffffff !important; border-color: rgba(255,255,255,0.08) !important; }
+    input.input { background-color: #111113 !important; color: #ffffff !important; border-color: rgba(255,255,255,0.15) !important; }
+    
+    /* Estilo en cuadrícula para las tarjetas de rutas */
+    .routes-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 16px;
+      margin-top: 16px;
+    }
+  </style>
 </head>
-<body>
-    <header class="nav">
-        <div class="container nav-inner">
-            <div class="brand"><span class="dot"></span> Rutas ManiRuta</div>
-            <a href="home_passenger.html" class="btn btn-ghost">Volver</a>
-        </div>
-    </header>
+<body class="company-theme company-dashboard">
 
-    <main class="container page stack">
-        <section class="card tile">
-            <h2 class="h1">Encuentra tu ruta</h2>
-            <input type="text" id="routeSearch" class="input" placeholder="Buscar por nombre..." style="margin-top:10px;">
+  <div class="company-shell">
+    <!-- Menú lateral Pasajero con Iconos -->
+    <aside class="company-sidebar">
+      <div class="company-sidebar-brand">
+        <a class="company-logo-link" href="home_passenger.html">
+          <img class="company-logo-img" src="https://ruunbwmuizhaetgubzjt.supabase.co/storage/v1/object/public/MOVANZA/Logo%20MOVANZA.png" alt="MOVANZA"/>
+        </a>
+      </div>
+      <nav class="company-nav-list">
+        <p class="label-caps company-nav-label">Mi Movilidad</p>
+        <a class="company-nav-item" href="home_passenger.html">
+          <span class="company-nav-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></span>
+          Inicio
+        </a>
+        <a class="company-nav-item is-active" href="view_routes.html">
+          <span class="company-nav-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M9 18l-6 3V6l6-3 6 3 6-3v15l-6 3-6-3ZM9 3v15M15 6v15" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          Rutas y Mapas
+        </a>
+        <a class="company-nav-item" href="alerts_passenger.html">
+          <span class="company-nav-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          Alertas de Red
+        </a>
+        <a class="company-nav-item" href="denuncias.html">
+          <span class="company-nav-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></span>
+          PQRS / Denuncias
+        </a>
+      </nav>
+    </aside>
+
+    <div class="company-content">
+      <header class="nav company-topbar">
+        <div class="nav-inner company-topbar-inner">
+          <div class="nav-left company-header-identity">
+            <a class="company-logo-link" href="home_passenger.html">
+              <img src="https://ruunbwmuizhaetgubzjt.supabase.co/storage/v1/object/public/MOVANZA/Logo%20MOVANZA.png" alt="MOVANZA"/>
+            </a>
+          </div>
+          <div class="company-header-pattern" aria-hidden="true"></div>
+          <div class="nav-right company-user-actions">
+            <span class="company-user-chip" id="who">...</span>
+            <button class="company-logout-btn" id="logout">Salir</button>
+          </div>
+        </div>
+      </header>
+
+      <main class="container home-wrap company-main" style="max-width: 1200px;">
+        
+        <section class="card welcome company-overview" style="margin-bottom: 16px;">
+          <div class="welcome-top">
+            <div>
+              <p class="label-caps">Información Vial</p>
+              <h1>Encuentra tu ruta</h1>
+              <p style="color: #a1a1aa;">Busca y selecciona la ruta que necesitas para ver los viajes activos.</p>
+            </div>
+          </div>
         </section>
 
-        <div id="routesList" class="stack"></div>
-    </main>
+        <!-- Buscador -->
+        <section class="card" style="padding: 20px;">
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <label class="help" style="color: #a1a1aa;">Buscador rápido</label>
+            <input type="text" id="routeSearch" class="input" placeholder="Buscar por nombre (Ej: Cable, Palermo)..." style="max-width: 100%; font-size: 16px; padding: 12px;"/>
+          </div>
+        </section>
 
-    <script type="module">
-        import { fetchAllRoutes } from "../js/routes_passenger.js";
-        import { requireAuthAndRole } from "../js/guard.js";
+        <!-- Contenedor dinámico de rutas -->
+        <div id="routesList" class="routes-grid"></div>
 
-        await requireAuthAndRole(1);
+      </main>
+    </div>
+  </div>
 
-        const list = document.getElementById("routesList");
-        const searchInput = document.getElementById("routeSearch");
-        let allRoutes = [];
+  <script type="module">
+    import { fetchAllRoutes } from "../js/routes_passenger.js";
+    import { requireAuthAndRole } from "../js/guard.js";
+    import { signOut } from "../js/auth.js";
 
-        function escapeHtml(value) {
-            return String(value ?? "")
-                .replaceAll("&", "&amp;")
-                .replaceAll("<", "&lt;")
-                .replaceAll(">", "&gt;")
-                .replaceAll('"', "&quot;")
-                .replaceAll("'", "&#039;");
-        }
+    // 1. Manejo de Sesión (Rol 1 = Pasajero)
+    const profile = await requireAuthAndRole(1);
+    if (profile) document.getElementById("who").textContent = `@${profile.username}`;
+    document.getElementById("logout").addEventListener("click", async () => { await signOut(); window.location.href = "login.html"; });
 
-        function render(routes) {
-            if (!routes.length) {
-                list.innerHTML = `<div class="card help">No hay rutas activas en este momento.</div>`;
-                return;
-            }
+    // 2. Lógica Original Intacta
+    const list = document.getElementById("routesList");
+    const searchInput = document.getElementById("routeSearch");
+    let allRoutes = [];
 
-            list.innerHTML = routes.map((route) => `
-                <div class="card tile passenger-route-card">
-                    <div class="pill passenger-route-pill">RUTA</div>
-                    <div style="flex:1;">
-                        <h3 style="margin:0;">${escapeHtml(route.name)}</h3>
-                        <p class="sub" style="margin:4px 0;">Sentido: <b>${escapeHtml(route.direction || "IDA")}</b></p>
-                    </div>
-                    <a class="btn btn-primary" href="passenger_route_live.html?route_id=${route.id}">Ver viajes</a>
-                </div>
-            `).join("");
-        }
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
 
-        async function load() {
-            try {
-                allRoutes = await fetchAllRoutes();
-                render(allRoutes);
-            } catch (error) {
-                list.innerHTML = `<p class="sub" style="color:red;">Error al cargar: ${escapeHtml(error.message)}</p>`;
-            }
-        }
+    function render(routes) {
+      if (!routes.length) {
+        list.innerHTML = `<div class="card" style="padding: 20px; text-align: center; color: #a1a1aa; grid-column: 1 / -1;">No hay rutas activas en este momento o no coinciden con tu búsqueda.</div>`;
+        return;
+      }
 
-        searchInput.addEventListener("input", (event) => {
-            const term = event.target.value.toLowerCase();
-            const filtered = allRoutes.filter((route) => route.name.toLowerCase().includes(term));
-            render(filtered);
-        });
+      // Renderizamos el HTML manteniendo tu <a> original que redirige a passenger_route_live.html,
+      // pero con el nuevo diseño de tarjetas grises y verde neón
+      list.innerHTML = routes.map((route) => `
+        <div class="card" style="padding: 16px; display: flex; justify-content: space-between; align-items: center; background: #161618; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px;">
+          <div>
+            <span class="pill" style="font-size: 10px; color:#00ff66; border-color: rgba(0,255,102,0.3); margin-bottom: 8px; display: inline-block;">RUTA</span>
+            <h3 style="margin: 0; color: #ffffff; font-size: 1.1rem;">${escapeHtml(route.name)}</h3>
+            <p class="sub" style="margin: 4px 0 0 0; color: #a1a1aa; font-size: 0.9rem;">Sentido: <b style="color: #ffffff;">${escapeHtml(route.direction || "IDA")}</b></p>
+          </div>
+          <div>
+            <a class="btn-mini" style="background: #00ff66; color: #050505; font-weight: bold; text-decoration: none; padding: 8px 16px; display: inline-block; border-radius: 6px;" href="passenger_route_live.html?route_id=${route.id}">Ver viajes</a>
+          </div>
+        </div>
+      `).join("");
+    }
 
-        await load();
-    </script>
+    async function load() {
+      try {
+        allRoutes = await fetchAllRoutes();
+        render(allRoutes);
+      } catch (error) {
+        list.innerHTML = `<div class="card" style="padding: 20px; color: #ef4444; text-align: center; grid-column: 1 / -1;">Error al cargar: ${escapeHtml(error.message)}</div>`;
+      }
+    }
+
+    searchInput.addEventListener("input", (event) => {
+      const term = event.target.value.toLowerCase();
+      const filtered = allRoutes.filter((route) => route.name.toLowerCase().includes(term));
+      render(filtered);
+    });
+
+    await load();
+  </script>
 </body>
 </html>

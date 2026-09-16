@@ -3,76 +3,162 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Detalle de Ruta | ManiRuta</title>
+  <title>Ruta en Vivo | Movanza Pasajeros</title>
   <link rel="stylesheet" href="../css/base.css"/>
+  <link rel="stylesheet" href="../css/company_design_system.css"/>
   <link rel="stylesheet" href="../css/home.css"/>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
-</head>
-<body>
+  <style>
+    /* Forzar modo oscuro unificado solo para los paneles, respetando el mapa */
+    body.company-theme, .company-content, .company-shell { background-color: #0d0d0f !important; color: #ffffff !important; }
+    .card { background-color: #161618 !important; color: #ffffff !important; border-color: rgba(255,255,255,0.08) !important; }
+    
+    /* Forzar que los textos inyectados por JS se vean bien */
+    h1, h2, h3, h4, strong { color: #ffffff !important; }
+    p, span, .sub, .help { color: #a1a1aa !important; }
 
-<header class="nav">
-  <div class="container nav-inner">
-    <div class="brand"><span class="dot"></span> Ruta en Vivo</div>
-    <div class="nav-right">
-      <a class="btn btn-ghost" href="view_routes.html">Volver</a>
+    /* Estructura corregida para los encabezados del panel izquierdo (evita que se aplasten) */
+    .left-panel-heading {
+      display: flex;
+      flex-direction: column; /* Pone el título arriba y el texto abajo */
+      align-items: flex-start;
+      gap: 6px;
+      margin-bottom: 16px;
+    }
+    .left-panel-heading h2 { margin: 0; font-size: 1.3rem; }
+    .left-panel-heading p { margin: 0; font-size: 0.9rem; line-height: 1.4; }
+
+    /* Ajuste de tarjetas de viaje y paraderos para evitar desbordes de texto */
+    .passenger-trips-list > div, .route-timeline > div, #passengerGeofenceCard > div {
+      background-color: #111113 !important;
+      border: 1px solid rgba(255,255,255,0.05) !important;
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 12px;
+      word-wrap: break-word; /* Obliga al texto largo a bajar de renglón */
+      overflow-wrap: break-word;
+    }
+  </style>
+</head>
+<body class="company-theme company-dashboard">
+
+  <div class="company-shell">
+    <!-- Menú lateral Pasajero -->
+    <aside class="company-sidebar">
+      <div class="company-sidebar-brand">
+        <a class="company-logo-link" href="home_passenger.html">
+          <img class="company-logo-img" src="https://ruunbwmuizhaetgubzjt.supabase.co/storage/v1/object/public/MOVANZA/Logo%20MOVANZA.png" alt="MOVANZA"/>
+        </a>
+      </div>
+      <nav class="company-nav-list">
+        <p class="label-caps company-nav-label">Mi Movilidad</p>
+        <a class="company-nav-item" href="home_passenger.html">
+          <span class="company-nav-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></span>
+          Inicio
+        </a>
+        <a class="company-nav-item is-active" href="view_routes.html">
+          <span class="company-nav-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M9 18l-6 3V6l6-3 6 3 6-3v15l-6 3-6-3ZM9 3v15M15 6v15" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          Rutas y Mapas
+        </a>
+        <a class="company-nav-item" href="alerts_passenger.html">
+          <span class="company-nav-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          Alertas de Red
+        </a>
+        <a class="company-nav-item" href="denuncias.html">
+          <span class="company-nav-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></span>
+          PQRS / Denuncias
+        </a>
+      </nav>
+    </aside>
+
+    <div class="company-content">
+      <header class="nav company-topbar">
+        <div class="nav-inner company-topbar-inner">
+          <div class="nav-left company-header-identity">
+            <a class="company-logo-link" href="home_passenger.html">
+              <img src="https://ruunbwmuizhaetgubzjt.supabase.co/storage/v1/object/public/MOVANZA/Logo%20MOVANZA.png" alt="MOVANZA"/>
+            </a>
+          </div>
+          <div class="company-header-pattern" aria-hidden="true"></div>
+          <div class="nav-right company-user-actions">
+            <span class="company-user-chip" id="who">...</span>
+            <button class="company-logout-btn" id="logout">Salir</button>
+          </div>
+        </div>
+      </header>
+
+      <main class="container home-wrap company-main" style="max-width: 1400px;">
+        
+        <section class="card welcome company-overview" style="margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+          <div>
+            <p class="label-caps">Monitoreo Satelital</p>
+            <h1 id="routeTitle" style="color: #ffffff; margin: 4px 0;">Cargando Ruta...</h1>
+            <div id="routeMeta" class="footer-actions" style="margin-top: 8px;"></div>
+          </div>
+          <div>
+            <a class="btn secondary" href="view_routes.html" style="text-decoration: none; display: inline-flex; align-items: center;">← Volver al directorio</a>
+          </div>
+        </section>
+
+        <div id="routeOk" class="toast-ok" style="display:none; margin-bottom: 16px;"></div>
+        <div id="routeErr" class="error" style="display:none; margin-bottom: 16px;"></div>
+
+        <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 16px; align-items: start;">
+          
+          <!-- PANEL IZQUIERDO -->
+          <div style="display: flex; flex-direction: column; gap: 16px; max-height: 700px; overflow-y: auto; padding-right: 8px;">
+            
+            <section class="card" style="padding: 20px;">
+              <div class="left-panel-heading">
+                <h2>Viajes Activos</h2>
+                <p>Selecciona un viaje para activar su seguimiento en vivo.</p>
+              </div>
+              <div id="activeTripsList" class="passenger-trips-list"></div>
+            </section>
+
+            <section class="card" style="padding: 20px;">
+              <div class="left-panel-heading">
+                <h2>Proximidad del Bus</h2>
+                <p>Te avisaremos cuando el bus pase por los paraderos y cuánto falta para tu ubicación.</p>
+              </div>
+              <div id="passengerGeofenceCard"></div>
+            </section>
+
+            <section class="card" style="padding: 20px;">
+              <div class="left-panel-heading">
+                <h2>Recorrido Completo</h2>
+                <p>Lista de paraderos oficiales de esta ruta.</p>
+              </div>
+              <div id="routeTimeline" class="route-timeline"></div>
+            </section>
+
+          </div>
+
+          <!-- MAPA DERECHO -->
+          <section class="card" style="height: 700px; padding: 12px; display: flex; flex-direction: column;">
+            <div class="panel-heading" style="margin-bottom: 12px; flex-shrink: 0;">
+              <h2>Mapa en Tiempo Real</h2>
+            </div>
+            <!-- El mapa ya no tiene el filtro oscuro aplicado -->
+            <div id="passengerMap" style="flex-grow: 1; width: 100%; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08);"></div>
+          </section>
+
+        </div>
+      </main>
     </div>
   </div>
-</header>
 
-<main class="container page stack">
-  <section class="card tile passenger-live-layout">
-    <section class="passenger-side">
-      <div class="page-title">
-        <div>
-          <h1 class="h1" id="routeTitle">Ruta</h1>
-          <p class="sub">Selecciona un viaje activo para ver el vehiculo en el mapa.</p>
-        </div>
-      </div>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  
+  <!-- Lógica original intacta -->
+  <script type="module" src="../js/passenger_route_live.js"></script>
 
-      <div class="footer-actions" id="routeMeta"></div>
-
-      <section class="card tile passenger-trips-card">
-        <div class="page-title">
-          <div>
-            <h2 class="h1">Viajes activos</h2>
-            <p class="sub">Elige el viaje y activa su seguimiento.</p>
-          </div>
-        </div>
-        <div id="activeTripsList" class="passenger-trips-list"></div>
-      </section>
-
-      <section class="card tile trip-summary-card">
-        <div class="page-title">
-          <div>
-            <h2 class="h1">Seguimiento de viaje</h2>
-            <p class="sub">Cuando el bus entra al radio de 60 m de un paradero se informa en que paradero esta y cuantos paraderos faltan para llegar al mas cercano a ti.</p>
-          </div>
-        </div>
-        <div id="passengerGeofenceCard"></div>
-      </section>
-
-      <section class="card tile passenger-timeline-card">
-        <div class="page-title">
-          <div>
-            <h2 class="h1">Recorrido completo</h2>
-            <p class="sub">Origen, paraderos intermedios y destino final en texto.</p>
-          </div>
-        </div>
-        <div id="routeTimeline" class="route-timeline"></div>
-      </section>
-
-      <div id="routeOk" class="toast" style="display:none;"></div>
-      <div id="routeErr" class="error" style="display:none;"></div>
-    </section>
-
-    <section class="passenger-map-card">
-      <div id="passengerMap"></div>
-    </section>
-  </section>
-</main>
-
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script type="module" src="../js/passenger_route_live.js"></script>
-
+  <script type="module">
+    import { requireAuthAndRole } from "../js/guard.js";
+    import { signOut } from "../js/auth.js";
+    const profile = await requireAuthAndRole(1);
+    if (profile) document.getElementById("who").textContent = `@${profile.username}`;
+    document.getElementById("logout").addEventListener("click", async () => { await signOut(); window.location.href = "login.html"; });
+  </script>
 </body>
 </html>
